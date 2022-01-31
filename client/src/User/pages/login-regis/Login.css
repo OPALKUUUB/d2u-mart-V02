@@ -1,0 +1,12 @@
+.Login-register-btn {
+  cursor: pointer;
+  text-decoration: underline;
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  color: rgb(0, 0, 255);
+}
+
+.Login-register-btn:hover {
+  color: rgba(0, 0, 255, 0.7);
+}

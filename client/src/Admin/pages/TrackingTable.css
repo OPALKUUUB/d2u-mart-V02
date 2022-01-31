@@ -1,0 +1,30 @@
+.TrackingTable {
+  width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  row-gap: 20px;
+  margin-bottom: 40px;
+  font-size: 0.8rem;
+}
+.TrackingTable table,
+.TrackingTable th,
+.TrackingTable td {
+  border: 1px solid black;
+}
+
+.TrackingTable th,
+.TrackingTable td {
+  padding: 10px;
+  text-align: left;
+}
+
+.TrackingTable table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.TrackingTable th {
+  height: 50px;
+}

@@ -11,7 +11,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^14.3.2",
     "express": "^4.17.2",
-    "password-generator": "^2.3.2"
+    "jsonwebtoken": "^8.5.1",
+    "multer": "^1.4.4",
+    "mysql2": "^2.3.3",
+    "password-generator": "^2.3.2",
+    "request": "^2.88.2"
   }
 }
