@@ -71,6 +71,53 @@ app.get("/api/yen", (req, res) => {
     }
   });
 });
+app.post("/api/regist", (req, res) => {
+  var date = genDate();
+  var regist = [
+    req.body.username,
+    req.body.name,
+    req.body.phone,
+    req.body.address_case,
+    req.body.address,
+    req.body.password,
+    date,
+    date,
+  ];
+  const sql = `INSERT INTO user_customers (
+      username,
+      name,
+      phone,
+      address_case,
+      address,
+      password,
+      created_at,
+      updated_at
+      ) VALUES(?,?,?,?,?,?,?,?);`;
+  conn.query(sql, regist, (err, result) => {
+    if (err) {
+      console.log(err.sqlMessage);
+      res.status(400).json({
+        status: false,
+        message: "Error: " + err.sqlMessage,
+      });
+    } else {
+      console.log(result);
+      if (!IsEmpty(result.insertId)) {
+        res.status(200).json({
+          status: true,
+          message:
+            "insert into usercustomers is successfully at row " +
+            result.insertId,
+        });
+      } else {
+        res.status(400).json({
+          status: false,
+          message: result,
+        });
+      }
+    }
+  });
+});
 
 app.post("/api/login", (req, res) => {
   const { username, password, mode } = req.body;
@@ -832,6 +879,11 @@ app.get("*", (req, res) => {
 });
 
 const port = process.env.PORT || 5000;
-app.listen(port);
+app.listen(port, () => {
+  if (port === 5000) {
+    PD_SRC_IMAGE = "./client/public/image/";
+    PD_SRC_IMAGE_TRACKING = "./client/public/image/";
+  }
+});
 
 console.log(`Password generator listening on ${port}`);
