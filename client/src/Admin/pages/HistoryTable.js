@@ -42,9 +42,9 @@ export default function HistoryTable() {
             <th>Order</th>
             <th>Username</th>
             <th>Link</th>
-            <th>Bid</th>
-            <th>tranfer fee</th>
-            <th>delivery</th>
+            <th>Bid(yen)</th>
+            <th>tranfer fee(bath)</th>
+            <th>delivery(yen)</th>
             <th>Status</th>
             <th>Payment Status</th>
           </tr>

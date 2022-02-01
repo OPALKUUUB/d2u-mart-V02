@@ -255,7 +255,7 @@ function MydModalWithGrid(props) {
                   className="mb-3"
                   controlId="exampleForm.ControlInput1"
                 >
-                  <Form.Label>Bid</Form.Label>
+                  <Form.Label>Bid(yen)</Form.Label>
                   <Form.Control
                     type="number"
                     placeholder="Enter bid"
@@ -270,7 +270,7 @@ function MydModalWithGrid(props) {
                   className="mb-3"
                   controlId="exampleForm.ControlInput1"
                 >
-                  <Form.Label>tranfer fee in japan</Form.Label>
+                  <Form.Label>tranfer fee(bath.)</Form.Label>
                   <Form.Control
                     type="number"
                     placeholder="tranfer fee in japan"
@@ -287,10 +287,10 @@ function MydModalWithGrid(props) {
                   className="mb-3"
                   controlId="exampleForm.ControlInput1"
                 >
-                  <Form.Label>delivery in thai</Form.Label>
+                  <Form.Label>delivery in japan(yen)</Form.Label>
                   <Form.Control
                     type="number"
-                    placeholder="delivery in thai"
+                    placeholder="delivery in japan"
                     onChange={(e) => setDeliveryFee(e.target.value)}
                   />
                 </Form.Group>

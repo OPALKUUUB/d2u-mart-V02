@@ -48,9 +48,9 @@ export default function PaymentTable() {
             <th>Order</th>
             <th>Username</th>
             <th>Link</th>
-            <th>Bid</th>
-            <th>tranfer fee</th>
-            <th>delivery</th>
+            <th>Bid(yen)</th>
+            <th>tranfer fee(bath)</th>
+            <th>delivery(yen)</th>
             <th>Payment Status</th>
             <th>Config</th>
           </tr>
@@ -171,7 +171,7 @@ function MydModalWithGrid(props) {
                   className="mb-3"
                   controlId="exampleForm.ControlInput1"
                 >
-                  <Form.Label>Bid</Form.Label>
+                  <Form.Label>Bid(yen)</Form.Label>
                   <Form.Control
                     type="number"
                     placeholder="Enter bid"
@@ -188,7 +188,7 @@ function MydModalWithGrid(props) {
                   className="mb-3"
                   controlId="exampleForm.ControlInput1"
                 >
-                  <Form.Label>tranfer fee in japan</Form.Label>
+                  <Form.Label>tranfer fee(bath)</Form.Label>
                   <Form.Control
                     type="number"
                     placeholder="tranfer fee in japan"
@@ -207,10 +207,10 @@ function MydModalWithGrid(props) {
                   className="mb-3"
                   controlId="exampleForm.ControlInput1"
                 >
-                  <Form.Label>delivery in thai</Form.Label>
+                  <Form.Label>delivery(yen)</Form.Label>
                   <Form.Control
                     type="number"
-                    placeholder="delivery in thai"
+                    placeholder="delivery"
                     name="delivery_in_thai"
                     onChange={handleChangeItem}
                     value={item.delivery_in_thai}
