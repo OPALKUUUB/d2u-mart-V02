@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import "./Tracking.css";
+import { Button, Form, Modal, Row, Table, Col } from "react-bootstrap";
 
-function Tracking() {
+export default function Tracking() {
   const [trackings, setTrackings] = useState([]);
-
   useEffect(() => {
     fetch("/api/tracking", {
       method: "GET",
@@ -18,55 +17,56 @@ function Tracking() {
           setTrackings(json.data);
         } else {
           alert(json.message);
+          localStorage.removeItem("token");
+          window.location.reload(false);
         }
       });
   }, []);
-
   return (
-    <div className="Tracking">
-      <h1 style={{ textAlign: "left" }}>Tracking</h1>
-      <table>
+    <>
+      <h3 className="">Tracking</h3>
+      <Table responsive striped bordered hover>
         <thead>
           <tr>
             <th>#</th>
-            <th width="200px">Date</th>
-            <th width="200px">หมายเลขกล่อง</th>
-            <th>weight(kg.)</th>
-            <th width="200px">รอบเรือ</th>
-            <th width="200px">Noted</th>
-            <th>PIC1</th>
-            <th>PIC2</th>
+            <th>Date(y/m/d)</th>
+            <th>Channel</th>
+            <th>Track Id</th>
+            <th>weight</th>
+            <th>Round Boat</th>
+            <th>Pic1</th>
+            <th>Pic2</th>
+            <th>Remark</th>
           </tr>
         </thead>
-        <tbody style={{ height: "70vh", overflowY: "scroll" }}>
-          {trackings.map((item, i) => (
-            <tr key={item.id}>
-              <th>{i + 1}</th>
-              <td>{item.date}</td>
-              <td>{item.track_id}</td>
-              <td>{item.weight}</td>
-              <td>{item.round_boat}</td>
-              <td>{item.remark}</td>
-              <td>
+        <tbody>
+          {trackings.map((item, index) => (
+            <tr key={index}>
+              <td className="align-middle">{index + 1}</td>
+              <td className="align-middle">{item.date}</td>
+              <td className="align-middle">{item.channel}</td>
+              <td className="align-middle">{item.track_id}</td>
+              <td className="align-middle">{item.weight}</td>
+              <td className="align-middle">{item.round_boat}</td>
+              <td className="align-middle">
                 <img
-                  src={`/image/${item.pic1_filename}`}
-                  alt={item.pic1_filename}
-                  width={"100px"}
+                  src={"/image/" + item.pic1_filename}
+                  alt="image for pic1"
+                  width={100}
                 />
               </td>
-              <td>
+              <td className="align-middle">
                 <img
-                  src={`/image/${item.pic2_filename}`}
-                  alt={item.pic2_filename}
-                  width={"100px"}
+                  src={"/image/" + item.pic2_filename}
+                  alt="image for pic2"
+                  width={100}
                 />
               </td>
+              <td className="align-middle">{item.remark}</td>
             </tr>
           ))}
         </tbody>
-      </table>
-    </div>
+      </Table>
+    </>
   );
 }
-
-export default Tracking;

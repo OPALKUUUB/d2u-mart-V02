@@ -307,11 +307,11 @@ function MydModalWithGrid(props) {
                     aria-label="Default select example"
                     onChange={(e) => setStatus(e.target.value)}
                   >
-                    <option value={null}>select option</option>
-                    <option value="pending1">pending1</option>
-                    <option value="pending2">pending2</option>
-                    <option value="pending3">pending3</option>
-                    <option value="paid">paid</option>
+                    <option value="pending1">select option</option>
+                    <option value="pending1">รอค่าส่ง</option>
+                    <option value="pending2">รอการชำระ</option>
+                    <option value="pending3">รอการตรวจสอบ</option>
+                    <option value="paid">ชำระเงินเรียบร้อยแล้ว</option>
                   </Form.Select>
                 </Form.Group>
               </Form>

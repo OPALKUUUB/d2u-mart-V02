@@ -13,7 +13,9 @@ import { useHistory } from "react-router-dom";
 export default function YahooPayment() {
   const [orders, setOrders] = useState([]);
   const [modalShow, setModalShow] = useState(false);
+  const [modalShowSlip, setModalShowSlip] = useState(false);
   const [payment, setPayment] = useState([]);
+  const [slip, setSlip] = useState("");
   useEffect(() => {
     fetch("/api/yahoo/payment", {
       method: "GET",
@@ -50,6 +52,23 @@ export default function YahooPayment() {
   const handlePayment = () => {
     setModalShow(true);
   };
+  const handleShowSlip = (payment_id) => {
+    fetch("/api/payment/slip/" + payment_id, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.status) {
+          setSlip(json.data);
+        } else {
+          alert(json.message);
+        }
+      });
+    setModalShowSlip(true);
+  };
   return (
     <>
       <h2 className="mb-3">Yahoo Payment</h2>
@@ -77,7 +96,11 @@ export default function YahooPayment() {
                     onChange={(e) => handleCheckBox(e, item)}
                   />
                 )}
-                {item.payment_status === "pending3" && <Button>Slip</Button>}
+                {item.payment_status === "pending3" && (
+                  <Button onClick={() => handleShowSlip(item.payment_id)}>
+                    Slip
+                  </Button>
+                )}
               </td>
               <td className="align-middle">{item.created_at}</td>
 
@@ -90,7 +113,11 @@ export default function YahooPayment() {
                 </a>
               </td>
               <td className="align-middle">{item.bid} (¥)</td>
-              <td className="align-middle">{item.status}</td>
+              <td className="align-middle">
+                {item.payment_status === "pending1" && "รอค่าส่ง"}
+                {item.payment_status === "pending2" && "รอการชำระ"}
+                {item.payment_status === "pending3" && "รอการตรวจสอบ"}
+              </td>
             </tr>
           ))}
         </tbody>
@@ -100,6 +127,11 @@ export default function YahooPayment() {
         show={modalShow}
         onHide={() => setModalShow(false)}
         arrItem={payment}
+      />
+      <ModalSlip
+        show={modalShowSlip}
+        onHide={() => setModalShowSlip(false)}
+        src={slip}
       />
     </>
   );
@@ -162,6 +194,20 @@ function MyVerticallyCenteredModal(props) {
           Close
         </Button>
       </Modal.Footer>
+    </Modal>
+  );
+}
+
+function ModalSlip(props) {
+  return (
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+      onClick={props.onHide}
+    >
+      <img src={"/slip/" + props.src} />
     </Modal>
   );
 }

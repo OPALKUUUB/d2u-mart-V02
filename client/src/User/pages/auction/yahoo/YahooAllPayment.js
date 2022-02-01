@@ -44,8 +44,8 @@ export default function YahooAllPayment(props) {
     let temp = 0;
     for (let i = 0; i < payment.length; i++) {
       temp += Math.round(
-        (payment[i].bid + payment[i].tranfer_fee_injapan) * yen +
-          payment[i].delivery_in_thai
+        (payment[i].bid + payment[i].delivery_in_thai) * yen +
+          payment[i].tranfer_fee_injapan
       );
     }
     return temp;
@@ -198,7 +198,7 @@ function MyVerticallyCenteredModal(props) {
       .then((data) => {
         if (data.status) {
           alert("Your payment is already submit");
-          history.push("/auction/yahoo/history");
+          history.push("/auction/yahoo/payment");
         }
       });
   };

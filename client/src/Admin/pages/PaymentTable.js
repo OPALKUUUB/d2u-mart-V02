@@ -39,7 +39,7 @@ export default function PaymentTable() {
 
   return (
     <>
-      <h3 className="mb-3">Yahoo Auction Table</h3>
+      <h3 className="mb-3">Yahoo Payment Table</h3>
       <Table responsive="md" striped bordered hover size="sm">
         <thead style={{ textAlign: "center" }}>
           <tr>
@@ -97,6 +97,8 @@ export default function PaymentTable() {
 
 function MydModalWithGrid(props) {
   const [item, setItem] = useState(props.item);
+  const [slip, setSlip] = useState("");
+  const [modalShowSlip, setModalShowSlip] = useState(false);
   useEffect(() => {
     setItem(props.item);
   }, [props.item]);
@@ -130,6 +132,23 @@ function MydModalWithGrid(props) {
         }
         window.location.reload(false);
       });
+  };
+  const handleShowSlip = (payment_id) => {
+    fetch("/api/payment/slip/" + payment_id, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.status) {
+          setSlip(json.data);
+        } else {
+          alert(json.message);
+        }
+      });
+    setModalShowSlip(true);
   };
   return (
     <Modal
@@ -212,15 +231,18 @@ function MydModalWithGrid(props) {
                     onChange={handleChangeItem}
                     value={item.payment_status}
                   >
-                    <option value={null}>select option</option>
-                    <option value="pending1">pending1</option>
-                    <option value="pending2">pending2</option>
-                    <option value="pending3">pending3</option>
-                    <option value="paid">paid</option>
+                    <option value="pending1">รอค่าส่ง</option>
+                    <option value="pending2">รอการชำระ</option>
+                    <option value="pending3">รอการตรวจสอบ</option>
+                    <option value="paid">ชำระเงินเรียบร้อยแล้ว</option>
                   </Form.Select>
                 </Form.Group>
               </Form>
-              {item.payment_id !== null && <Button>Slip</Button>}
+              {item.payment_id !== null && (
+                <Button onClick={() => handleShowSlip(item.payment_id)}>
+                  Slip
+                </Button>
+              )}
             </Col>
           </Row>
         </Container>
@@ -233,6 +255,25 @@ function MydModalWithGrid(props) {
           Close
         </Button>
       </Modal.Footer>
+      <ModalSlip
+        show={modalShowSlip}
+        onHide={() => setModalShowSlip(false)}
+        src={slip}
+      />
+    </Modal>
+  );
+}
+
+function ModalSlip(props) {
+  return (
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+      onClick={props.onHide}
+    >
+      <img src={"/slip/" + props.src} />
     </Modal>
   );
 }

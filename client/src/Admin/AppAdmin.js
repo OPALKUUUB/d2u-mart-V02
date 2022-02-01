@@ -6,7 +6,9 @@ import AuctionTable from "./pages/AuctionTable";
 import HistoryTable from "./pages/HistoryTable";
 import LoginAdmin from "./pages/login/LoginAdmin";
 import PaymentTable from "./pages/PaymentTable";
-import TrackingTable from "./pages/TrackingTable";
+import MercariTracking from "./pages/tracking/MercariTracking";
+import OtherTracking from "./pages/tracking/OtherTracking";
+import YahooTracking from "./pages/tracking/YahooTracking";
 export default function AppAdmin() {
   const [loginStatus, setLoginStatus] = useState(
     localStorage.getItem("AdminToken") !== null
@@ -37,8 +39,18 @@ export default function AppAdmin() {
             />
             <Route
               exact
-              path="/admin/table/tracking"
-              component={TrackingTable}
+              path="/admin/table/tracking/yahoo"
+              component={YahooTracking}
+            />
+            <Route
+              exact
+              path="/admin/table/tracking/mercari"
+              component={MercariTracking}
+            />
+            <Route
+              exact
+              path="/admin/table/tracking/123"
+              component={OtherTracking}
             />
           </Switch>
         </Container>

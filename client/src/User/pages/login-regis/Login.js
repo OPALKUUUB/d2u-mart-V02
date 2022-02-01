@@ -1,8 +1,17 @@
 import React, { useState } from "react";
-import { Form, Button, Container } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  Container,
+  Modal,
+  Row,
+  Col,
+  FloatingLabel,
+} from "react-bootstrap";
 import "./Login.css";
 
 export default function Login() {
+  const [modalShow, setModalShow] = React.useState(false);
   const [account, setAccount] = useState({
     username: "",
     password: "",
@@ -58,10 +67,11 @@ export default function Login() {
         <Button variant="primary" type="submit" style={{ width: "100%" }}>
           Submit
         </Button>
-        <span className="Login-register-btn">register</span>
+        <span className="Login-register-btn" onClick={() => setModalShow(true)}>
+          register
+        </span>
       </Form>
-      {/* <p>username: {account.username}</p>
-      <p>password: {account.password}</p> */}
+      <ModalRegister show={modalShow} onHide={() => setModalShow(false)} />
     </Container>
   );
 }
@@ -84,3 +94,241 @@ const style = {
     marginBottom: "20px",
   },
 };
+
+function ModalRegister(props) {
+  const [register, setRegister] = useState({
+    name: "",
+    username: "",
+    phone: "",
+    password: "",
+    confirm_password: "",
+    case: "มารับเอง",
+    address: "",
+  });
+  const handleChange = (e) => {
+    setRegister({ ...register, [e.target.name]: e.target.value });
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(register);
+    if (IsNotEmpty(register)) {
+      if (ConfirmPassword(register)) {
+        fetch("/api/regist", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(register),
+        })
+          .then((res) => res.json())
+          .then((result) => {
+            if (result.status) {
+              alert("Register is successfully");
+              setRegister({
+                name: "",
+                username: "",
+                phone: "",
+                password: "",
+                confirm_password: "",
+                case: "มารับเอง",
+                address: "",
+              });
+              props.onHide();
+            } else {
+              alert("Register is fail with Error: " + result.message);
+            }
+          })
+          .catch((err) => console.log(err));
+      } else {
+        alert("In field confirm password is not match with password field!!!");
+      }
+    } else {
+      alert("please fill every input");
+    }
+  };
+  return (
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">Register</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form>
+          <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
+            <Form.Label column sm={2}>
+              ชี่อ-นามสกุล
+            </Form.Label>
+            <Col sm={10}>
+              <Form.Control
+                type="text"
+                placeholder="Enter Name"
+                name="name"
+                onChange={handleChange}
+              />
+            </Col>
+          </Form.Group>
+          <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
+            <Form.Label column sm={2}>
+              ตั้งชี่อผู้ใช้งาน
+            </Form.Label>
+            <Col sm={10}>
+              <Form.Control
+                type="text"
+                placeholder="Enter Username"
+                name="username"
+                onChange={handleChange}
+              />
+            </Col>
+          </Form.Group>
+          <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
+            <Form.Label column sm={2}>
+              เบอร์โทร
+            </Form.Label>
+            <Col sm={10}>
+              <Form.Control
+                type="tel"
+                placeholder="Enter Phone"
+                name="phone"
+                onChange={handleChange}
+              />
+            </Col>
+          </Form.Group>
+          <Form.Group
+            as={Row}
+            className="mb-3"
+            controlId="formHorizontalPassword"
+          >
+            <Form.Label column sm={2}>
+              Password
+            </Form.Label>
+            <Col sm={10}>
+              <Form.Control
+                type="password"
+                placeholder="Enter Password"
+                name="password"
+                onChange={handleChange}
+              />
+            </Col>
+          </Form.Group>
+          <Form.Group
+            as={Row}
+            className="mb-3"
+            controlId="formHorizontalPassword"
+          >
+            <Form.Label column sm={2}>
+              Confirm Password
+            </Form.Label>
+            <Col sm={10}>
+              <Form.Control
+                type="password"
+                placeholder="Enter Confirm Password"
+                name="confirm_password"
+                onChange={handleChange}
+              />
+            </Col>
+          </Form.Group>
+          <Row className="justify-content-md-center">
+            <Col sm>
+              <fieldset>
+                <Form.Group className="mb-3">
+                  <Form.Label>วิธีที่ใช้ในการส่ง</Form.Label>
+                  <Col>
+                    <Form.Check
+                      type="radio"
+                      label="มารับเอง"
+                      name="case"
+                      id="formHorizontalRadios1"
+                      value="มารับเอง"
+                      checked={register.case === "มารับเอง"}
+                      onChange={handleChange}
+                    />
+                    <Form.Check
+                      type="radio"
+                      label="ขนส่งในประเทศ"
+                      name="case"
+                      id="formHorizontalRadios2"
+                      value="ขนส่งในประเทศ"
+                      checked={register.case === "ขนส่งในประเทศ"}
+                      onChange={handleChange}
+                    />
+                  </Col>
+                </Form.Group>
+              </fieldset>
+            </Col>
+            <Col lg="9">
+              {register.case === "มารับเอง" && (
+                <>
+                  <fieldset>
+                    <Form.Group className="mb-3">
+                      <Form.Label>
+                        กรณีที่มารับเอง สามารถเลือกสถานที่ได้ดังนี้
+                      </Form.Label>
+                      <Col>
+                        <Form.Check
+                          type="radio"
+                          label="พระราม3 ซอย35 (พระราม3 แมนชั่น)"
+                          value="พระราม3 ซอย35 (พระราม3 แมนชั่น)"
+                          name="address"
+                          onChange={handleChange}
+                        />
+                        <Form.Check
+                          type="radio"
+                          label="ถนนร่มเกล้า 19/1"
+                          value="ถนนร่มเกล้า 19/1"
+                          name="address"
+                          onChange={handleChange}
+                        />
+                      </Col>
+                    </Form.Group>
+                  </fieldset>
+                </>
+              )}
+              {register.case === "ขนส่งในประเทศ" && (
+                <>
+                  <Form.Group className="mb-3" controlId="formGroupPassword">
+                    <Form.Label>
+                      กรณีขนส่งในประเทศ โปรดใส่ข้อมูลการจัดส่ง
+                    </Form.Label>
+                    <FloatingLabel
+                      controlId="floatingTextarea2"
+                      label="Address"
+                    >
+                      <Form.Control
+                        as="textarea"
+                        placeholder="Leave a comment here"
+                        style={{ height: "70px" }}
+                        onChange={handleChange}
+                        name="address"
+                      />
+                    </FloatingLabel>
+                  </Form.Group>
+                </>
+              )}
+            </Col>
+          </Row>
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={handleSubmit}>Register</Button>
+        <Button onClick={props.onHide} variant="secondary">
+          Close
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+}
+
+function IsNotEmpty(obj) {
+  for (var key in obj) {
+    if (obj[key] === "") return false;
+  }
+  return true;
+}
+
+function ConfirmPassword(item) {
+  return item.password === item.confirm_password;
+}

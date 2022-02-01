@@ -11,7 +11,7 @@ var request = require("request");
 dotenv.config();
 // const PD_SRC_IMAGE = "./client/public/slip/";
 // const PD_SRC_IMAGE_TRACKING = "./client/public/image/";
-let PD_SRC_IMAGE = "./client/build/image/";
+let PD_SRC_IMAGE = "./client/build/slip/";
 let PD_SRC_IMAGE_TRACKING = "./client/build/image/";
 
 const conn = mysql.createConnection({
@@ -51,6 +51,39 @@ function genDate() {
     today.getMinutes() >= 10 ? today.getMinutes() : `0${today.getMinutes()}`;
   return `${today.getFullYear()}-${month}-${date}T${hour}:${minute}`;
 }
+app.post("/api/regist", (req, res) => {
+  var date = genDate();
+  var regist = [
+    req.body.username,
+    req.body.name,
+    req.body.phone,
+    req.body.address_case,
+    req.body.address,
+    req.body.password,
+    date,
+    date,
+  ];
+  const sql = `INSERT INTO user_customers (
+      username,name,phone,address_case,address,password,created_at,updated_at
+      ) VALUES(?,?,?,?,?,?,?,?);`;
+  conn.query(sql, regist, (err, result) => {
+    if (err) {
+      console.log(err.sqlMessage);
+      res.status(400).json({
+        status: false,
+        message: "Error: " + err.sqlMessage,
+      });
+    } else {
+      console.log(result);
+      res.status(200).json({
+        status: true,
+        message:
+          "insert into user_customers is successfully at row " +
+          result.insertId,
+      });
+    }
+  });
+});
 
 app.get("/api/yen", (req, res) => {
   const sql = "SELECT * FROM config WHERE id = 1;";
@@ -425,7 +458,7 @@ app.patch("/api/payment/confirm", (req, res) => {
           sql += ";";
           conn.query(
             sql,
-            [result.insertId, "paid", ...paymentId],
+            [result.insertId, "pending3", ...paymentId],
             (err1, result1) => {
               if (err1) {
                 console.log(err1.sqlMessage);
@@ -446,6 +479,25 @@ app.patch("/api/payment/confirm", (req, res) => {
       }
     );
   }
+});
+
+app.get("/api/payment/slip/:id", (req, res) => {
+  const sql = "SELECT slip_image_filename FROM payments WHERE id = ?;";
+  conn.query(sql, [req.params.id], (err, row) => {
+    if (err) {
+      console.log(err.sqlMessage);
+      res.status(400).json({
+        status: false,
+        message: "Error: " + err.sqlMessage,
+      });
+    } else {
+      res.status(200).json({
+        status: true,
+        message: "select slip filename where payment_id = " + req.params.id,
+        data: row[0].slip_image_filename,
+      });
+    }
+  });
 });
 
 app.get("/api/yahoo/history", (req, res) => {
@@ -490,6 +542,24 @@ app.get("/api/yahoo/history", (req, res) => {
 });
 
 // Admin
+app.get("/api/admin/users", (req, res) => {
+  const sql = "SELECT * FROM user_customers;";
+  conn.query(sql, (err, row) => {
+    if (err) {
+      console.log(err.sqlMessage);
+      res.status(400).json({
+        status: false,
+        message: "Error: " + err.sqlMessage,
+      });
+    } else {
+      res.status(200).json({
+        status: true,
+        message: "select * from user_customers",
+        data: row,
+      });
+    }
+  });
+});
 app.get("/api/admin/yahoo/auction", (req, res) => {
   const sql = "SELECT * FROM orders WHERE status = ?";
   conn.query(sql, ["Auction"], (err, result) => {
@@ -715,8 +785,9 @@ app.post("/api/upload", trackingUpload.single("image"), (req, res) => {
     filename: req.file.filename,
   });
 });
+
 app.get("/api/tracking", (req, res) => {
-  var decoded = jwt.verify(
+  let decoded = jwt.verify(
     req.headers.token,
     process.env.SECRET_KEY,
     (err, decoded) => {
@@ -725,7 +796,7 @@ app.get("/api/tracking", (req, res) => {
           status: false,
           message: err,
         });
-        console.log("Error: " + err);
+        console.log("Error: Your login session is expired!");
       } else {
         console.log(decoded);
         return decoded;
@@ -733,30 +804,29 @@ app.get("/api/tracking", (req, res) => {
     }
   );
   if (decoded !== undefined) {
-    const sql = `SELECT * FROM trackings WHERE username = ?;`;
-    conn.query(sql, [decoded.username], (err, result) => {
+    const sql = "SELECT * FROM trackings WHERE username = ?;";
+    conn.query(sql, [decoded.username], (err, row) => {
       if (err) {
-        console.log(err.sqlMessage);
+        console.log(err);
         res.status(400).json({
           status: false,
           message: "Error: " + err.sqlMessage,
         });
       } else {
-        console.log(result);
         res.status(200).json({
           status: true,
-          message: "select trackings successfully",
-          data: result,
+          message:
+            "Select * from tracking where username = " + decoded.username,
+          data: row,
         });
       }
     });
   }
 });
 
-app.get("/api/admin/tracking", (req, res) => {
-  console.log("/api/admin/tracking method get");
-  const sql = `SELECT * FROM trackings;`;
-  conn.query(sql, (err, result) => {
+app.get("/api/admin/tracking/:mode", (req, res) => {
+  const sql = "SELECT * FROM trackings WHERE channel = ?;";
+  conn.query(sql, [req.params.mode], (err, row) => {
     if (err) {
       console.log(err.sqlMessage);
       res.status(400).json({
@@ -764,108 +834,77 @@ app.get("/api/admin/tracking", (req, res) => {
         message: "Error: " + err.sqlMessage,
       });
     } else {
-      console.log(result);
       res.status(200).json({
         status: true,
-        message: "select trackings successfully",
-        data: result,
+        data: row,
       });
     }
   });
 });
 
-app.post("/api/admin/tracking", (req, res) => {
-  console.log("/api/admin/tracking method: POST!!!");
-  var date = genDate();
+app.post("/api/admin/tracking/:mode", (req, res) => {
+  let date = genDate();
   let tracking = [
+    req.params.mode,
     req.body.date,
     req.body.username,
     req.body.track_id,
     req.body.weight,
-    req.body.noted,
     req.body.round_boat,
-    req.body.pic1_filename,
-    req.body.pic2_filename,
-    date,
-    date,
-  ];
-  // console.log(tracking);
-  // res.json({
-  //   status: false,
-  //   message: "test api",
-  // });
-  const sql =
-    "INSERT INTO trackings (date, username, track_id, weight,remark, round_boat, pic1_filename, pic2_filename, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?);";
-  conn.query(sql, tracking, (err, result) => {
-    if (err) {
-      console.log(err.sqlMessage);
-      res.status(400).json({
-        status: false,
-        message: "Error: " + err.sqlMessage,
-      });
-    } else {
-      res.status(200).json({
-        status: true,
-        message: "insert into trackings at row " + result.insertId,
-      });
-    }
-  });
-});
-
-app.get("/api/admin/tracking/:id", (req, res) => {
-  // res.json({
-  //   status: false,
-  //   message: "test /api/admin/tracking/" + req.params.id,
-  // });
-  const sql = "SELECT * FROM trackings WHERE id = ?;";
-  conn.query(sql, [req.params.id], (err, result) => {
-    if (err) {
-      console.log(err.sqlMessage);
-      res.status(400).json({
-        status: false,
-        message: "Error: " + err.sqlMessage,
-      });
-    } else {
-      console.log(result);
-      res.status(200).json({
-        status: true,
-        message:
-          "select data from tracking where id " +
-          req.params.id +
-          " successfully!!!",
-        tracking: result[0],
-      });
-    }
-  });
-});
-
-app.patch("/api/admin/tracking/:id", (req, res) => {
-  var date = genDate();
-  let tracking = [
-    req.body.date,
-    req.body.username,
-    req.body.track_id,
-    req.body.weight,
     req.body.remark,
-    req.body.round_boat,
     req.body.pic1_filename,
     req.body.pic2_filename,
     date,
-    req.params.id,
+    date,
   ];
-  const sql =
-    "UPDATE trackings SET date = ?, username=?, track_id=?, weight=?,remark=?, round_boat=?, pic1_filename=?, pic2_filename=?, updated_at=? WHERE id = ?;";
+  let sql =
+    "INSERT INTO trackings (channel,date,username,track_id,weight,round_boat,remark,pic1_filename,pic2_filename, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?);";
   conn.query(sql, tracking, (err, result) => {
     if (err) {
-      console.log(err.sqlMessage);
+      console.log(err);
       res.status(400).json({
         status: false,
         message: "Error: " + err.sqlMessage,
       });
     } else {
+      console.log(result);
       res.status(200).json({
         status: true,
-        message: "update trackings at row " + result.changedRows,
+        message: "add data in trackings success!",
+      });
+    }
+  });
+});
+
+app.patch("/api/admin/tracking", (req, res) => {
+  let date = genDate();
+  let tracking = [
+    req.body.channel,
+    req.body.date,
+    req.body.username,
+    req.body.track_id,
+    req.body.weight,
+    req.body.round_boat,
+    req.body.pic1_filename,
+    req.body.pic2_filename,
+    req.body.remark,
+    date,
+    req.body.id,
+  ];
+  const sql =
+    "UPDATE trackings SET channel =?,date = ?, username = ?, track_id = ?, weight = ?, round_boat = ?, pic1_filename = ?, pic2_filename = ?, remark = ?, updated_at = ? WHERE id = ?;";
+  conn.query(sql, tracking, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({
+        status: false,
+        message: "Error: " + err.sqlMessage,
+      });
+    } else {
+      console.log(result);
+      res.status(200).json({
+        status: true,
+        message: "Update trackings * where id = " + req.body.id,
       });
     }
   });
@@ -881,9 +920,9 @@ app.get("*", (req, res) => {
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
   if (port === 5000) {
-    PD_SRC_IMAGE = "./client/public/image/";
+    PD_SRC_IMAGE = "./client/public/slip/";
     PD_SRC_IMAGE_TRACKING = "./client/public/image/";
   }
 });
 
-console.log(`Password generator listening on ${port}`);
+console.log(`Server listening on ${port}`);
