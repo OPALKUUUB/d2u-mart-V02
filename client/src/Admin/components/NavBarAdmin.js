@@ -1,13 +1,38 @@
-import React from "react";
-import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import {
+  Button,
+  Container,
+  Modal,
+  Nav,
+  Navbar,
+  NavDropdown,
+} from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 
 export default function NavBarAdmin() {
+  const [modalShow, setModalShow] = useState(false);
+  const [yen, setYen] = useState("");
   const history = useHistory();
   const handleLogout = () => {
     localStorage.removeItem("AdminToken");
     window.location.reload(false);
   };
+  useEffect(() => {
+    fetch("/api/yen", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.status) {
+          setYen(json.yen);
+        } else {
+          alert(json.message);
+        }
+      });
+  }, [yen]);
   return (
     <Navbar
       bg="dark"
@@ -16,7 +41,12 @@ export default function NavBarAdmin() {
       style={{ marginBottom: "30px" }}
     >
       <Container fluid>
-        <Navbar.Brand href="#">D2U SERVICES(admin)</Navbar.Brand>
+        <Navbar.Brand href="#">
+          D2U SERVICES(admin)
+          <Button size="sm" className="ms-3" onClick={() => setModalShow(true)}>
+            1 yen: {yen} bath
+          </Button>
+        </Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse id="navbarScroll">
           <Nav className="ms-auto my-2 my-lg-0">
@@ -40,6 +70,11 @@ export default function NavBarAdmin() {
           </Nav>
         </Navbar.Collapse>
       </Container>
+      <ChangeYen
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+        yen={yen}
+      />
     </Navbar>
   );
 }
@@ -49,3 +84,44 @@ const navLink = [
   { name: "Payment", path: "/admin/table/yahoo/payment" },
   { name: "History", path: "/admin/table/yahoo/history" },
 ];
+
+function ChangeYen(props) {
+  const [yen, setYen] = useState(props.yen);
+  useEffect(() => {
+    setYen(props.yen);
+  }, [props]);
+  const handleSubmit = () => {
+    fetch("/api/yen", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ yen: yen }),
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.status) {
+          alert(json.message);
+          props.onHide();
+          window.location.reload(false);
+        } else {
+          alert(json.message);
+        }
+      });
+  };
+  return (
+    <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">Change Yen</Modal.Title>
+      </Modal.Header>
+      <Modal.Body className="show-grid">
+        1 yen : <input value={yen} onChange={(e) => setYen(e.target.value)} />{" "}
+        bath
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={handleSubmit}>Set</Button>
+        <Button onClick={props.onHide} variant="secondary">
+          Close
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+}
