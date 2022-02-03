@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form, Modal, Row, Table, Col } from "react-bootstrap";
+import AutoComplete from "../../components/AutoComplete";
 
 export default function OtherTracking() {
   const [trackings, setTrackings] = useState([]);
   const [modalShowAdd, setModalShowAdd] = React.useState(false);
   const [modalShowUpdate, setModalShowUpdate] = React.useState(false);
   const [item, setItem] = useState({});
+  const [date, setDate] = useState("");
+  const [username, setUsername] = useState("");
   useEffect(() => {
     fetch("/api/admin/tracking/123", {
       method: "GET",
@@ -22,14 +25,118 @@ export default function OtherTracking() {
     setItem(item);
     setModalShowUpdate(true);
   };
+  const trackingFilter = (c) => {
+    let temp = trackings;
+    if (c === 1 || c === 3) {
+      temp = temp.filter((u) => {
+        let regex = new RegExp("(" + username + ")", "gi");
+        let match = u.username.match(regex);
+        if (match != null) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+    }
+    if (c === 2 || c === 3) {
+      temp = temp.filter((u) => {
+        let regex = new RegExp("(" + date + ")", "gi");
+        let fdate = formatDate(u.date);
+        let match = fdate.match(regex);
+        if (match != null) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+    }
+
+    return (
+      <>
+        {temp.map((item, index) => (
+          <tr key={index}>
+            <td className="align-middle">{index + 1}</td>
+            <td className="align-middle">
+              {parseInt(item.date.split("-")[2])}{" "}
+              {month[parseInt(item.date.split("-")[1])]}{" "}
+              {parseInt(item.date.split("-")[0])}
+            </td>
+            <td className="align-middle">{item.channel}</td>
+            <td className="align-middle">{item.username}</td>
+            <td className="align-middle">{item.track_id}</td>
+            <td className="align-middle">{item.box_id}</td>
+            <td className="align-middle">{item.weight}</td>
+            <td className="align-middle">
+              {parseInt(item.round_boat.split("-")[2])}{" "}
+              {month[parseInt(item.round_boat.split("-")[1])]}
+            </td>
+            <td className="align-middle">
+              <img
+                src={"/image/" + item.pic1_filename}
+                alt="image for pic1"
+                width={100}
+              />
+            </td>
+            <td className="align-middle">
+              <img
+                src={"/image/" + item.pic2_filename}
+                alt="image for pic2"
+                width={100}
+              />
+            </td>
+            <td className="align-middle">{item.remark}</td>
+            <td className="align-middle">
+              <Button size="sm" onClick={() => handleConfigs(item)}>
+                Edit
+              </Button>
+            </td>
+          </tr>
+        ))}
+      </>
+    );
+  };
+  function formatDate(date) {
+    let temp = date.split("-");
+    let y = parseInt(temp[0]);
+    let m = parseInt(temp[1]);
+    let d = parseInt(temp[2]);
+    return `${d}/${m}/${y}`;
+  }
   return (
     <>
       <div className="mb-3 d-flex justify-content-between align-items-center">
-        <h3 className="bg-secondary p-2">123 Tracking</h3>
+        <h3 className="bg-secondary p-2">Web 123 Tracking</h3>
         <Button variant="primary" onClick={() => setModalShowAdd(true)}>
           Add Tracking
         </Button>
       </div>
+      <Row>
+        <Col>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label>
+              Date&nbsp;
+              <Form.Text className="text-muted">Such as 1/1/2022</Form.Text>
+            </Form.Label>
+            <Form.Control
+              type="text"
+              name="date"
+              onChange={(e) => setDate(e.target.value)}
+              placeholder="D/M/Y"
+            />
+          </Form.Group>
+        </Col>
+        <Col>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label>Username</Form.Label>
+            <Form.Control
+              ttype="text"
+              name="username"
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Enter Username"
+            />
+          </Form.Group>
+        </Col>
+      </Row>
 
       <AddTrackModal
         show={modalShowAdd}
@@ -48,46 +155,20 @@ export default function OtherTracking() {
             <th>Channel</th>
             <th>Username</th>
             <th>Track Id</th>
+            <th>หมายเลขกล่อง</th>
             <th>weight</th>
-            <th>Round Boat</th>
+            <th>รอบเรือ</th>
             <th>Pic1</th>
             <th>Pic2</th>
             <th>Remark</th>
-            <th>config</th>
+            <th>Edit</th>
           </tr>
         </thead>
         <tbody>
-          {trackings.map((item, index) => (
-            <tr key={index}>
-              <td className="align-middle">{index + 1}</td>
-              <td className="align-middle">{item.date}</td>
-              <td className="align-middle">{item.channel}</td>
-              <td className="align-middle">{item.username}</td>
-              <td className="align-middle">{item.track_id}</td>
-              <td className="align-middle">{item.weight}</td>
-              <td className="align-middle">{item.round_boat}</td>
-              <td className="align-middle">
-                <img
-                  src={"/image/" + item.pic1_filename}
-                  alt="image for pic1"
-                  width={100}
-                />
-              </td>
-              <td className="align-middle">
-                <img
-                  src={"/image/" + item.pic2_filename}
-                  alt="image for pic2"
-                  width={100}
-                />
-              </td>
-              <td className="align-middle">{item.remark}</td>
-              <td className="align-middle">
-                <Button size="sm" onClick={() => handleConfigs(item)}>
-                  Configs
-                </Button>
-              </td>
-            </tr>
-          ))}
+          {date === "" && username !== "" && trackingFilter(1)}
+          {date !== "" && username === "" && trackingFilter(2)}
+          {date !== "" && username !== "" && trackingFilter(3)}
+          {date === "" && username === "" && trackingFilter(4)}
         </tbody>
       </Table>
     </>
@@ -183,6 +264,13 @@ function AddTrackModal(props) {
       });
   };
 
+  const handleChangeUsername = (data) => {
+    if (data.length !== 0) {
+      setTracking({ ...tracking, username: data[0].username });
+    } else {
+      setTracking({ ...tracking, username: "" });
+    }
+  };
   return (
     <Modal
       {...props}
@@ -194,13 +282,13 @@ function AddTrackModal(props) {
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          123 Add Tracking
+          Web 123 Add Tracking
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
           <Row className="mb-3">
-            <Col lg={6} sm={12} className="mb-3">
+            <Col lg={4} sm={12} className="mb-3">
               <Form.Group>
                 <Form.Label>Date</Form.Label>
                 <Form.Control
@@ -210,17 +298,25 @@ function AddTrackModal(props) {
                 />
               </Form.Group>
             </Col>
-            <Col lg={6} sm={12} className="mb-3">
+            <Col lg={4} sm={12} className="mb-3">
               <Form.Group>
-                <Form.Label>Username</Form.Label>
-                <Form.Select onChange={handleChangeTracking} name="username">
-                  <option selected>Select</option>
-                  {users.map((item, index) => (
-                    <option key={index} value={item.username}>
-                      {item.username}
-                    </option>
-                  ))}
-                </Form.Select>
+                <Form.Label>Username({tracking.username})</Form.Label>
+                <AutoComplete
+                  arr={users}
+                  handleChange={handleChangeUsername}
+                  label="username"
+                  placeholder={"Select username"}
+                />
+              </Form.Group>
+            </Col>
+            <Col lg={4} sm={12} className="mb-3">
+              <Form.Group>
+                <Form.Label>หมายเลขกล่อง</Form.Label>
+                <Form.Control
+                  type="text"
+                  onChange={handleChangeTracking}
+                  name="box_id"
+                />
               </Form.Group>
             </Col>
             <Col lg={4} sm={12} className="mb-3">
@@ -245,7 +341,7 @@ function AddTrackModal(props) {
             </Col>
             <Col lg={4} sm={12} className="mb-3">
               <Form.Group>
-                <Form.Label>Round Boat</Form.Label>
+                <Form.Label>รอบเรือ</Form.Label>
                 <Form.Control
                   type="date"
                   onChange={handleChangeTracking}
@@ -407,6 +503,14 @@ function UpdateTrackModal(props) {
       });
   };
 
+  const handleChangeUsername = (data) => {
+    if (data.length !== 0) {
+      setTracking({ ...tracking, username: data[0].username });
+    } else {
+      setTracking({ ...tracking, username: "" });
+    }
+  };
+
   return (
     <Modal
       {...props}
@@ -425,14 +529,14 @@ function UpdateTrackModal(props) {
             onChange={handleChangeTracking}
             name="channel"
           >
-            <option value={"yahoo"} selected={tracking.channel === "yahoo"}>
+            <option value={"shimizu"} selected={tracking.channel === "shimizu"}>
               Yahoo
             </option>
             <option value={"mercari"} selected={tracking.channel === "mercari"}>
               Mercari
             </option>
-            <option value={"123"} selected={tracking.channel === "123"}>
-              123
+            <option value={"123"} selected={tracking.channel === "web123"}>
+              Web 123
             </option>
           </Form.Select>
         </Modal.Title>
@@ -440,7 +544,7 @@ function UpdateTrackModal(props) {
       <Modal.Body>
         <Form>
           <Row className="mb-3">
-            <Col lg={6} sm={12} className="mb-3">
+            <Col lg={4} sm={12} className="mb-3">
               <Form.Group>
                 <Form.Label>Date</Form.Label>
                 <Form.Control
@@ -451,23 +555,27 @@ function UpdateTrackModal(props) {
                 />
               </Form.Group>
             </Col>
-            <Col lg={6} sm={12} className="mb-3">
+            <Col lg={4} sm={12} className="mb-3">
               <Form.Group>
-                <Form.Label>Username</Form.Label>
-                <Form.Select onChange={handleChangeTracking} name="username">
-                  {tracking.username === "" ? (
-                    <option selected>Select</option>
-                  ) : (
-                    <option value={tracking.username} selected>
-                      {tracking.username}
-                    </option>
-                  )}
-                  {users.map((item, index) => (
-                    <option key={index} value={item.username}>
-                      {item.username}
-                    </option>
-                  ))}
-                </Form.Select>
+                <Form.Label>Username({tracking.username})</Form.Label>
+                <AutoComplete
+                  arr={users}
+                  handleChange={handleChangeUsername}
+                  label="username"
+                  placeholder={"Select username"}
+                  preset={tracking.username}
+                />
+              </Form.Group>
+            </Col>
+            <Col lg={4} sm={12} className="mb-3">
+              <Form.Group>
+                <Form.Label>หมายเลขกล่อง</Form.Label>
+                <Form.Control
+                  type="text"
+                  onChange={handleChangeTracking}
+                  name="box_id"
+                  value={tracking.box_id}
+                />
               </Form.Group>
             </Col>
             <Col lg={4} sm={12} className="mb-3">
@@ -494,7 +602,7 @@ function UpdateTrackModal(props) {
             </Col>
             <Col lg={4} sm={12} className="mb-3">
               <Form.Group>
-                <Form.Label>Round Boat</Form.Label>
+                <Form.Label>รอบเรือ</Form.Label>
                 <Form.Control
                   type="date"
                   onChange={handleChangeTracking}
@@ -576,6 +684,21 @@ let trackingModel = {
   round_boat: "",
   pic1_filename: "",
   pic2_filename: "",
+  box_id: "",
+};
+const month = {
+  1: "JAN",
+  2: "FEB",
+  3: "MAR",
+  4: "APR",
+  5: "MAY",
+  6: "JUN",
+  7: "JUL",
+  8: "AUG",
+  9: "SEPT",
+  10: "OCT",
+  11: "NOV",
+  12: "DEC",
 };
 function packFile(file) {
   const fd = new FormData();

@@ -11,6 +11,7 @@ import YahooOrder from "./pages/auction/yahoo/YahooOrder";
 import YahooPayment from "./pages/auction/yahoo/YahooPayment";
 import YahooAllPayment from "./pages/auction/yahoo/YahooAllPayment";
 import YahooHistory from "./pages/auction/yahoo/YahooHistory";
+import Profile from "./pages/Profile";
 
 export default function AppUser() {
   const [loginStatus, setLoginStatus] = useState(
@@ -29,6 +30,7 @@ export default function AppUser() {
             <Route exact path="/auction" component={Auction} />
             <Route exact path="/auction/yahoo" component={YahooAuction} />
             <Route exact path="/auction/yahoo/order" component={YahooOrder} />
+            <Route exact path="/setting/profile" component={Profile} />
             <Route
               exact
               path="/auction/yahoo/payment"

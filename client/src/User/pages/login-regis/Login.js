@@ -106,11 +106,18 @@ function ModalRegister(props) {
     address: "",
   });
   const handleChange = (e) => {
-    setRegister({ ...register, [e.target.name]: e.target.value });
+    if (e.target.name === "case") {
+      setRegister({
+        ...register,
+        address: "",
+        [e.target.name]: e.target.value,
+      });
+    } else {
+      setRegister({ ...register, [e.target.name]: e.target.value });
+    }
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(register);
     if (IsNotEmpty(register)) {
       if (ConfirmPassword(register)) {
         fetch("/api/regist", {

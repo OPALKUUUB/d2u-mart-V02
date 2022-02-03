@@ -32,8 +32,9 @@ export default function Tracking() {
             <th>Date(y/m/d)</th>
             <th>Channel</th>
             <th>Track Id</th>
+            <th>หมายเลขกล่อง</th>
             <th>weight</th>
-            <th>Round Boat</th>
+            <th>รอบเรือ</th>
             <th>Pic1</th>
             <th>Pic2</th>
             <th>Remark</th>
@@ -46,6 +47,7 @@ export default function Tracking() {
               <td className="align-middle">{item.date}</td>
               <td className="align-middle">{item.channel}</td>
               <td className="align-middle">{item.track_id}</td>
+              <td className="align-middle">{item.box_id}</td>
               <td className="align-middle">{item.weight}</td>
               <td className="align-middle">{item.round_boat}</td>
               <td className="align-middle">

@@ -51,7 +51,79 @@ function genDate() {
     today.getMinutes() >= 10 ? today.getMinutes() : `0${today.getMinutes()}`;
   return `${today.getFullYear()}-${month}-${date}T${hour}:${minute}`;
 }
+app.get("/api/regist", (req, res) => {
+  let decoded = jwt.verify(
+    req.headers.token,
+    process.env.SECRET_KEY,
+    (err, decoded) => {
+      if (err) {
+        res.status(400).json({
+          status: false,
+          message: err,
+        });
+        console.log("Error: Your login session is expired!");
+      } else {
+        console.log(decoded);
+        return decoded;
+      }
+    }
+  );
+  if (decoded !== undefined) {
+    const sql = "SELECT * FROM user_customers WHERE username = ?;";
+    conn.query(sql, [decoded.username], (err, row) => {
+      if (err) {
+        console.log(err.sqlMessage);
+        res.status(400).json({
+          status: 400,
+          message: "Error: " + err.sqlMessage,
+        });
+      } else {
+        res.status(200).json({
+          status: true,
+          message:
+            "select * from user_customers where username = " +
+            decoded.username +
+            " successfully!",
+          data: row[0],
+        });
+      }
+    });
+  }
+});
 app.post("/api/regist", (req, res) => {
+  var date = genDate();
+  var regist = [
+    req.body.username,
+    req.body.name,
+    req.body.phone,
+    req.body.case,
+    req.body.address,
+    req.body.password,
+    date,
+    date,
+  ];
+  const sql = `INSERT INTO user_customers (
+      username,name,phone,address_case,address,password,created_at,updated_at
+      ) VALUES(?,?,?,?,?,?,?,?);`;
+  conn.query(sql, regist, (err, result) => {
+    if (err) {
+      console.log(err.sqlMessage);
+      res.status(400).json({
+        status: false,
+        message: "Error: " + err.sqlMessage,
+      });
+    } else {
+      console.log(result);
+      res.status(200).json({
+        status: true,
+        message:
+          "insert into user_customers is successfully at row " +
+          result.insertId,
+      });
+    }
+  });
+});
+app.patch("/api/regist", (req, res) => {
   var date = genDate();
   var regist = [
     req.body.username,
@@ -61,11 +133,11 @@ app.post("/api/regist", (req, res) => {
     req.body.address,
     req.body.password,
     date,
-    date,
+    req.body.id,
   ];
-  const sql = `INSERT INTO user_customers (
-      username,name,phone,address_case,address,password,created_at,updated_at
-      ) VALUES(?,?,?,?,?,?,?,?);`;
+  const sql = `UPDATE user_customers SET 
+      username = ?,name =?,phone =?,address_case =?,address =?,password =?,updated_at =?
+       WHERE id = ?;`;
   conn.query(sql, regist, (err, result) => {
     if (err) {
       console.log(err.sqlMessage);
@@ -863,6 +935,7 @@ app.get("/api/admin/tracking/:mode", (req, res) => {
 app.post("/api/admin/tracking/:mode", (req, res) => {
   let date = genDate();
   let tracking = [
+    req.body.box_id,
     req.params.mode,
     req.body.date,
     req.body.username,
@@ -876,7 +949,7 @@ app.post("/api/admin/tracking/:mode", (req, res) => {
     date,
   ];
   let sql =
-    "INSERT INTO trackings (channel,date,username,track_id,weight,round_boat,remark,pic1_filename,pic2_filename, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?);";
+    "INSERT INTO trackings (box_id,channel,date,username,track_id,weight,round_boat,remark,pic1_filename,pic2_filename, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?);";
   conn.query(sql, tracking, (err, result) => {
     if (err) {
       console.log(err);
@@ -897,6 +970,7 @@ app.post("/api/admin/tracking/:mode", (req, res) => {
 app.patch("/api/admin/tracking", (req, res) => {
   let date = genDate();
   let tracking = [
+    req.body.box_id,
     req.body.channel,
     req.body.date,
     req.body.username,
@@ -910,7 +984,7 @@ app.patch("/api/admin/tracking", (req, res) => {
     req.body.id,
   ];
   const sql =
-    "UPDATE trackings SET channel =?,date = ?, username = ?, track_id = ?, weight = ?, round_boat = ?, pic1_filename = ?, pic2_filename = ?, remark = ?, updated_at = ? WHERE id = ?;";
+    "UPDATE trackings SET box_id = ?,channel =?,date = ?, username = ?, track_id = ?, weight = ?, round_boat = ?, pic1_filename = ?, pic2_filename = ?, remark = ?, updated_at = ? WHERE id = ?;";
   conn.query(sql, tracking, (err, result) => {
     if (err) {
       console.log(err);

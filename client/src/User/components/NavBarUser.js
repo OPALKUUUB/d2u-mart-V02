@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Nav, Navbar } from "react-bootstrap";
+import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 
 export default function NavBarUser() {
@@ -29,7 +29,12 @@ export default function NavBarUser() {
                 {item.name}
               </Nav.Link>
             ))}
-            <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+            <NavDropdown title="Setting" id="collasible-nav-dropdown">
+              <NavDropdown.Item href="/setting/profile">
+                Profile
+              </NavDropdown.Item>
+              <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
+            </NavDropdown>
           </Nav>
         </Navbar.Collapse>
       </Container>

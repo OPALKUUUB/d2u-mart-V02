@@ -52,7 +52,7 @@ export default function PaymentTable() {
             <th>tranfer fee(bath)</th>
             <th>delivery(yen)</th>
             <th>Payment Status</th>
-            <th>Config</th>
+            <th>Edit</th>
           </tr>
         </thead>
         <tbody style={{ textAlign: "center" }}>
@@ -79,7 +79,7 @@ export default function PaymentTable() {
               <td className="align-middle">{item.payment_status}</td>
               <td className="align-middle">
                 <Button variant="warning" onClick={() => handleUpdateWin(item)}>
-                  Config
+                  Edit
                 </Button>
               </td>
             </tr>

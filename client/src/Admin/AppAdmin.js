@@ -8,7 +8,8 @@ import LoginAdmin from "./pages/login/LoginAdmin";
 import PaymentTable from "./pages/PaymentTable";
 import MercariTracking from "./pages/tracking/MercariTracking";
 import OtherTracking from "./pages/tracking/OtherTracking";
-import YahooTracking from "./pages/tracking/YahooTracking";
+import ShimizuTracking from "./pages/tracking/ShimizuTracking";
+import UserTable from "./pages/UserTable";
 export default function AppAdmin() {
   const [loginStatus, setLoginStatus] = useState(
     localStorage.getItem("AdminToken") !== null
@@ -39,8 +40,8 @@ export default function AppAdmin() {
             />
             <Route
               exact
-              path="/admin/table/tracking/yahoo"
-              component={YahooTracking}
+              path="/admin/table/tracking/shimizu"
+              component={ShimizuTracking}
             />
             <Route
               exact
@@ -52,6 +53,7 @@ export default function AppAdmin() {
               path="/admin/table/tracking/123"
               component={OtherTracking}
             />
+            <Route exact path="/admin/table/user" component={UserTable} />
           </Switch>
         </Container>
       </>

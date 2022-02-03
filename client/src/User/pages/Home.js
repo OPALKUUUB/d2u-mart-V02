@@ -3,7 +3,7 @@ import React from "react";
 export default function Home() {
   return (
     <div>
-      <h1>Home Page</h1>
+      <img src="/home2.jpg" />
     </div>
   );
 }

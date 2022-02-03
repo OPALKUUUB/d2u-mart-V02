@@ -56,8 +56,8 @@ export default function NavBarAdmin() {
               </Nav.Link>
             ))}
             <NavDropdown title="Tracking" id="collasible-nav-dropdown">
-              <NavDropdown.Item href="/admin/table/tracking/yahoo">
-                Yahoo
+              <NavDropdown.Item href="/admin/table/tracking/shimizu">
+                Shimizu
               </NavDropdown.Item>
               <NavDropdown.Item href="/admin/table/tracking/mercari">
                 Mercari
@@ -80,6 +80,7 @@ export default function NavBarAdmin() {
 }
 
 const navLink = [
+  { name: "User", path: "/admin/table/user" },
   { name: "Auction", path: "/admin/table/yahoo/auction" },
   { name: "Payment", path: "/admin/table/yahoo/payment" },
   { name: "History", path: "/admin/table/yahoo/history" },
