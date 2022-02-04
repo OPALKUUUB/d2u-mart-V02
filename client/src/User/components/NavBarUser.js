@@ -19,11 +19,7 @@ export default function NavBarUser() {
         <Navbar.Brand href="/">D2U SERVICES</Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
-          <Nav
-            className="ms-auto my-2 my-lg-0"
-            style={{ maxHeight: "100px" }}
-            navbarScroll
-          >
+          <Nav className="ms-auto my-2 my-lg-0">
             {navLink.map((item, i) => (
               <Nav.Link key={i + 1} onClick={() => history.push(item.path)}>
                 {item.name}
