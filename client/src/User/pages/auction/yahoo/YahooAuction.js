@@ -81,6 +81,8 @@ export default function YahooAuction() {
             history.push("/auction/yahoo/order");
           } else {
             alert(json.message);
+            localStorage.removeItem("token");
+            window.location.reload(false);
           }
         });
     }

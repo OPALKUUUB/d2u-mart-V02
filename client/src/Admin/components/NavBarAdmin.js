@@ -50,11 +50,14 @@ export default function NavBarAdmin() {
         <Navbar.Toggle />
         <Navbar.Collapse id="navbarScroll">
           <Nav className="ms-auto my-2 my-lg-0">
-            {navLink.map((item, i) => (
-              <Nav.Link key={i + 1} onClick={() => history.push(item.path)}>
-                {item.name}
-              </Nav.Link>
-            ))}
+            <Nav.Link href="/admin/table/user">User</Nav.Link>
+            <NavDropdown title="Yahoo" id="collasible-nav-dropdown">
+              {navLink.map((item, i) => (
+                <NavDropdown.Item key={i + 1} href={item.path}>
+                  {item.name}
+                </NavDropdown.Item>
+              ))}
+            </NavDropdown>
             <NavDropdown title="Tracking" id="collasible-nav-dropdown">
               <NavDropdown.Item href="/admin/table/tracking/shimizu">
                 Shimizu
@@ -63,7 +66,7 @@ export default function NavBarAdmin() {
                 Mercari
               </NavDropdown.Item>
               <NavDropdown.Item href="/admin/table/tracking/123">
-                123
+                Web123
               </NavDropdown.Item>
             </NavDropdown>
             <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
@@ -80,10 +83,9 @@ export default function NavBarAdmin() {
 }
 
 const navLink = [
-  { name: "User", path: "/admin/table/user" },
   { name: "Auction", path: "/admin/table/yahoo/auction" },
   { name: "Payment", path: "/admin/table/yahoo/payment" },
-  { name: "History", path: "/admin/table/yahoo/history" },
+  { name: "History/Tracking", path: "/admin/table/yahoo/history" },
 ];
 
 function ChangeYen(props) {

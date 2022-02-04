@@ -10,6 +10,8 @@ import {
 } from "react-bootstrap";
 
 export default function PaymentTable() {
+  const [date, setDate] = useState("");
+  const [username, setUsername] = useState("");
   const [orders, setOrders] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [temp, setTemp] = useState({});
@@ -36,10 +38,108 @@ export default function PaymentTable() {
     setModalShow(true);
     setTemp(item);
   };
+  const auctionFilter = (c) => {
+    let t = orders;
+    if (c === 1 || c === 3) {
+      t = t.filter((u) => {
+        let regex = new RegExp("(" + username + ")", "gi");
+        let match = u.username.match(regex);
+        if (match != null) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+    }
+    if (c === 2 || c === 3) {
+      t = t.filter((u) => {
+        let regex = new RegExp("(" + date + ")", "gi");
+        let fdate = formatDate(u.created_at);
+        let match = fdate.match(regex);
+        if (match != null) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+    }
+
+    return (
+      <>
+        {t.map((item, index) => (
+          <tr key={index}>
+            <td className="align-middle">{index + 1}</td>
+            <td className="align-middle">
+              {parseInt(item.created_at.split("T")[0].split("-")[2])}{" "}
+              {month[parseInt(item.created_at.split("T")[0].split("-")[1])]}{" "}
+              {parseInt(item.created_at.split("T")[0].split("-")[0])}
+            </td>
+            <td className="align-middle">
+              <img src={item.imgsrc} width={100} />
+            </td>
+            <td className="align-middle">{item.username}</td>
+            <td className="align-middle">
+              <a href={item.link} target="_blank">
+                {item.link.split("/")[5]}
+              </a>
+            </td>
+
+            <td className="align-middle">
+              <div>{item.bid} (¥)</div>
+              <div style={{ backgroundColor: "yellow" }}>{item.bid_by}</div>
+            </td>
+            <td className="align-middle">{item.tranfer_fee_injapan}</td>
+            <td className="align-middle">{item.delivery_in_thai}</td>
+            <td className="align-middle">{item.payment_status}</td>
+            <td className="align-middle">
+              <Button variant="warning" onClick={() => handleUpdateWin(item)}>
+                Edit
+              </Button>
+            </td>
+          </tr>
+        ))}
+      </>
+    );
+  };
+  function formatDate(date) {
+    let temp2 = date.split("T")[0];
+    let temp = temp2.split("-");
+    let y = parseInt(temp[0]);
+    let m = parseInt(temp[1]);
+    let d = parseInt(temp[2]);
+    return `${d}/${m}/${y}`;
+  }
 
   return (
     <>
       <h3 className="mb-3">Yahoo Payment Table</h3>
+      <Row>
+        <Col>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label>
+              Date&nbsp;
+              <Form.Text className="text-muted">Such as 1/1/2022</Form.Text>
+            </Form.Label>
+            <Form.Control
+              type="text"
+              name="date"
+              onChange={(e) => setDate(e.target.value)}
+              placeholder="D/M/Y"
+            />
+          </Form.Group>
+        </Col>
+        <Col>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label>Username</Form.Label>
+            <Form.Control
+              ttype="text"
+              name="username"
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Enter Username"
+            />
+          </Form.Group>
+        </Col>
+      </Row>
       <Table responsive="md" striped bordered hover size="sm">
         <thead style={{ textAlign: "center" }}>
           <tr>
@@ -56,34 +156,10 @@ export default function PaymentTable() {
           </tr>
         </thead>
         <tbody style={{ textAlign: "center" }}>
-          {orders.map((item, index) => (
-            <tr key={index}>
-              <td className="align-middle">{index + 1}</td>
-              <td className="align-middle">{item.created_at}</td>
-              <td className="align-middle">
-                <img src={item.imgsrc} width={100} />
-              </td>
-              <td className="align-middle">{item.username}</td>
-              <td className="align-middle">
-                <a href={item.link} target="_blank">
-                  {item.link.split("/")[5]}
-                </a>
-              </td>
-
-              <td className="align-middle">
-                <div>{item.bid} (¥)</div>
-                <div style={{ backgroundColor: "yellow" }}>{item.bid_by}</div>
-              </td>
-              <td className="align-middle">{item.tranfer_fee_injapan}</td>
-              <td className="align-middle">{item.delivery_in_thai}</td>
-              <td className="align-middle">{item.payment_status}</td>
-              <td className="align-middle">
-                <Button variant="warning" onClick={() => handleUpdateWin(item)}>
-                  Edit
-                </Button>
-              </td>
-            </tr>
-          ))}
+          {date === "" && username !== "" && auctionFilter(1)}
+          {date !== "" && username === "" && auctionFilter(2)}
+          {date !== "" && username !== "" && auctionFilter(3)}
+          {date === "" && username === "" && auctionFilter(4)}
         </tbody>
       </Table>
       <MydModalWithGrid
@@ -277,3 +353,18 @@ function ModalSlip(props) {
     </Modal>
   );
 }
+
+const month = {
+  1: "JAN",
+  2: "FEB",
+  3: "MAR",
+  4: "APR",
+  5: "MAY",
+  6: "JUN",
+  7: "JUL",
+  8: "AUG",
+  9: "SEPT",
+  10: "OCT",
+  11: "NOV",
+  12: "DEC",
+};

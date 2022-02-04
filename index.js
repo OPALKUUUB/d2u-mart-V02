@@ -59,7 +59,7 @@ app.get("/api/regist", (req, res) => {
       if (err) {
         res.status(400).json({
           status: false,
-          message: err,
+          message: err.sqlMessage,
         });
         console.log("Error: Your login session is expired!");
       } else {
@@ -312,7 +312,7 @@ app.post("/api/yahoo/offer", (req, res) => {
       if (err) {
         res.status(400).json({
           status: false,
-          message: err,
+          message: err.sqlMessage,
         });
         console.log("Error: Your login session is expired!");
       } else {
@@ -362,7 +362,7 @@ app.get("/api/yahoo/orders", (req, res) => {
       if (err) {
         res.status(400).json({
           status: false,
-          message: err,
+          message: err.sqlMessage,
         });
         console.log("Error: Your login session is expired!");
       } else {
@@ -400,7 +400,7 @@ app.get("/api/yahoo/payment", (req, res) => {
       if (err) {
         res.status(400).json({
           status: false,
-          message: err,
+          message: err.sqlMessage,
         });
         console.log("Error: Your login session is expired!");
       } else {
@@ -443,7 +443,7 @@ app.patch("/api/yahoo/order/addbid", (req, res) => {
       if (err) {
         res.status(400).json({
           status: false,
-          message: err,
+          message: err.sqlMessage,
         });
         console.log("Error: Your login session is expired!");
       } else {
@@ -516,7 +516,7 @@ app.patch("/api/payment/confirm", (req, res) => {
       if (err) {
         res.status(400).json({
           status: false,
-          message: err,
+          message: err.sqlMessage,
         });
         console.log("Error: " + err);
       } else {
@@ -598,7 +598,7 @@ app.get("/api/yahoo/history", (req, res) => {
       if (err) {
         res.status(400).json({
           status: false,
-          message: err,
+          message: err.sqlMessage,
         });
         console.log("Error: " + err);
       } else {
@@ -717,7 +717,7 @@ app.patch("/api/admin/workby", (req, res) => {
       if (err) {
         res.status(400).json({
           status: false,
-          message: err,
+          message: err.sqlMessage,
         });
         console.log("Error: Your login session is expired!");
       } else {
@@ -770,7 +770,7 @@ app.patch("/api/admin/win", (req, res) => {
       if (err) {
         res.status(400).json({
           status: false,
-          message: err,
+          message: err.sqlMessage,
         });
         console.log("Error: Your login session is expired!");
       } else {
@@ -820,7 +820,7 @@ app.patch("/api/admin/lose", (req, res) => {
       if (err) {
         res.status(400).json({
           status: false,
-          message: err,
+          message: err.sqlMessage,
         });
         console.log("Error: Your login session is expired!");
       } else {
@@ -851,6 +851,35 @@ app.patch("/api/admin/lose", (req, res) => {
       }
     });
   }
+});
+
+app.patch("/api/admin/yahoo/tracking", (req, res) => {
+  let date = genDate();
+  const tracking = [
+    date,
+    req.body.track_id,
+    req.body.box_id,
+    req.body.weight,
+    req.body.round_boat,
+    req.body.id,
+  ];
+  const sql =
+    "UPDATE orders SET updated_at = ?, track_id = ?, box_id = ?, weight = ?, round_boat = ? WHERE id = ?;";
+  conn.query(sql, tracking, (err, result) => {
+    if (err) {
+      console.log(err.sqlMessage);
+      res.status(400).json({
+        status: false,
+        message: "Error: " + err.sqlMessage,
+      });
+    } else {
+      console.log(result);
+      res.status(200).json({
+        status: true,
+        message: "update successful",
+      });
+    }
+  });
 });
 
 // tracking
@@ -884,7 +913,7 @@ app.get("/api/tracking", (req, res) => {
       if (err) {
         res.status(400).json({
           status: false,
-          message: err,
+          message: err.sqlMessage,
         });
         console.log("Error: Your login session is expired!");
       } else {
