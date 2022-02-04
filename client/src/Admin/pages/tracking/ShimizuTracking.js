@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Button,
-  Form,
-  Modal,
-  Row,
-  Table,
-  Col,
-  FloatingLabel,
-} from "react-bootstrap";
+import { Button, Form, Modal, Row, Table, Col } from "react-bootstrap";
 import AutoComplete from "../../components/AutoComplete";
 
 export default function ShimizuTracking() {
@@ -189,6 +181,12 @@ function AddTrackModal(props) {
   const [pic1File, setPic1File] = useState(null);
   const [pic2File, setPic2File] = useState(null);
   const [users, setUsers] = useState([]);
+  const [image1, setImage1] = useState(null);
+  const [image2, setImage2] = useState(null);
+  useEffect(() => {
+    setImage1(null);
+    setImage2(null);
+  }, [props]);
   useEffect(() => {
     fetch("/api/admin/users", {
       method: "GET",
@@ -212,13 +210,16 @@ function AddTrackModal(props) {
   };
   const handleChangeTracking = (e) => {
     setTracking({ ...tracking, [e.target.name]: e.target.value });
-    console.log(tracking);
   };
   const handleSelectPic1File = (e) => {
     setPic1File(e.target.files[0]);
+    const objectUrl = URL.createObjectURL(e.target.files[0]);
+    setImage1(objectUrl);
   };
   const handleSelectPic2File = (e) => {
     setPic2File(e.target.files[0]);
+    const objectUrl = URL.createObjectURL(e.target.files[0]);
+    setImage2(objectUrl);
   };
   const handleUploadPic1File = () => {
     if (pic1File === null) {
@@ -261,7 +262,6 @@ function AddTrackModal(props) {
     }
   };
   const handleAddTracking = () => {
-    console.log(tracking);
     fetch("/api/admin/tracking/shimizu", {
       method: "POST",
       headers: {
@@ -279,6 +279,21 @@ function AddTrackModal(props) {
           alert(json.message);
         }
       });
+  };
+
+  const handlePaste1 = (e) => {
+    if (e.clipboardData.files.length) {
+      setPic1File(e.clipboardData.files[0]);
+      const objectUrl = URL.createObjectURL(e.clipboardData.files[0]);
+      setImage1(objectUrl);
+    }
+  };
+  const handlePaste2 = (e) => {
+    if (e.clipboardData.files.length) {
+      setPic2File(e.clipboardData.files[0]);
+      const objectUrl = URL.createObjectURL(e.clipboardData.files[0]);
+      setImage2(objectUrl);
+    }
   };
 
   return (
@@ -366,7 +381,7 @@ function AddTrackModal(props) {
                   <Button
                     onClick={handleUploadPic1File}
                     size="sm"
-                    className="ms-3"
+                    className="ms-3 me-3"
                   >
                     upload
                   </Button>
@@ -378,6 +393,30 @@ function AddTrackModal(props) {
                   name="pic1_filename"
                 />
               </Form.Group>
+              <div
+                style={{
+                  cursor: "pointer",
+                }}
+                onPaste={handlePaste1}
+              >
+                {image1 === null ? (
+                  <div
+                    style={{
+                      background: "gray",
+                      width: "100%",
+                      height: "150px",
+                      color: "white",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    paste image hear
+                  </div>
+                ) : (
+                  <img src={image1} width="100%" />
+                )}
+              </div>
             </Col>
             <Col lg={6} sm={12} className="mb-3">
               <Form.Group controlId="formFileSm">
@@ -398,6 +437,30 @@ function AddTrackModal(props) {
                   name="pic2_filename"
                 />
               </Form.Group>
+              <div
+                style={{
+                  cursor: "pointer",
+                }}
+                onPaste={handlePaste2}
+              >
+                {image2 === null ? (
+                  <div
+                    style={{
+                      background: "gray",
+                      width: "100%",
+                      height: "150px",
+                      color: "white",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    paste image hear
+                  </div>
+                ) : (
+                  <img src={image2} width="100%" />
+                )}
+              </div>
             </Col>
             <Col lg={12} sm={12}>
               <Form.Group>
@@ -426,7 +489,12 @@ function UpdateTrackModal(props) {
   const [pic1File, setPic1File] = useState(null);
   const [pic2File, setPic2File] = useState(null);
   const [users, setUsers] = useState([]);
+  const [image1, setImage1] = useState(null);
+  const [image2, setImage2] = useState(null);
+
   useEffect(() => {
+    setImage1(null);
+    setImage2(null);
     setTracking({ ...props.item });
   }, [props]);
   useEffect(() => {
@@ -448,9 +516,28 @@ function UpdateTrackModal(props) {
   };
   const handleSelectPic1File = (e) => {
     setPic1File(e.target.files[0]);
+    const objectUrl = URL.createObjectURL(e.target.files[0]);
+    setImage1(objectUrl);
+    console.log(image1);
   };
   const handleSelectPic2File = (e) => {
     setPic2File(e.target.files[0]);
+    const objectUrl = URL.createObjectURL(e.target.files[0]);
+    setImage2(objectUrl);
+  };
+  const handlePaste1 = (e) => {
+    if (e.clipboardData.files.length) {
+      setPic1File(e.clipboardData.files[0]);
+      const objectUrl = URL.createObjectURL(e.clipboardData.files[0]);
+      setImage1(objectUrl);
+    }
+  };
+  const handlePaste2 = (e) => {
+    if (e.clipboardData.files.length) {
+      setPic2File(e.clipboardData.files[0]);
+      const objectUrl = URL.createObjectURL(e.clipboardData.files[0]);
+      setImage2(objectUrl);
+    }
   };
   const handleUploadPic1File = () => {
     if (pic1File === null) {
@@ -639,6 +726,30 @@ function UpdateTrackModal(props) {
                   name="pic1_filename"
                 />
               </Form.Group>
+              <div
+                style={{
+                  cursor: "pointer",
+                }}
+                onPaste={handlePaste1}
+              >
+                {image1 === null ? (
+                  <div
+                    style={{
+                      background: "gray",
+                      width: "100%",
+                      height: "150px",
+                      color: "white",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    paste image hear
+                  </div>
+                ) : (
+                  <img src={image1} width="100%" />
+                )}
+              </div>
             </Col>
             <Col lg={6} sm={12} className="mb-3">
               <Form.Group controlId="formFileSm">
@@ -659,6 +770,30 @@ function UpdateTrackModal(props) {
                   name="pic2_filename"
                 />
               </Form.Group>
+              <div
+                style={{
+                  cursor: "pointer",
+                }}
+                onPaste={handlePaste2}
+              >
+                {image2 === null ? (
+                  <div
+                    style={{
+                      background: "gray",
+                      width: "100%",
+                      height: "150px",
+                      color: "white",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    paste image hear
+                  </div>
+                ) : (
+                  <img src={image2} width="100%" />
+                )}
+              </div>
             </Col>
             <Col lg={12} sm={12}>
               <Form.Group>
