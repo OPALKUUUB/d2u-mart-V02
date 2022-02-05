@@ -51,8 +51,8 @@ export default function YahooAllPayment(props) {
     return temp;
   };
   const handleFileChange = (e) => {
-    setImage(URL.createObjectURL(e.target.files[0]));
     setFile(e.target.files[0]);
+    setImage(URL.createObjectURL(e.target.files[0]));
   };
   function packFile() {
     const fd = new FormData();
@@ -63,7 +63,7 @@ export default function YahooAllPayment(props) {
     if (file === null) {
       alert(`please choose slip first!`);
     } else {
-      const fd = packFile();
+      const fd = packFile(file);
       fetch(`/api/upload/slip`, {
         method: "PATCH",
         headers: {

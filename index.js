@@ -60,6 +60,62 @@ app.get("/", (req, res) => {
   res.send("test");
 });
 
+app.get("/addcolumn", (req, res) => {
+  const sql = "ALTER TABLE trackings ADD url VARCHAR (255);";
+  conn.query(sql, (err, result) => {
+    if(err) {
+      console.log(err.sqlMessage);
+      res.status(400).json({
+        status: false,
+        message: "Error: " + err.sqlMessage
+      })
+    }else {
+      console.log(result);
+      res.status(200).json({
+        status: true,
+        message: "successfully"
+      });
+    }
+  })
+})
+app.get("/admin/account", (req, res) => {
+  const sql = "SELECT * FROM user_admins;";
+  conn.query(sql, (err, row) => {
+    res.send(row)
+  })
+})
+// 7/8/10
+app.get("/del",(req, res) => {
+  const sql = "DELETE FROM user_admins WHERE id = ?;";
+  conn.query(sql,[10], (err, result) => {
+    if(err) {
+      res.send(err)
+    }else {
+      res.send(result)
+    }
+  })
+})
+app.get("/add/admin", (req, res) => {
+  const sql = "INSERT INTO user_admins (name, username, password) VALUES (?,?,?)";
+  conn.query(sql, ["MNGJI", "MNGJI", "lakious775"], (err, result) => {
+    if(err) {
+      console.log(err)
+      res.status(400).json({
+        status: false,
+        message: "Error: " + err.sqlMessage
+      })
+    }else {
+      console.log(result)
+      res.status(200).json({
+        status: true,
+        message: "success"
+      })
+    }
+  })
+})
+
+
+
 //  this section for line api
 app.post("/webhook", function (req, res) {
   res.send("HTTP POST request sent to the webhook URL!");
@@ -1022,10 +1078,28 @@ app.get("/api/admin/tracking/:mode", (req, res) => {
     }
   });
 });
+app.delete("/api/admin/tracking", (req, res) => {
+  const sql = "DELETE FROM trackings WHERE id = ?;";
+  conn.query(sql, [req.body.id], (err, result) => {
+    if(err) {
+      console.log(err.sqlMessage);
+      res.status(400).json({
+        status: false,
+        message: err.sqlMessage
+      });
+    }else {
+      res.status(200).json({
+        status: true,
+        message: "delete tracking successfully!"
+      })
+    }
+  })
+})
 
 app.post("/api/admin/tracking/:mode", (req, res) => {
   let date = genDate();
   let tracking = [
+    req.body.url,
     req.body.box_id,
     req.params.mode,
     req.body.date,
@@ -1040,7 +1114,7 @@ app.post("/api/admin/tracking/:mode", (req, res) => {
     date,
   ];
   let sql =
-    "INSERT INTO trackings (box_id,channel,date,username,track_id,weight,round_boat,remark,pic1_filename,pic2_filename, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?);";
+    "INSERT INTO trackings (url,box_id,channel,date,username,track_id,weight,round_boat,remark,pic1_filename,pic2_filename, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);";
   conn.query(sql, tracking, (err, result) => {
     if (err) {
       console.log(err);
@@ -1061,6 +1135,7 @@ app.post("/api/admin/tracking/:mode", (req, res) => {
 app.patch("/api/admin/tracking", (req, res) => {
   let date = genDate();
   let tracking = [
+    req.body.url,
     req.body.box_id,
     req.body.channel,
     req.body.date,
@@ -1075,7 +1150,7 @@ app.patch("/api/admin/tracking", (req, res) => {
     req.body.id,
   ];
   const sql =
-    "UPDATE trackings SET box_id = ?,channel =?,date = ?, username = ?, track_id = ?, weight = ?, round_boat = ?, pic1_filename = ?, pic2_filename = ?, remark = ?, updated_at = ? WHERE id = ?;";
+    "UPDATE trackings SET url = ?, box_id = ?,channel =?,date = ?, username = ?, track_id = ?, weight = ?, round_boat = ?, pic1_filename = ?, pic2_filename = ?, remark = ?, updated_at = ? WHERE id = ?;";
   conn.query(sql, tracking, (err, result) => {
     if (err) {
       console.log(err);

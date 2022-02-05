@@ -50,6 +50,17 @@ export default function MercariTracking() {
         }
       });
     }
+    const handleDelete = (id) => {
+      fetch("/api/admin/tracking", {
+        method: "DELETE", headers: {"Content-Type": "application/json"}, body: JSON.stringify({id: id})}).then(res=>res.json()).then(json=>{
+        if(json.status) {
+          alert(json.message)
+          window.location.reload(false)
+        }else {
+          alert(json.message)
+        }
+      })
+    }
 
     return (
       <>
@@ -63,6 +74,7 @@ export default function MercariTracking() {
             </td>
             <td className="align-middle">{item.channel}</td>
             <td className="align-middle">{item.username}</td>
+            <td className="align-middle" width="50px"><a href={item.url} target="_blank">{item.url}</a></td>
             <td className="align-middle">{item.track_id}</td>
             <td className="align-middle">{item.box_id}</td>
             <td className="align-middle">{item.weight}</td>
@@ -89,6 +101,7 @@ export default function MercariTracking() {
               <Button size="sm" onClick={() => handleConfigs(item)}>
                 Edit
               </Button>
+              <Button variant="danger" onClick={() => handleDelete(item.id)}>Delete</Button>
             </td>
           </tr>
         ))}
@@ -153,6 +166,7 @@ export default function MercariTracking() {
             <th>Date</th>
             <th>Channel</th>
             <th>Username</th>
+            <th>URL</th>
             <th>Track Id</th>
             <th>หมายเลขกล่อง</th>
             <th>weight</th>
@@ -332,13 +346,23 @@ function AddTrackModal(props) {
                 />
               </Form.Group>
             </Col>
-            <Col lg={4} sm={12} className="mb-3">
+            <Col sm={12} className="mb-3">
               <Form.Group>
                 <Form.Label>หมายเลขกล่อง</Form.Label>
                 <Form.Control
                   type="text"
                   onChange={handleChangeTracking}
                   name="box_id"
+                />
+              </Form.Group>
+            </Col>
+            <Col lg={4} sm={12} className="mb-3">
+              <Form.Group>
+                <Form.Label>URL</Form.Label>
+                <Form.Control
+                  type="text"
+                  onChange={handleChangeTracking}
+                  name="url"
                 />
               </Form.Group>
             </Col>
@@ -669,6 +693,17 @@ function UpdateTrackModal(props) {
                   onChange={handleChangeTracking}
                   name="box_id"
                   value={tracking.box_id}
+                />
+              </Form.Group>
+            </Col>
+            <Col sm={12} className="mb-3">
+              <Form.Group>
+                <Form.Label>URL</Form.Label>
+                <Form.Control
+                  type="text"
+                  onChange={handleChangeTracking}
+                  name="url"
+                  value={tracking.url}
                 />
               </Form.Group>
             </Col>
