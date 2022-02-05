@@ -1,3 +1,4 @@
+const https = require("https");
 const express = require("express");
 const path = require("path");
 
@@ -13,6 +14,9 @@ dotenv.config();
 // const PD_SRC_IMAGE_TRACKING = "./client/public/image/";
 let PD_SRC_IMAGE = "./client/build/slip/";
 let PD_SRC_IMAGE_TRACKING = "./client/build/image/";
+// PD_SRC_IMAGE = "./client/public/slip/";
+// PD_SRC_IMAGE_TRACKING = "./client/public/image/";
+const TOKEN = process.env.LINE_ACCESS_TOKEN;
 
 const conn = mysql.createConnection({
   host: process.env.PD_DB_HOST,
@@ -51,6 +55,64 @@ function genDate() {
     today.getMinutes() >= 10 ? today.getMinutes() : `0${today.getMinutes()}`;
   return `${today.getFullYear()}-${month}-${date}T${hour}:${minute}`;
 }
+
+app.get("/", (req, res) => {
+  res.send("test");
+});
+
+//  this section for line api
+app.post("/webhook", function (req, res) {
+  res.send("HTTP POST request sent to the webhook URL!");
+  // If the user sends a message to your bot, send a reply message
+  if (req.body.events[0].type === "message") {
+    // Message data, must be stringified
+    const dataString = JSON.stringify({
+      replyToken: req.body.events[0].replyToken,
+      messages: [
+        {
+          type: "text",
+          text: "Hello, user",
+        },
+        {
+          type: "text",
+          text: "May I help you?",
+        },
+      ],
+    });
+
+    // Request header
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + TOKEN,
+    };
+
+    // Options to pass into the request
+    const webhookOptions = {
+      hostname: "api.line.me",
+      path: "/v2/bot/message/reply",
+      method: "POST",
+      headers: headers,
+      body: dataString,
+    };
+
+    // Define request
+    const request = https.request(webhookOptions, (res) => {
+      res.on("data", (d) => {
+        process.stdout.write(d);
+      });
+    });
+
+    // Handle error
+    request.on("error", (err) => {
+      console.error(err);
+    });
+
+    // Send data
+    request.write(dataString);
+    request.end();
+  }
+});
+
 app.get("/api/regist", (req, res) => {
   let decoded = jwt.verify(
     req.headers.token,
@@ -1039,11 +1101,6 @@ app.get("*", (req, res) => {
 });
 
 const port = process.env.PORT || 5000;
-app.listen(port, () => {
-  if (port === 5000) {
-    PD_SRC_IMAGE = "./client/public/slip/";
-    PD_SRC_IMAGE_TRACKING = "./client/public/image/";
-  }
-});
+app.listen(port);
 
 console.log(`Server listening on ${port}`);
