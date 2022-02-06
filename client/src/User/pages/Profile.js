@@ -47,7 +47,7 @@ export default function Profile() {
   };
   return (
     <div>
-      <h1>Profile</h1>
+      <h1>Profile ({register.username})</h1>
       <Form>
         <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
           <Form.Label column sm={2}>
@@ -60,20 +60,6 @@ export default function Profile() {
               name="name"
               onChange={handleChange}
               value={register.name}
-            />
-          </Col>
-        </Form.Group>
-        <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
-          <Form.Label column sm={2}>
-            ตั้งชี่อผู้ใช้งาน
-          </Form.Label>
-          <Col sm={10}>
-            <Form.Control
-              type="text"
-              placeholder="Enter Username"
-              name="username"
-              onChange={handleChange}
-              value={register.username}
             />
           </Col>
         </Form.Group>

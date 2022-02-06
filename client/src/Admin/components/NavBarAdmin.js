@@ -65,6 +65,9 @@ export default function NavBarAdmin() {
               <NavDropdown.Item href="/admin/table/tracking/mercari">
                 Mercari
               </NavDropdown.Item>
+              <NavDropdown.Item href="/admin/table/tracking/fril">
+                Fril
+              </NavDropdown.Item>
               <NavDropdown.Item href="/admin/table/tracking/123">
                 Web123
               </NavDropdown.Item>

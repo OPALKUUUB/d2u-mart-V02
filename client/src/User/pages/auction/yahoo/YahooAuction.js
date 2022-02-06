@@ -124,6 +124,7 @@ export default function YahooAuction() {
               aria-label="Amount (to the nearest yen)"
               onChange={(e) => setPrice(e.target.value)}
               type="number"
+              placeholder="หน่วยเป็นเยน"
             />
             <InputGroup.Text>.00</InputGroup.Text>
           </InputGroup>
@@ -137,6 +138,7 @@ export default function YahooAuction() {
               as="textarea"
               rows={3}
               onChange={(e) => setRemark(e.target.value)}
+              placeholder="(เช่น ราคาไม่รวมภาษี หรือ ไม่รวมค่าส่ง)"
             />
           </Form.Group>
           <Button variant="primary" onClick={handleSubmitOffer}>

@@ -105,6 +105,8 @@ function ModalRegister(props) {
     case: "มารับเอง",
     address: "",
   });
+  const [alertUsername, setAlertUsername] = useState(false);
+  const [alertPassword, setAlertPassword] = useState(false);
   const handleChange = (e) => {
     if (e.target.name === "case") {
       setRegister({
@@ -115,10 +117,26 @@ function ModalRegister(props) {
     } else {
       setRegister({ ...register, [e.target.name]: e.target.value });
     }
+    if (e.target.name === "username") {
+      var re = new RegExp("^\\w[\\w.]{2,18}\\w$");
+      if (e.target.value.match(re) === null) {
+        setAlertUsername(true);
+      } else {
+        setAlertUsername(false);
+      }
+    }
+    if (e.target.name === "password") {
+      var re = new RegExp("^\\w[\\w.]{2,18}\\w$");
+      if (e.target.value.match(re) === null) {
+        setAlertPassword(true);
+      } else {
+        setAlertPassword(false);
+      }
+    }
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (IsNotEmpty(register)) {
+    if (IsNotEmpty(register) && alertUsername && alertPassword) {
       if (ConfirmPassword(register)) {
         fetch("/api/regist", {
           method: "POST",
@@ -150,7 +168,7 @@ function ModalRegister(props) {
         alert("In field confirm password is not match with password field!!!");
       }
     } else {
-      alert("please fill every input");
+      alert("Please fill every input");
     }
   };
   return (
@@ -180,7 +198,7 @@ function ModalRegister(props) {
           </Form.Group>
           <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
             <Form.Label column sm={2}>
-              ตั้งชี่อผู้ใช้งาน
+              ชี่อผู้ใช้งาน
             </Form.Label>
             <Col sm={10}>
               <Form.Control
@@ -189,6 +207,12 @@ function ModalRegister(props) {
                 name="username"
                 onChange={handleChange}
               />
+              {alertUsername && (
+                <Form.Text id="passwordHelpBlock" style={{ color: "red" }}>
+                  Your username must be 4-18characters long, container only a-z,
+                  A-Z, 0-9
+                </Form.Text>
+              )}
             </Col>
           </Form.Group>
           <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
@@ -219,6 +243,12 @@ function ModalRegister(props) {
                 name="password"
                 onChange={handleChange}
               />
+              {alertPassword && (
+                <Form.Text id="passwordHelpBlock" style={{ color: "red" }}>
+                  Your password must be 4-18characters long, container only a-z,
+                  A-Z, 0-9
+                </Form.Text>
+              )}
             </Col>
           </Form.Group>
           <Form.Group

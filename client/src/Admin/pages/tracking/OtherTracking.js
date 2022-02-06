@@ -50,19 +50,40 @@ export default function OtherTracking() {
         }
       });
     }
+    const handleDelete = (id) => {
+      fetch("/api/admin/tracking", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: id }),
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          if (json.status) {
+            alert(json.message);
+            window.location.reload(false);
+          } else {
+            alert(json.message);
+          }
+        });
+    };
 
     return (
       <>
         {temp.map((item, index) => (
           <tr key={index}>
             <td className="align-middle">{index + 1}</td>
-            <td className="align-middle">
+            <td className="align-middle" style={{ minWidth: "100px" }}>
               {parseInt(item.date.split("-")[2])}{" "}
               {month[parseInt(item.date.split("-")[1])]}{" "}
               {parseInt(item.date.split("-")[0])}
             </td>
             <td className="align-middle">{item.channel}</td>
             <td className="align-middle">{item.username}</td>
+            <td className="align-middle">
+              <a href={item.url} target="_blank">
+                link
+              </a>
+            </td>
             <td className="align-middle">{item.track_id}</td>
             <td className="align-middle">{item.box_id}</td>
             <td className="align-middle">{item.weight}</td>
@@ -84,11 +105,23 @@ export default function OtherTracking() {
                 width={100}
               />
             </td>
-            <td className="align-middle">{item.remark}</td>
+            <td className="align-middle" style={{ minWidth: "130px" }}>
+              {item.remark}
+            </td>
             <td className="align-middle">
-              <Button size="sm" onClick={() => handleConfigs(item)}>
-                Edit
-              </Button>
+              <div style={{ display: "flex" }}>
+                <Button
+                  size="sm"
+                  onClick={() => handleConfigs(item)}
+                  variant="success"
+                >
+                  <i class="fas fa-pencil-alt"></i>
+                </Button>
+                &nbsp;
+                <Button variant="danger" onClick={() => handleDelete(item.id)}>
+                  <i class="fas fa-times"></i>
+                </Button>
+              </div>
             </td>
           </tr>
         ))}
@@ -105,7 +138,7 @@ export default function OtherTracking() {
   return (
     <>
       <div className="mb-3 d-flex justify-content-between align-items-center">
-        <h3 className="bg-secondary p-2">Web 123 Tracking</h3>
+        <h3 className="bg-warning p-2">Web 123 Tracking</h3>
         <Button variant="primary" onClick={() => setModalShowAdd(true)}>
           Add Tracking
         </Button>
@@ -137,7 +170,6 @@ export default function OtherTracking() {
           </Form.Group>
         </Col>
       </Row>
-
       <AddTrackModal
         show={modalShowAdd}
         onHide={() => setModalShowAdd(false)}
@@ -154,6 +186,7 @@ export default function OtherTracking() {
             <th>Date</th>
             <th>Channel</th>
             <th>Username</th>
+            <th>URL</th>
             <th>Track Id</th>
             <th>หมายเลขกล่อง</th>
             <th>weight</th>
@@ -287,7 +320,6 @@ function AddTrackModal(props) {
         }
       });
   };
-
   const handleChangeUsername = (data) => {
     if (data.length !== 0) {
       setTracking({ ...tracking, username: data[0].username });
@@ -295,6 +327,7 @@ function AddTrackModal(props) {
       setTracking({ ...tracking, username: "" });
     }
   };
+
   return (
     <Modal
       {...props}
@@ -306,7 +339,7 @@ function AddTrackModal(props) {
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          Web 123 Add Tracking
+          Web123 Add Tracking
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -340,6 +373,16 @@ function AddTrackModal(props) {
                   type="text"
                   onChange={handleChangeTracking}
                   name="box_id"
+                />
+              </Form.Group>
+            </Col>
+            <Col sm={12} className="mb-3">
+              <Form.Group>
+                <Form.Label>URL</Form.Label>
+                <Form.Control
+                  type="text"
+                  onChange={handleChangeTracking}
+                  name="url"
                 />
               </Form.Group>
             </Col>
@@ -490,6 +533,7 @@ function UpdateTrackModal(props) {
   const [users, setUsers] = useState([]);
   const [image1, setImage1] = useState(null);
   const [image2, setImage2] = useState(null);
+
   useEffect(() => {
     setImage1(null);
     setImage2(null);
@@ -597,7 +641,6 @@ function UpdateTrackModal(props) {
         }
       });
   };
-
   const handleChangeUsername = (data) => {
     if (data.length !== 0) {
       setTracking({ ...tracking, username: data[0].username });
@@ -630,8 +673,11 @@ function UpdateTrackModal(props) {
             <option value={"mercari"} selected={tracking.channel === "mercari"}>
               Mercari
             </option>
+            <option value={"fril"} selected={tracking.channel === "fril"}>
+              Fril
+            </option>
             <option value={"123"} selected={tracking.channel === "web123"}>
-              Web 123
+              123
             </option>
           </Form.Select>
         </Modal.Title>
@@ -670,6 +716,17 @@ function UpdateTrackModal(props) {
                   onChange={handleChangeTracking}
                   name="box_id"
                   value={tracking.box_id}
+                />
+              </Form.Group>
+            </Col>
+            <Col sm={12} className="mb-3">
+              <Form.Group>
+                <Form.Label>URL</Form.Label>
+                <Form.Control
+                  type="text"
+                  onChange={handleChangeTracking}
+                  name="url"
+                  value={tracking.url}
                 />
               </Form.Group>
             </Col>

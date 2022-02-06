@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Form, Modal, Row, Table, Col } from "react-bootstrap";
 import AutoComplete from "../../components/AutoComplete";
 
-export default function MercariTracking() {
+export default function FrilTracking() {
   const [trackings, setTrackings] = useState([]);
   const [modalShowAdd, setModalShowAdd] = React.useState(false);
   const [modalShowUpdate, setModalShowUpdate] = React.useState(false);
@@ -10,7 +10,7 @@ export default function MercariTracking() {
   const [date, setDate] = useState("");
   const [username, setUsername] = useState("");
   useEffect(() => {
-    fetch("/api/admin/tracking/mercari", {
+    fetch("/api/admin/tracking/fril", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -138,7 +138,7 @@ export default function MercariTracking() {
   return (
     <>
       <div className="mb-3 d-flex justify-content-between align-items-center">
-        <h3 className="bg-warning p-2">Mercari Tracking</h3>
+        <h3 className="bg-warning p-2">Fril Tracking</h3>
         <Button variant="primary" onClick={() => setModalShowAdd(true)}>
           Add Tracking
         </Button>
@@ -301,8 +301,7 @@ function AddTrackModal(props) {
     }
   };
   const handleAddTracking = () => {
-    console.log(tracking);
-    fetch("/api/admin/tracking/mercari", {
+    fetch("/api/admin/tracking/fril", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -339,7 +338,7 @@ function AddTrackModal(props) {
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          Mercari Add Tracking
+          Fril Add Tracking
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>

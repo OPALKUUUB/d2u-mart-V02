@@ -142,6 +142,20 @@ export default function YahooAllPayment(props) {
                     <br />
                     Sum: {handleSumPayment()} bath
                   </p>
+                  <p
+                    style={{
+                      fontSize: "0.9rem",
+                      border: "1px solid rgba(0,0,0,0.2)",
+                      borderRadius: "5px",
+                      padding: "5px",
+                      background: "rgba(0,0,0,0.1)",
+                      color: "rgba(0,0,0,0.8)",
+                    }}
+                  >
+                    สามารถชำระเงินผ่านเลขที่บัญชี: <span>4670686364</span>
+                    <br />
+                    (ธ.กรุงไทย มนจิรา เดชะชาติ)
+                  </p>
                   <Form.Group controlId="formFileSm" className="mb-3">
                     <Form.Label>Upload slip</Form.Label>
                     <Form.Control
