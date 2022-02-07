@@ -495,7 +495,6 @@ const storage = multer.diskStorage({
       cb(null, SRC_IMAGE);
     } else {
       cb(null, PD_SRC_IMAGE);
-      cb(null, SRC_IMAGE);
     }
   },
   filename: (req, file, cb) => {
@@ -900,7 +899,6 @@ const trackingStorage = multer.diskStorage({
       cb(null, SRC_IMAGE_TRACKING);
     } else {
       cb(null, PD_SRC_IMAGE_TRACKING);
-      cb(null, SRC_IMAGE_TRACKING);
     }
   },
   filename: (req, file, cb) => {
