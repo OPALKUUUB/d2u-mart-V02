@@ -11,7 +11,9 @@ const multer = require("multer");
 var request = require("request");
 dotenv.config();
 let PD_SRC_IMAGE = "./client/build/slip/";
+let SRC_IMAGE = "./client/public/slip/";
 let PD_SRC_IMAGE_TRACKING = "./client/build/image/";
+let SRC_IMAGE_TRACKING = "./client/public/image/";
 
 const TOKEN = process.env.LINE_ACCESS_TOKEN;
 
@@ -489,7 +491,12 @@ app.patch("/api/yahoo/order/addbid", (req, res) => {
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     // ./client/public/image/
-    cb(null, PD_SRC_IMAGE);
+    if (port === 5000) {
+      cb(null, SRC_IMAGE);
+    } else {
+      cb(null, PD_SRC_IMAGE);
+      cb(null, SRC_IMAGE);
+    }
   },
   filename: (req, file, cb) => {
     cb(
@@ -888,7 +895,13 @@ app.patch("/api/admin/yahoo/tracking", (req, res) => {
 const trackingStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     // ./client/public/image/
-    cb(null, PD_SRC_IMAGE_TRACKING);
+
+    if (port === 5000) {
+      cb(null, SRC_IMAGE_TRACKING);
+    } else {
+      cb(null, PD_SRC_IMAGE_TRACKING);
+      cb(null, SRC_IMAGE_TRACKING);
+    }
   },
   filename: (req, file, cb) => {
     cb(
@@ -1060,11 +1073,6 @@ app.get("*", (req, res) => {
 });
 
 const port = process.env.PORT || 5000;
-app.listen(port, () => {
-  if (port === 5000) {
-    PD_SRC_IMAGE = "./client/public/slip/";
-    PD_SRC_IMAGE_TRACKING = "./client/public/image/";
-  }
-});
+app.listen(port);
 
 console.log(`Server listening on ${port}`);
