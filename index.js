@@ -1,6 +1,6 @@
 const express = require("express");
 const path = require("path");
-
+const fs = require("fs");
 const cors = require("cors");
 const mysql = require("mysql2");
 const jwt = require("jsonwebtoken");
@@ -13,8 +13,6 @@ let PD_SRC_IMAGE = "./client/build/slip/";
 let SRC_IMAGE = "./client/public/slip/";
 let PD_SRC_IMAGE_TRACKING = "./client/build/image/";
 let SRC_IMAGE_TRACKING = "./client/public/image/";
-let SRC_IMAGE_PUBLIC_TRACKING = "./client/image/tracking";
-let SRC_IMAGE_PUBLIC_SLIP = "./client/image/slip";
 
 const TOKEN = process.env.LINE_ACCESS_TOKEN;
 
@@ -491,8 +489,6 @@ app.patch("/api/yahoo/order/addbid", (req, res) => {
 });
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // ./client/public/image/
-    cb(null, SRC_IMAGE_PUBLIC_SLIP);
     if (port === 5000) {
       cb(null, SRC_IMAGE);
     } else {
@@ -516,6 +512,17 @@ app.patch("/api/upload/slip", upload.single("image"), (req, res) => {
     message: "upload successfully!",
     slip_image_filename: req.file.filename,
   });
+  let filename = req.file.filename;
+  if (port !== 5000) {
+    fs.readFile("./client/build/slip/" + filename, (err, buf) => {
+      if (err) console.log(err);
+      let imgBuf = new Buffer(buf, "base64");
+      fs.writeFile("./client/public/slip/" + filename, imgBuf, (err, data) => {
+        if (err) console.log(err);
+        console.log("written successfully!");
+      });
+    });
+  }
 });
 
 app.patch("/api/payment/confirm", (req, res) => {
@@ -895,8 +902,6 @@ app.patch("/api/admin/yahoo/tracking", (req, res) => {
 // tracking
 const trackingStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // ./client/public/image/
-    cb(null, SRC_IMAGE_PUBLIC_TRACKING);
     if (port === 5000) {
       cb(null, SRC_IMAGE_TRACKING);
     } else {
@@ -918,6 +923,17 @@ app.post("/api/upload", trackingUpload.single("image"), (req, res) => {
   res.status(200).json({
     filename: req.file.filename,
   });
+  let filename = req.file.filename;
+  if (port !== 5000) {
+    fs.readFile("./client/build/image/" + filename, (err, buf) => {
+      if (err) console.log(err);
+      let imgBuf = new Buffer(buf, "base64");
+      fs.writeFile("./client/public/image/" + filename, imgBuf, (err, data) => {
+        if (err) console.log(err);
+        console.log("written successfully!");
+      });
+    });
+  }
 });
 
 app.get("/api/tracking", (req, res) => {
