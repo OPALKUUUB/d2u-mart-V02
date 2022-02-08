@@ -89,6 +89,7 @@ const navLink = [
   { name: "Auction", path: "/admin/table/yahoo/auction" },
   { name: "Payment", path: "/admin/table/yahoo/payment" },
   { name: "History/Tracking", path: "/admin/table/yahoo/history" },
+  { name: "Add", path: "/admin/yahoo/auction" },
 ];
 
 function ChangeYen(props) {
