@@ -232,7 +232,7 @@ function AddTrackModal(props) {
           alert(json.message);
         }
       });
-  });
+  }, []);
   const handleChangeTracking = (e) => {
     setTracking({ ...tracking, [e.target.name]: e.target.value });
   };

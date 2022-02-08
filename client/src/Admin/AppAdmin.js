@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Container } from "react-bootstrap";
 import { Route, Switch } from "react-router-dom";
 import NavBarAdmin from "./components/NavBarAdmin";
+import AuctionAdmin from "./pages/AuctionAdmin";
 import AuctionTable from "./pages/AuctionTable";
 import HistoryTable from "./pages/HistoryTable";
 import LoginAdmin from "./pages/login/LoginAdmin";
@@ -29,6 +30,7 @@ export default function AppAdmin() {
               path="/admin/table/yahoo/auction"
               component={AuctionTable}
             />
+            <Route exact path="/admin/yahoo/auction" component={AuctionAdmin} />
             <Route
               exact
               path="/admin/table/yahoo/payment"

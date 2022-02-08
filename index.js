@@ -1081,6 +1081,38 @@ app.patch("/api/admin/tracking", (req, res) => {
   });
 });
 
+app.post("/api/admin/yahoo/offer", (req, res) => {
+  let date = genDate();
+  let offer = [
+    req.body.username,
+    req.body.link,
+    req.body.imgsrc,
+    req.body.price,
+    "Auction",
+    req.body.remark,
+    date,
+    date,
+  ];
+  console.log(offer);
+  const sql =
+    "INSERT INTO orders (username, link, imgsrc, maxbid, status, remark, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?);";
+  conn.query(sql, offer, (err, result) => {
+    if (err) {
+      console.log(err.sqlMessage);
+      res.status(400).json({
+        status: false,
+        message: "Error: " + err.sqlMessage,
+      });
+    } else {
+      console.log(result);
+      res.status(200).json({
+        status: true,
+        message: "Offer " + req.body.link + "is successfully",
+      });
+    }
+  });
+});
+
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
 // ref deploy : https://daveceddia.com/deploy-react-express-app-heroku/
