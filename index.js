@@ -14,8 +14,6 @@ let SRC_IMAGE = "./client/public/slip/";
 let PD_SRC_IMAGE_TRACKING = "./client/build/image/";
 let SRC_IMAGE_TRACKING = "./client/public/image/";
 
-const TOKEN = process.env.LINE_ACCESS_TOKEN;
-
 const conn = mysql.createConnection({
   host: process.env.PD_DB_HOST,
   user: process.env.PD_DB_UNAME,
@@ -53,6 +51,8 @@ function genDate() {
     today.getMinutes() >= 10 ? today.getMinutes() : `0${today.getMinutes()}`;
   return `${today.getFullYear()}-${month}-${date}T${hour}:${minute}`;
 }
+
+const url_line_notification = "https://notify-api.line.me/api/notify";
 
 app.get("/api/regist", (req, res) => {
   let decoded = jwt.verify(
@@ -355,6 +355,29 @@ app.post("/api/yahoo/offer", (req, res) => {
       }
     });
   }
+  // ref: https://somnuekmueanprasan.medium.com/line-notify-nodejs-1feb050c1016
+  request(
+    {
+      method: "POST",
+      uri: url_line_notification,
+      header: {
+        "Content-Type": "multipart/form-data",
+      },
+      auth: {
+        bearer: process.env.TOKEN,
+      },
+      form: {
+        message: `${decoded.username}  Offer Link: ${req.body.link} bid: ${req.body.price} yen`,
+      },
+    },
+    (err, httpResponse, body) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(body);
+      }
+    }
+  );
 });
 
 app.get("/api/yahoo/orders", (req, res) => {
@@ -482,6 +505,28 @@ app.patch("/api/yahoo/order/addbid", (req, res) => {
             message:
               "Update orders at username " + decoded.username + " successfully",
           });
+          request(
+            {
+              method: "POST",
+              uri: url_line_notification,
+              header: {
+                "Content-Type": "multipart/form-data",
+              },
+              auth: {
+                bearer: process.env.TOKEN,
+              },
+              form: {
+                message: `${decoded.username}  Add bid`,
+              },
+            },
+            (err, httpResponse, body) => {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log(body);
+              }
+            }
+          );
         }
       }
     );
@@ -1111,6 +1156,28 @@ app.post("/api/admin/yahoo/offer", (req, res) => {
       });
     }
   });
+  request(
+    {
+      method: "POST",
+      uri: url_line_notification,
+      header: {
+        "Content-Type": "multipart/form-data",
+      },
+      auth: {
+        bearer: process.env.TOKEN,
+      },
+      form: {
+        message: `${req.body.username}  Offer Link: ${req.body.link} bid: ${req.body.price} yen`,
+      },
+    },
+    (err, httpResponse, body) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(body);
+      }
+    }
+  );
 });
 
 // The "catchall" handler: for any request that doesn't
