@@ -1,6 +1,5 @@
 const express = require("express");
 const path = require("path");
-const fs = require("fs");
 const cors = require("cors");
 const mysql = require("mysql2");
 const jwt = require("jsonwebtoken");
@@ -557,17 +556,6 @@ app.patch("/api/upload/slip", upload.single("image"), (req, res) => {
     message: "upload successfully!",
     slip_image_filename: req.file.filename,
   });
-  let filename = req.file.filename;
-  if (port !== 5000) {
-    fs.readFile("./client/build/slip/" + filename, (err, buf) => {
-      if (err) console.log(err);
-      let imgBuf = new Buffer(buf, "base64");
-      fs.writeFile("./client/public/slip/" + filename, imgBuf, (err, data) => {
-        if (err) console.log(err);
-        console.log("written successfully!");
-      });
-    });
-  }
 });
 
 app.patch("/api/payment/confirm", (req, res) => {
@@ -968,17 +956,6 @@ app.post("/api/upload", trackingUpload.single("image"), (req, res) => {
   res.status(200).json({
     filename: req.file.filename,
   });
-  let filename = req.file.filename;
-  if (port !== 5000) {
-    fs.readFile("./client/build/image/" + filename, (err, buf) => {
-      if (err) console.log(err);
-      let imgBuf = new Buffer(buf, "base64");
-      fs.writeFile("./client/public/image/" + filename, imgBuf, (err, data) => {
-        if (err) console.log(err);
-        console.log("written successfully!");
-      });
-    });
-  }
 });
 
 app.get("/api/tracking", (req, res) => {
