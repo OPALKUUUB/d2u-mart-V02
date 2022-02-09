@@ -68,7 +68,11 @@ export default function YahooHistory() {
               <td className="align-middle">{item.tranfer_fee_injapan}</td>
               <td className="align-middle">{item.delivery_in_thai}</td>
               <td className="align-middle">{item.status}</td>
-              <td className="align-middle">{item.payment_status}</td>
+              <td className="align-middle">
+                {item.payment_status === null || item.payment_status === ""
+                  ? "-"
+                  : "ชำระเงินเรียบร้อยแล้ว"}
+              </td>
             </tr>
           ))}
         </tbody>

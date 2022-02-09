@@ -90,7 +90,12 @@ export default function PaymentTable() {
             </td>
             <td className="align-middle">{item.tranfer_fee_injapan}</td>
             <td className="align-middle">{item.delivery_in_thai}</td>
-            <td className="align-middle">{item.payment_status}</td>
+            <td className="align-middle">
+              {item.payment_status === "pending1" && "รอค่าส่ง"}
+              {item.payment_status === "pending2" && "รอการชำระ"}
+              {item.payment_status === "pending3" && "รอการตรวจสอบ"}
+              {item.payment_status === "paid" && "ชำระเงินเรียบร้อยแล้ว"}
+            </td>
             <td className="align-middle">
               <Button variant="warning" onClick={() => handleUpdateWin(item)}>
                 Edit
