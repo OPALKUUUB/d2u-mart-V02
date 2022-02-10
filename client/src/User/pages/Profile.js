@@ -3,6 +3,9 @@ import { Form, Row, Col, Button, FloatingLabel } from "react-bootstrap";
 
 export default function Profile() {
   const [register, setRegister] = useState({});
+  const [p1, setP1] = useState("");
+  const [p2, setP2] = useState("");
+  const [p3, setP3] = useState("");
   useEffect(() => {
     fetch("/api/regist", {
       method: "GET",
@@ -17,6 +20,8 @@ export default function Profile() {
           setRegister(json.data);
         } else {
           alert(json.message);
+          localStorage.removeItem("token");
+          window.location.reload(false);
         }
       });
   }, []);
@@ -32,18 +37,57 @@ export default function Profile() {
     }
   };
   const handleUpdate = () => {
-    fetch("/api/regist", {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        token: localStorage.getItem("token"),
-      },
-      body: JSON.stringify(register),
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        alert(json.message);
-      });
+    if (p1 !== "" && p2 !== "" && p3 !== "") {
+      if (p1 !== register.password) {
+        alert("Password is not correct!");
+        setP1("");
+        setP2("");
+        setP3("");
+      } else {
+        if (p2 !== p3) {
+          alert("New Password and Confirm Password doesn't match!");
+        } else {
+          setRegister({ ...register, password: p2 });
+          fetch("/api/regist", {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              token: localStorage.getItem("token"),
+            },
+            body: JSON.stringify(register),
+          })
+            .then((res) => res.json())
+            .then((json) => {
+              if (json.status) {
+                alert("Update Profile Successfull");
+              } else {
+                alert(json.message);
+                localStorage.removeItem("token");
+                window.location.reload(false);
+              }
+            });
+        }
+      }
+    } else {
+      fetch("/api/regist", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          token: localStorage.getItem("token"),
+        },
+        body: JSON.stringify(register),
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          if (json.status) {
+            alert("Update Profile Successfull");
+          } else {
+            alert(json.message);
+            localStorage.removeItem("token");
+            window.location.reload(false);
+          }
+        });
+    }
   };
   return (
     <div>
@@ -74,6 +118,45 @@ export default function Profile() {
               name="phone"
               onChange={handleChange}
               value={register.phone}
+            />
+          </Col>
+        </Form.Group>
+        <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
+          <Form.Label column sm={2}>
+            Password
+          </Form.Label>
+          <Col sm={10}>
+            <Form.Control
+              type="password"
+              placeholder="Enter password"
+              name="password1"
+              onChange={(e) => setP1(e.target.value)}
+            />
+          </Col>
+        </Form.Group>
+        <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
+          <Form.Label column sm={2}>
+            New Password
+          </Form.Label>
+          <Col sm={10}>
+            <Form.Control
+              type="password"
+              placeholder="Enter password"
+              name="password2"
+              onChange={(e) => setP2(e.target.value)}
+            />
+          </Col>
+        </Form.Group>
+        <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
+          <Form.Label column sm={2}>
+            Confirm Password
+          </Form.Label>
+          <Col sm={10}>
+            <Form.Control
+              type="password"
+              placeholder="Enter password"
+              name="password3"
+              onChange={(e) => setP3(e.target.value)}
             />
           </Col>
         </Form.Group>
