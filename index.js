@@ -53,6 +53,50 @@ function genDate() {
 
 const url_line_notification = "https://notify-api.line.me/api/notify";
 
+// app.get("/add/user/customer", (req, res) => {
+//   var date = genDate();
+//   let data = [];
+//   let sql =
+//     "INSERT INTO user_customers (username,name,phone,address_case,address,password,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?)";
+//   data.push(user[0].username);
+//   data.push(user[0].name);
+//   data.push(user[0].phone);
+//   data.push(user[0].case);
+//   data.push(user[0].address);
+//   data.push(user[0].password);
+//   data.push(date);
+//   data.push(date);
+//   for (let i = 1; i < user.length; i++) {
+//     sql += ",(?,?,?,?,?,?,?,?)";
+//     data.push(user[i].username);
+//     data.push(user[i].name);
+//     data.push(user[i].phone);
+//     data.push(user[i].case);
+//     data.push(user[i].address);
+//     data.push(user[i].password);
+//     data.push(date);
+//     data.push(date);
+//   }
+
+//   conn.query(sql, data, (err, result) => {
+//     if (err) {
+//       console.log(err.sqlMessage);
+//       res.status(400).json({
+//         status: false,
+//         message: "Error: " + err.sqlMessage,
+//       });
+//     } else {
+//       console.log(result);
+//       res.status(200).json({
+//         status: true,
+//         message:
+//           "insert into user_customers is successfully at row " +
+//           result.insertId,
+//       });
+//     }
+//   });
+// });
+
 app.get("/api/regist", (req, res) => {
   let decoded = jwt.verify(
     req.headers.token,
@@ -91,39 +135,6 @@ app.get("/api/regist", (req, res) => {
       }
     });
   }
-});
-app.post("/api/regist", (req, res) => {
-  var date = genDate();
-  var regist = [
-    req.body.username,
-    req.body.name,
-    req.body.phone,
-    req.body.case,
-    req.body.address,
-    req.body.password,
-    date,
-    date,
-  ];
-  const sql = `INSERT INTO user_customers (
-      username,name,phone,address_case,address,password,created_at,updated_at
-      ) VALUES(?,?,?,?,?,?,?,?);`;
-  conn.query(sql, regist, (err, result) => {
-    if (err) {
-      console.log(err.sqlMessage);
-      res.status(400).json({
-        status: false,
-        message: "Error: " + err.sqlMessage,
-      });
-    } else {
-      console.log(result);
-      res.status(200).json({
-        status: true,
-        message:
-          "insert into user_customers is successfully at row " +
-          result.insertId,
-      });
-    }
-  });
 });
 app.patch("/api/regist", (req, res) => {
   var date = genDate();

@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Button,
-  Col,
-  Container,
-  Form,
-  Modal,
-  Row,
-  Table,
-} from "react-bootstrap";
+import { Table } from "react-bootstrap";
 
 export default function YahooHistory() {
   const [orders, setOrders] = useState([]);
@@ -42,8 +34,8 @@ export default function YahooHistory() {
             <th>Order</th>
             <th>Link</th>
             <th>Bid(yen)</th>
-            <th>tranfer fee(bath)</th>
-            <th>delivery(yen)</th>
+            <th>Tranfer fee(bath)</th>
+            <th>Delivery(yen)</th>
             <th>Status</th>
             <th>Payment Status</th>
           </tr>
