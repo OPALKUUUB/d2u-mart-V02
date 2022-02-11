@@ -58,9 +58,7 @@ export default function YahooHistory() {
                 </a>
               </td>
 
-              <td className="align-middle">
-                <div>{item.bid} (¥)</div>
-              </td>
+              <td className="align-middle">{item.bid} (¥)</td>
               <td className="align-middle">{item.tranfer_fee_injapan}</td>
               <td className="align-middle">{item.delivery_in_thai}</td>
               <td className="align-middle">{item.status}</td>

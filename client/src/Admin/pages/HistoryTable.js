@@ -112,42 +112,47 @@ export default function HistoryTable() {
                   </a>
                 </>
               )}
-              <span
-                style={{
-                  backgroundColor: "yellow",
-                  width: "fit-content",
-                  marginLeft: "10px",
-                }}
-              >
-                ({item.bid_by})
-              </span>
-              <br />
-              {item.bid === null || item.bid === "" ? "-" : item.bid} (¥)/
-              {item.tranfer_fee_injapan === null ||
-              item.tranfer_fee_injapan === ""
-                ? "-"
-                : item.tranfer_fee_injapan}{" "}
-              (฿)/
-              {item.delivery_in_thai === null || item.delivery_in_thai === ""
-                ? "-"
-                : item.delivery_in_thai}{" "}
-              (¥)
-              <br />
-              sum:{" "}
-              {item.bid === null ||
-              item.bid === "" ||
-              item.tranfer_fee_injapan === null ||
-              item.tranfer_fee_injapan === "" ||
-              item.delivery_in_thai === null ||
-              item.delivery_in_thai === "" ? (
-                ""
-              ) : (
+              {item.status === "win" && (
                 <>
-                  {Math.round((item.bid + item.delivery_in_thai) * yen) +
-                    item.tranfer_fee_injapan}{" "}
+                  <span
+                    style={{
+                      backgroundColor: "yellow",
+                      width: "fit-content",
+                      marginLeft: "10px",
+                    }}
+                  >
+                    ({item.bid_by})
+                  </span>
+                  <br />
+                  {item.bid === null || item.bid === "" ? "-" : item.bid} (¥)/
+                  {item.tranfer_fee_injapan === null ||
+                  item.tranfer_fee_injapan === ""
+                    ? "-"
+                    : item.tranfer_fee_injapan}{" "}
+                  (฿)/
+                  {item.delivery_in_thai === null ||
+                  item.delivery_in_thai === ""
+                    ? "-"
+                    : item.delivery_in_thai}{" "}
+                  (¥)
+                  <br />
+                  sum:{" "}
+                  {item.bid === null ||
+                  item.bid === "" ||
+                  item.tranfer_fee_injapan === null ||
+                  item.tranfer_fee_injapan === "" ||
+                  item.delivery_in_thai === null ||
+                  item.delivery_in_thai === "" ? (
+                    ""
+                  ) : (
+                    <>
+                      {Math.round((item.bid + item.delivery_in_thai) * yen) +
+                        item.tranfer_fee_injapan}{" "}
+                    </>
+                  )}
+                  (฿)
                 </>
               )}
-              (฿)
             </td>
             <td className="align-middle">{item.track_id}</td>
             <td className="align-middle">{item.box_id}</td>
