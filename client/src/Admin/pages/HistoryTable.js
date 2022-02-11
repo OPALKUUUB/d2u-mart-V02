@@ -112,17 +112,17 @@ export default function HistoryTable() {
                   </a>
                 </>
               )}
+              <span
+                style={{
+                  backgroundColor: "yellow",
+                  width: "fit-content",
+                  marginLeft: "10px",
+                }}
+              >
+                ({item.bid_by})
+              </span>
               {item.status === "win" && (
                 <>
-                  <span
-                    style={{
-                      backgroundColor: "yellow",
-                      width: "fit-content",
-                      marginLeft: "10px",
-                    }}
-                  >
-                    ({item.bid_by})
-                  </span>
                   <br />
                   {item.bid === null || item.bid === "" ? "-" : item.bid} (¥)/
                   {item.tranfer_fee_injapan === null ||
