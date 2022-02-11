@@ -38,6 +38,10 @@ export default function YahooHistory() {
             <th>Delivery(yen)</th>
             <th>Status</th>
             <th>Payment Status</th>
+            <th>Track id</th>
+            <th>หมายเลขกล่อง</th>
+            <th>น้ำหนัก(kg.)</th>
+            <th>รอบเรือ</th>
           </tr>
         </thead>
         <tbody style={{ textAlign: "center" }}>

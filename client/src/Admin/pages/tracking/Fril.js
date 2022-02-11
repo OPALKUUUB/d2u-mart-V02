@@ -18,7 +18,11 @@ export default function FrilTracking() {
     })
       .then((res) => res.json())
       .then((json) => {
-        setTrackings(json.data);
+        if (json.status) {
+          setTrackings(json.data);
+        } else {
+          alert(json.message);
+        }
       });
   }, []);
   const handleConfigs = (item) => {
