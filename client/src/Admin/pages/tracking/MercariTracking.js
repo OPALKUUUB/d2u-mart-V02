@@ -18,7 +18,7 @@ export default function MercariTracking() {
     })
       .then((res) => res.json())
       .then((json) => {
-        if (json.message) {
+        if (json.status) {
           setTrackings(json.data);
         } else {
           alert(json.message)

@@ -19,7 +19,7 @@ export default function ShimizuTracking() {
     })
       .then((res) => res.json())
       .then((json) => {
-        if (json.message) {
+        if (json.status) {
           setTrackings(json.data);
         } else {
           alert(json.message);

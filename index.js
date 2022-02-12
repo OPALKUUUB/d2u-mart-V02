@@ -1017,6 +1017,7 @@ app.get("/api/admin/tracking/:mode", (req, res) => {
         message: "Error: " + err.sqlMessage,
       });
     } else {
+      console.log(row);
       res.status(200).json({
         status: true,
         data: row,
