@@ -15,6 +15,7 @@ export default function Tracking() {
       .then((json) => {
         if (json.status) {
           setTrackings(json.data);
+          console.log(json.data);
         } else {
           alert(json.message);
           localStorage.removeItem("token");
@@ -43,28 +44,49 @@ export default function Tracking() {
         <tbody>
           {trackings.map((item, index) => (
             <tr key={index}>
-              <td className="align-middle">{index + 1}</td>
-              <td className="align-middle">{item.date}</td>
-              <td className="align-middle">{item.channel}</td>
-              <td className="align-middle">{item.track_id}</td>
-              <td className="align-middle">{item.box_id}</td>
-              <td className="align-middle">{item.weight}</td>
-              <td className="align-middle">{item.round_boat}</td>
-              <td className="align-middle">
-                <img
-                  src={"/image/" + item.pic1_filename}
-                  alt="image for pic1"
-                  width={100}
-                />
-              </td>
-              <td className="align-middle">
-                <img
-                  src={"/image/" + item.pic2_filename}
-                  alt="image for pic2"
-                  width={100}
-                />
-              </td>
-              <td className="align-middle">{item.remark}</td>
+              {item.channel === "yahoo" ? (
+                <>
+                  <td className="align-middle">{index + 1}</td>
+                  <td className="align-middle">
+                    {item.created_at.split("T")[0]}
+                  </td>
+                  <td className="align-middle">{item.channel}</td>
+                  <td className="align-middle">{item.track_id}</td>
+                  <td className="align-middle">{item.box_id}</td>
+                  <td className="align-middle">{item.weight}</td>
+                  <td className="align-middle">{item.round_boat}</td>
+                  <td className="align-middle">
+                    <img src={item.imgsrc} alt="image for pic1" width={100} />
+                  </td>
+                  <td className="align-middle text-center">-</td>
+                  <td className="align-middle text-center">-</td>
+                </>
+              ) : (
+                <>
+                  <td className="align-middle">{index + 1}</td>
+                  <td className="align-middle">{item.date}</td>
+                  <td className="align-middle">{item.channel}</td>
+                  <td className="align-middle">{item.track_id}</td>
+                  <td className="align-middle">{item.box_id}</td>
+                  <td className="align-middle">{item.weight}</td>
+                  <td className="align-middle">{item.round_boat}</td>
+                  <td className="align-middle">
+                    <img
+                      src={"/image/" + item.pic1_filename}
+                      alt="image for pic1"
+                      width={100}
+                    />
+                  </td>
+                  <td className="align-middle">
+                    <img
+                      src={"/image/" + item.pic2_filename}
+                      alt="image for pic2"
+                      width={100}
+                    />
+                  </td>
+                  <td className="align-middle">{item.remark}</td>
+                </>
+              )}
             </tr>
           ))}
         </tbody>

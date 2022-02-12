@@ -996,11 +996,26 @@ app.get("/api/tracking", (req, res) => {
           message: "Error: " + err.sqlMessage,
         });
       } else {
-        res.status(200).json({
-          status: true,
-          message:
-            "Select * from tracking where username = " + decoded.username,
-          data: row,
+        const sql2 =
+          "SELECT id,username, track_id, box_id, weight, round_boat, imgsrc, created_at FROM orders WHERE username = ? AND payment_status = ?;";
+        conn.query(sql2, [decoded.username, "paid"], (err2, row2) => {
+          if (err2) {
+            console.log(err);
+            res.status(400).json({
+              status: false,
+              message: "Error: " + err2.sqlMessage,
+            });
+          } else {
+            for (let i = 0; i < row2.length; i++) {
+              row2[i].channel = "yahoo";
+            }
+            row.push(...row2);
+            res.status(200).json({
+              status: true,
+              message: "Select tracking successfull",
+              data: row,
+            });
+          }
         });
       }
     });
