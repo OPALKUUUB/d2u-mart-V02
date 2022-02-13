@@ -37,45 +37,25 @@ export default function Profile() {
     }
   };
   const handleUpdate = () => {
+    let regist = {};
+    let check = true;
     if (p1 !== "" && p2 !== "" && p3 !== "") {
-      if (p1 !== register.password) {
-        alert("Password is not correct!");
-        setP1("");
-        setP2("");
-        setP3("");
+      if (p1 === register.password && p2 === p3) {
+        regist = { ...register, password: p3 };
       } else {
-        if (p2 !== p3) {
-          alert("New Password and Confirm Password doesn't match!");
-        } else {
-          setRegister({ ...register, password: p2 });
-          fetch("/api/regist", {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-              token: localStorage.getItem("token"),
-            },
-            body: JSON.stringify(register),
-          })
-            .then((res) => res.json())
-            .then((json) => {
-              if (json.status) {
-                alert("Update Profile Successfull");
-              } else {
-                alert(json.message);
-                localStorage.removeItem("token");
-                window.location.reload(false);
-              }
-            });
-        }
+        check = false;
       }
     } else {
+      regist = register;
+    }
+    if (check) {
       fetch("/api/regist", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           token: localStorage.getItem("token"),
         },
-        body: JSON.stringify(register),
+        body: JSON.stringify(regist),
       })
         .then((res) => res.json())
         .then((json) => {
@@ -87,6 +67,8 @@ export default function Profile() {
             window.location.reload(false);
           }
         });
+    } else {
+      alert("Please check password field again!");
     }
   };
   return (
