@@ -96,18 +96,10 @@ export default function OtherTracking() {
               {month[parseInt(item.round_boat.split("-")[1])]}
             </td>
             <td className="align-middle">
-              <img
-                src={"/image/" + item.pic1_filename}
-                alt="image for pic1"
-                width={100}
-              />
+              <img src={item.pic1_filename} alt="image for pic1" width={100} />
             </td>
             <td className="align-middle">
-              <img
-                src={"/image/" + item.pic2_filename}
-                alt="image for pic2"
-                width={100}
-              />
+              <img src={item.pic2_filename} alt="image for pic2" width={100} />
             </td>
             <td className="align-middle" style={{ minWidth: "130px" }}>
               {item.remark}
@@ -268,40 +260,74 @@ function AddTrackModal(props) {
     if (pic1File === null) {
       alert(`please choose slip first!`);
     } else {
-      const fd = packFile(pic1File);
-      fetch(`/api/upload`, {
+      const data = new FormData();
+      data.append("file", pic1File);
+      data.append("upload_preset", "d2u-service");
+      data.append("cloud_name", "d2u-service");
+      fetch("  https://api.cloudinary.com/v1_1/d2u-service/upload", {
         method: "POST",
-        body: fd,
+        body: data,
       })
-        .then((res) => res.json())
-        .then((result) => {
-          alert("upload slip successfully");
+        .then((resp) => resp.json())
+        .then((data) => {
           setTracking({
             ...tracking,
-            pic1_filename: result.filename,
+            pic1_filename: data.url,
           });
+          alert("upload slip successfully");
         })
         .catch((err) => console.log(err));
+      // const fd = packFile(pic1File);
+      // fetch(`/api/upload`, {
+      //   method: "POST",
+      //   body: fd,
+      // })
+      //   .then((res) => res.json())
+      //   .then((result) => {
+      //     alert("upload slip successfully");
+      // setTracking({
+      //   ...tracking,
+      //   pic1_filename: result.filename,
+      // });
+      //   })
+      //   .catch((err) => console.log(err));
     }
   };
   const handleUploadPic2File = () => {
     if (pic2File === null) {
       alert(`please choose slip first!`);
     } else {
-      const fd = packFile(pic2File);
-      fetch(`/api/upload`, {
+      const data = new FormData();
+      data.append("file", pic2File);
+      data.append("upload_preset", "d2u-service");
+      data.append("cloud_name", "d2u-service");
+      fetch("  https://api.cloudinary.com/v1_1/d2u-service/upload", {
         method: "POST",
-        body: fd,
+        body: data,
       })
-        .then((res) => res.json())
-        .then((result) => {
-          alert("upload slip successfully");
+        .then((resp) => resp.json())
+        .then((data) => {
           setTracking({
             ...tracking,
-            pic2_filename: result.filename,
+            pic2_filename: data.url,
           });
+          alert("upload slip successfully");
         })
         .catch((err) => console.log(err));
+      // const fd = packFile(pic2File);
+      // fetch(`/api/upload`, {
+      //   method: "POST",
+      //   body: fd,
+      // })
+      //   .then((res) => res.json())
+      //   .then((result) => {
+      //     alert("upload slip successfully");
+      //     setTracking({
+      //       ...tracking,
+      //       pic2_filename: result.filename,
+      //     });
+      //   })
+      //   .catch((err) => console.log(err));
     }
   };
   const handleAddTracking = () => {
@@ -589,18 +615,21 @@ function UpdateTrackModal(props) {
     if (pic1File === null) {
       alert(`please choose slip first!`);
     } else {
-      const fd = packFile(pic1File);
-      fetch(`/api/upload`, {
+      const data = new FormData();
+      data.append("file", pic1File);
+      data.append("upload_preset", "d2u-service");
+      data.append("cloud_name", "d2u-service");
+      fetch("  https://api.cloudinary.com/v1_1/d2u-service/upload", {
         method: "POST",
-        body: fd,
+        body: data,
       })
-        .then((res) => res.json())
-        .then((result) => {
-          alert("upload slip successfully");
+        .then((resp) => resp.json())
+        .then((data) => {
           setTracking({
             ...tracking,
-            pic1_filename: result.filename,
+            pic1_filename: data.url,
           });
+          alert("upload slip successfully");
         })
         .catch((err) => console.log(err));
     }
@@ -609,18 +638,21 @@ function UpdateTrackModal(props) {
     if (pic2File === null) {
       alert(`please choose slip first!`);
     } else {
-      const fd = packFile(pic2File);
-      fetch(`/api/upload`, {
+      const data = new FormData();
+      data.append("file", pic2File);
+      data.append("upload_preset", "d2u-service");
+      data.append("cloud_name", "d2u-service");
+      fetch("  https://api.cloudinary.com/v1_1/d2u-service/upload", {
         method: "POST",
-        body: fd,
+        body: data,
       })
-        .then((res) => res.json())
-        .then((result) => {
-          alert("upload slip successfully");
+        .then((resp) => resp.json())
+        .then((data) => {
           setTracking({
             ...tracking,
-            pic2_filename: result.filename,
+            pic2_filename: data.url,
           });
+          alert("upload slip successfully");
         })
         .catch((err) => console.log(err));
     }

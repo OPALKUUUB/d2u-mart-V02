@@ -63,28 +63,48 @@ export default function YahooAllPayment(props) {
     if (file === null) {
       alert(`please choose slip first!`);
     } else {
-      const fd = packFile(file);
-      fetch(`/api/upload/slip`, {
-        method: "PATCH",
-        headers: {
-          token: localStorage.getItem("token"),
-        },
-        body: fd,
+      // const fd = packFile(file);
+      // fetch(`/api/upload/slip`, {
+      //   method: "PATCH",
+      //   headers: {
+      //     token: localStorage.getItem("token"),
+      //   },
+      //   body: fd,
+      // })
+      //   .then((res) => res.json())
+      //   .then((result) => {
+      //     if (!result.status) {
+      //       alert("please upload slip again!");
+      //     } else {
+      // let temp = [];
+      // for (let i = 0; i < payment.length; i++) {
+      //   temp.push(payment[i].id);
+      // }
+      // setArrId(temp);
+      // setSlipImageFilename(result.slip_image_filename);
+      // setSum(handleSumPayment());
+      // setModalShow(true);
+      //     }
+      //   })
+      //   .catch((err) => console.log(err));
+      const data = new FormData();
+      data.append("file", file);
+      data.append("upload_preset", "d2u-service");
+      data.append("cloud_name", "d2u-service");
+      fetch("  https://api.cloudinary.com/v1_1/d2u-service/upload", {
+        method: "POST",
+        body: data,
       })
-        .then((res) => res.json())
-        .then((result) => {
-          if (!result.status) {
-            alert("please upload slip again!");
-          } else {
-            let temp = [];
-            for (let i = 0; i < payment.length; i++) {
-              temp.push(payment[i].id);
-            }
-            setArrId(temp);
-            setSlipImageFilename(result.slip_image_filename);
-            setSum(handleSumPayment());
-            setModalShow(true);
+        .then((resp) => resp.json())
+        .then((data) => {
+          let temp = [];
+          for (let i = 0; i < payment.length; i++) {
+            temp.push(payment[i].id);
           }
+          setArrId(temp);
+          setSlipImageFilename(data.url);
+          setSum(handleSumPayment());
+          setModalShow(true);
         })
         .catch((err) => console.log(err));
     }

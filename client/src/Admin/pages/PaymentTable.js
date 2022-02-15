@@ -354,7 +354,7 @@ function ModalSlip(props) {
       centered
       onClick={props.onHide}
     >
-      <img src={"/slip/" + props.src} />
+      <img src={props.src} />
     </Modal>
   );
 }

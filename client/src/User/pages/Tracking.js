@@ -72,14 +72,14 @@ export default function Tracking() {
                   <td className="align-middle">{item.round_boat}</td>
                   <td className="align-middle">
                     <img
-                      src={"/image/" + item.pic1_filename}
+                      src={item.pic1_filename}
                       alt="image for pic1"
                       width={100}
                     />
                   </td>
                   <td className="align-middle">
                     <img
-                      src={"/image/" + item.pic2_filename}
+                      src={item.pic2_filename}
                       alt="image for pic2"
                       width={100}
                     />
