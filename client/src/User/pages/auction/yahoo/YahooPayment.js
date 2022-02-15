@@ -9,6 +9,7 @@ import {
   Table,
 } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
+import ReactLoading from "react-loading";
 
 export default function YahooPayment() {
   const [orders, setOrders] = useState([]);
@@ -16,6 +17,7 @@ export default function YahooPayment() {
   const [modalShowSlip, setModalShowSlip] = useState(false);
   const [payment, setPayment] = useState([]);
   const [slip, setSlip] = useState("");
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     fetch("/api/yahoo/payment", {
       method: "GET",
@@ -28,6 +30,7 @@ export default function YahooPayment() {
       .then((json) => {
         if (json.status) {
           setOrders(json.data);
+          setLoading(false);
         } else {
           alert(json.message);
           localStorage.removeItem("token");
@@ -123,6 +126,37 @@ export default function YahooPayment() {
         </tbody>
       </Table>
       <Button onClick={handlePayment}>Payment</Button>
+      {loading && (
+        <>
+          <div
+            style={{
+              position: "fixed",
+              top: "0",
+              left: "0",
+              background: "rgba(0,0,0,0.3)",
+              width: "100vw",
+              height: "100vh",
+              zIndex: "999",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+              }}
+            >
+              <ReactLoading
+                type={"bubbles"}
+                color={"rgba(0,0,0,0.2)"}
+                height={400}
+                width={300}
+              />
+            </div>
+          </div>
+        </>
+      )}
       <MyVerticallyCenteredModal
         show={modalShow}
         onHide={() => setModalShow(false)}

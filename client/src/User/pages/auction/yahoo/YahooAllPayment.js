@@ -9,6 +9,7 @@ import {
   Row,
 } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
+import ReactLoading from "react-loading";
 
 export default function YahooAllPayment(props) {
   const [yen, setYen] = useState("");
@@ -19,6 +20,8 @@ export default function YahooAllPayment(props) {
   const [slipImageFilename, setSlipImageFilename] = useState();
   const [arrId, setArrId] = useState([]);
   const [sum, setSum] = useState("");
+
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch("/api/yen", {
@@ -31,6 +34,7 @@ export default function YahooAllPayment(props) {
       .then((json) => {
         if (json.status) {
           setYen(json.yen);
+          setLoading(false);
         } else {
           alert(json.message);
         }
@@ -54,39 +58,11 @@ export default function YahooAllPayment(props) {
     setFile(e.target.files[0]);
     setImage(URL.createObjectURL(e.target.files[0]));
   };
-  function packFile() {
-    const fd = new FormData();
-    fd.append("image", file, file.name);
-    return fd;
-  }
   const handleUpload = () => {
+    setLoading(true);
     if (file === null) {
       alert(`please choose slip first!`);
     } else {
-      // const fd = packFile(file);
-      // fetch(`/api/upload/slip`, {
-      //   method: "PATCH",
-      //   headers: {
-      //     token: localStorage.getItem("token"),
-      //   },
-      //   body: fd,
-      // })
-      //   .then((res) => res.json())
-      //   .then((result) => {
-      //     if (!result.status) {
-      //       alert("please upload slip again!");
-      //     } else {
-      // let temp = [];
-      // for (let i = 0; i < payment.length; i++) {
-      //   temp.push(payment[i].id);
-      // }
-      // setArrId(temp);
-      // setSlipImageFilename(result.slip_image_filename);
-      // setSum(handleSumPayment());
-      // setModalShow(true);
-      //     }
-      //   })
-      //   .catch((err) => console.log(err));
       const data = new FormData();
       data.append("file", file);
       data.append("upload_preset", "d2u-service");
@@ -105,6 +81,7 @@ export default function YahooAllPayment(props) {
           setSlipImageFilename(data.url);
           setSum(handleSumPayment());
           setModalShow(true);
+          setLoading(false);
         })
         .catch((err) => console.log(err));
     }
@@ -199,6 +176,36 @@ export default function YahooAllPayment(props) {
           </Col>
         </Row>
       </Container>
+      {loading && (
+        <>
+          <div
+            style={{
+              position: "fixed",
+              top: "0",
+              left: "0",
+              background: "rgba(0,0,0,0.3)",
+              width: "100vw",
+              height: "100vh",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+              }}
+            >
+              <ReactLoading
+                type={"bubbles"}
+                color={"rgba(0,0,0,0.2)"}
+                height={400}
+                width={300}
+              />
+            </div>
+          </div>
+        </>
+      )}
       <MyVerticallyCenteredModal
         show={modalShow}
         onHide={() => setModalShow(false)}

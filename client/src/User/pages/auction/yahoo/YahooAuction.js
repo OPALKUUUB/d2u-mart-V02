@@ -9,6 +9,7 @@ import {
   InputGroup,
   Row,
 } from "react-bootstrap";
+import ReactLoading from "react-loading";
 
 export default function YahooAuction() {
   const history = useHistory();
@@ -17,6 +18,7 @@ export default function YahooAuction() {
   const [price, setPrice] = useState();
   const [remark, setRemark] = useState();
   const [yen, setYen] = useState();
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     fetch("/api/yen", {
       method: "GET",
@@ -28,6 +30,7 @@ export default function YahooAuction() {
       .then((json) => {
         if (json.status) {
           setYen(json.yen);
+          setLoading(false);
         } else {
           alert(json.message);
         }
@@ -89,6 +92,37 @@ export default function YahooAuction() {
   };
   return (
     <>
+      {loading && (
+        <>
+          <div
+            style={{
+              position: "fixed",
+              top: "0",
+              left: "0",
+              background: "rgba(0,0,0,0.3)",
+              width: "100vw",
+              height: "100vh",
+              zIndex: "999",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+              }}
+            >
+              <ReactLoading
+                type={"bubbles"}
+                color={"rgba(0,0,0,0.2)"}
+                height={400}
+                width={300}
+              />
+            </div>
+          </div>
+        </>
+      )}
       <InputGroup className="mb-3">
         <FormControl
           placeholder="Example https://page.auctions.yahoo.co.jp/jp/auction/x0000000"

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form, Modal, Row, Table, Col } from "react-bootstrap";
 import AutoComplete from "../../components/AutoComplete";
-import { Image, Video, Transformation } from "cloudinary-react";
+import ReactLoading from "react-loading";
 
 export default function ShimizuTracking() {
   const [trackings, setTrackings] = useState([]);
@@ -10,7 +10,8 @@ export default function ShimizuTracking() {
   const [item, setItem] = useState({});
   const [date, setDate] = useState("");
   const [username, setUsername] = useState("");
-
+  const [trackId, setTrackId] = useState("");
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     fetch("/api/admin/tracking/shimizu", {
       method: "GET",
@@ -22,6 +23,7 @@ export default function ShimizuTracking() {
       .then((json) => {
         if (json.status) {
           setTrackings(json.data);
+          setLoading(false);
         } else {
           alert(json.message);
         }
@@ -31,9 +33,9 @@ export default function ShimizuTracking() {
     setItem(item);
     setModalShowUpdate(true);
   };
-  const trackingFilter = (c) => {
+  const trackingFilter = () => {
     let temp = trackings;
-    if (c === 1 || c === 3) {
+    if (username !== "") {
       temp = temp.filter((u) => {
         let regex = new RegExp("(" + username + ")", "gi");
         let match = u.username.match(regex);
@@ -44,7 +46,18 @@ export default function ShimizuTracking() {
         }
       });
     }
-    if (c === 2 || c === 3) {
+    if (trackId !== "") {
+      temp = temp.filter((u) => {
+        let regex = new RegExp("(" + trackId + ")", "gi");
+        let match = u.track_id.match(regex);
+        if (match != null) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+    }
+    if (date !== "") {
       temp = temp.filter((u) => {
         let regex = new RegExp("(" + date + ")", "gi");
         let fdate = formatDate(u.date);
@@ -56,19 +69,40 @@ export default function ShimizuTracking() {
         }
       });
     }
+    const handleDelete = (id) => {
+      fetch("/api/admin/tracking", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: id }),
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          if (json.status) {
+            alert(json.message);
+            window.location.reload(false);
+          } else {
+            alert(json.message);
+          }
+        });
+    };
 
     return (
       <>
         {temp.map((item, index) => (
           <tr key={index}>
             <td className="align-middle">{index + 1}</td>
-            <td className="align-middle">
+            <td className="align-middle" style={{ minWidth: "100px" }}>
               {parseInt(item.date.split("-")[2])}{" "}
               {month[parseInt(item.date.split("-")[1])]}{" "}
               {parseInt(item.date.split("-")[0])}
             </td>
             <td className="align-middle">{item.channel}</td>
             <td className="align-middle">{item.username}</td>
+            <td className="align-middle">
+              <a href={item.url} target="_blank">
+                link
+              </a>
+            </td>
             <td className="align-middle">{item.track_id}</td>
             <td className="align-middle">{item.box_id}</td>
             <td className="align-middle">{item.weight}</td>
@@ -82,11 +116,23 @@ export default function ShimizuTracking() {
             <td className="align-middle">
               <img src={item.pic2_filename} alt="image for pic2" width={100} />
             </td>
-            <td className="align-middle">{item.remark}</td>
+            <td className="align-middle" style={{ minWidth: "130px" }}>
+              {item.remark}
+            </td>
             <td className="align-middle">
-              <Button size="sm" onClick={() => handleConfigs(item)}>
-                Edit
-              </Button>
+              <div style={{ display: "flex" }}>
+                <Button
+                  size="sm"
+                  onClick={() => handleConfigs(item)}
+                  variant="success"
+                >
+                  <i class="fas fa-pencil-alt"></i>
+                </Button>
+                &nbsp;
+                <Button variant="danger" onClick={() => handleDelete(item.id)}>
+                  <i class="fas fa-times"></i>
+                </Button>
+              </div>
             </td>
           </tr>
         ))}
@@ -134,16 +180,29 @@ export default function ShimizuTracking() {
             />
           </Form.Group>
         </Col>
+        <Col>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label>Track Id</Form.Label>
+            <Form.Control
+              ttype="text"
+              name="track_id"
+              onChange={(e) => setTrackId(e.target.value)}
+              placeholder="Enter Track Id"
+            />
+          </Form.Group>
+        </Col>
       </Row>
 
       <AddTrackModal
         show={modalShowAdd}
         onHide={() => setModalShowAdd(false)}
+        loading={setLoading}
       />
       <UpdateTrackModal
         show={modalShowUpdate}
         onHide={() => setModalShowUpdate(false)}
         item={item}
+        loading={setLoading}
       />
       <Table responsive striped bordered hover>
         <thead>
@@ -162,13 +221,39 @@ export default function ShimizuTracking() {
             <th>Edit</th>
           </tr>
         </thead>
-        <tbody>
-          {date === "" && username !== "" && trackingFilter(1)}
-          {date !== "" && username === "" && trackingFilter(2)}
-          {date !== "" && username !== "" && trackingFilter(3)}
-          {date === "" && username === "" && trackingFilter(4)}
-        </tbody>
+        <tbody>{trackingFilter()}</tbody>
       </Table>
+      {loading && (
+        <>
+          <div
+            style={{
+              position: "fixed",
+              top: "0",
+              left: "0",
+              background: "rgba(0,0,0,0.3)",
+              width: "100vw",
+              height: "100vh",
+              zIndex: "9999",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+              }}
+            >
+              <ReactLoading
+                type={"bubbles"}
+                color={"rgba(0,0,0,0.2)"}
+                height={400}
+                width={300}
+              />
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 }
@@ -222,6 +307,7 @@ function AddTrackModal(props) {
     if (pic1File === null) {
       alert(`please choose slip first!`);
     } else {
+      props.loading(true);
       const data = new FormData();
       data.append("file", pic1File);
       data.append("upload_preset", "d2u-service");
@@ -236,23 +322,10 @@ function AddTrackModal(props) {
             ...tracking,
             pic1_filename: data.url,
           });
+          props.loading(false);
           alert("upload slip successfully");
         })
         .catch((err) => console.log(err));
-      // const fd = packFile(pic1File);
-      // fetch(`/api/upload`, {
-      //   method: "POST",
-      //   body: fd,
-      // })
-      //   .then((res) => res.json())
-      //   .then((result) => {
-      //     alert("upload slip successfully");
-      // setTracking({
-      //   ...tracking,
-      //   pic1_filename: result.filename,
-      // });
-      //   })
-      //   .catch((err) => console.log(err));
     }
   };
   const handleUploadPic2File = () => {
@@ -276,20 +349,6 @@ function AddTrackModal(props) {
           alert("upload slip successfully");
         })
         .catch((err) => console.log(err));
-      // const fd = packFile(pic2File);
-      // fetch(`/api/upload`, {
-      //   method: "POST",
-      //   body: fd,
-      // })
-      //   .then((res) => res.json())
-      //   .then((result) => {
-      //     alert("upload slip successfully");
-      //     setTracking({
-      //       ...tracking,
-      //       pic2_filename: result.filename,
-      //     });
-      //   })
-      //   .catch((err) => console.log(err));
     }
   };
   const handleAddTracking = () => {

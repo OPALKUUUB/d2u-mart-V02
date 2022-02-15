@@ -8,6 +8,7 @@ import {
   Row,
   Table,
 } from "react-bootstrap";
+import ReactLoading from "react-loading";
 
 export default function PaymentTable() {
   const [date, setDate] = useState("");
@@ -15,6 +16,8 @@ export default function PaymentTable() {
   const [orders, setOrders] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [temp, setTemp] = useState({});
+
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     fetch("/api/admin/yahoo/payment", {
       method: "GET",
@@ -27,6 +30,7 @@ export default function PaymentTable() {
       .then((json) => {
         if (json.status) {
           setOrders(json.data);
+          setLoading(false);
         } else {
           alert(json.message);
           localStorage.removeItem("AdminToken");
@@ -195,6 +199,18 @@ export default function PaymentTable() {
           {date === "" && username === "" && auctionFilter(4)}
         </tbody>
       </Table>
+      {loading && (
+        <>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <ReactLoading
+              type={"bubbles"}
+              color={"rgba(0,0,0,0.2)"}
+              height={400}
+              width={300}
+            />
+          </div>
+        </>
+      )}
       <MydModalWithGrid
         show={modalShow}
         onHide={() => setModalShow(false)}

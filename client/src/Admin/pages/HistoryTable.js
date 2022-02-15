@@ -9,6 +9,8 @@ import {
   Col,
 } from "react-bootstrap";
 
+import ReactLoading from "react-loading";
+
 export default function HistoryTable() {
   const [date, setDate] = useState("");
   const [username, setUsername] = useState("");
@@ -16,6 +18,7 @@ export default function HistoryTable() {
   const [orders, setOrders] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [temp, setTemp] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(async () => {
     await fetch("/api/yen", {
@@ -43,6 +46,7 @@ export default function HistoryTable() {
       .then((json) => {
         if (json.status) {
           setOrders(json.data);
+          setLoading(false);
         } else {
           alert(json.message);
           localStorage.removeItem("AdminToken");
@@ -241,6 +245,18 @@ export default function HistoryTable() {
           {date === "" && username === "" && auctionFilter(4)}
         </tbody>
       </Table>
+      {loading && (
+        <>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <ReactLoading
+              type={"bubbles"}
+              color={"rgba(0,0,0,0.2)"}
+              height={400}
+              width={300}
+            />
+          </div>
+        </>
+      )}
       <EditYahooHistory
         show={modalShow}
         onHide={() => setModalShow(false)}

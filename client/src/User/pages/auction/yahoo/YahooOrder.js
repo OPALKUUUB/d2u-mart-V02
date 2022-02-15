@@ -9,11 +9,13 @@ import {
   FormControl,
 } from "react-bootstrap";
 import "./YahooOrder.css";
+import ReactLoading from "react-loading";
 
 export default function YahooOrder() {
   const [orders, setOrders] = useState([]);
   const [temp, setTemp] = useState({});
   const [modalShow, setModalShow] = useState(false);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     fetch("/api/yahoo/orders", {
       method: "GET",
@@ -26,6 +28,7 @@ export default function YahooOrder() {
       .then((json) => {
         if (json.status) {
           setOrders(json.data);
+          setLoading(false);
         } else {
           alert(json.message);
           localStorage.removeItem("token");
@@ -81,6 +84,37 @@ export default function YahooOrder() {
           ))}
         </tbody>
       </Table>
+      {loading && (
+        <>
+          <div
+            style={{
+              position: "fixed",
+              top: "0",
+              left: "0",
+              background: "rgba(0,0,0,0.3)",
+              width: "100vw",
+              height: "100vh",
+              zIndex: "999",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+              }}
+            >
+              <ReactLoading
+                type={"bubbles"}
+                color={"rgba(0,0,0,0.2)"}
+                height={400}
+                width={300}
+              />
+            </div>
+          </div>
+        </>
+      )}
       <AddbidModal
         show={modalShow}
         onHide={() => setModalShow(false)}

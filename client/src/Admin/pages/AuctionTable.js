@@ -9,6 +9,7 @@ import {
   Table,
 } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
+import ReactLoading from "react-loading";
 
 export default function AuctionTable() {
   const [date, setDate] = useState("");
@@ -16,6 +17,7 @@ export default function AuctionTable() {
   const [orders, setOrders] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [id, setId] = useState("");
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     fetch("/api/admin/yahoo/auction", {
       method: "GET",
@@ -28,6 +30,7 @@ export default function AuctionTable() {
       .then((json) => {
         if (json.status) {
           setOrders(json.data);
+          setLoading(false);
         } else {
           alert(json.message);
           localStorage.removeItem("AdminToken");
@@ -222,6 +225,18 @@ export default function AuctionTable() {
           {date === "" && username === "" && auctionFilter(4)}
         </tbody>
       </Table>
+      {loading && (
+        <>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <ReactLoading
+              type={"bubbles"}
+              color={"rgba(0,0,0,0.2)"}
+              height={400}
+              width={300}
+            />
+          </div>
+        </>
+      )}
       <MydModalWithGrid
         show={modalShow}
         onHide={() => setModalShow(false)}

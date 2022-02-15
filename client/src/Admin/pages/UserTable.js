@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Form, Table } from "react-bootstrap";
+import ReactLoading from "react-loading";
 
 export default function UserTable() {
   const [users, setUsers] = useState([]);
   const [username, setUsername] = useState("");
+
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     fetch("/api/admin/users", {
       method: "GET",
@@ -16,6 +19,7 @@ export default function UserTable() {
       .then((json) => {
         if (json.status) {
           setUsers(json.data);
+          setLoading(false);
         } else {
           alert(json.message);
           localStorage.removeItem("AdminToken");
@@ -82,6 +86,18 @@ export default function UserTable() {
               ))}
         </tbody>
       </Table>
+      {loading && (
+        <>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <ReactLoading
+              type={"bubbles"}
+              color={"rgba(0,0,0,0.2)"}
+              height={400}
+              width={300}
+            />
+          </div>
+        </>
+      )}
     </>
   );
 }

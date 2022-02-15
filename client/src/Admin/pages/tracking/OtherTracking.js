@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form, Modal, Row, Table, Col } from "react-bootstrap";
 import AutoComplete from "../../components/AutoComplete";
+import ReactLoading from "react-loading";
 
 export default function OtherTracking() {
   const [trackings, setTrackings] = useState([]);
@@ -9,6 +10,9 @@ export default function OtherTracking() {
   const [item, setItem] = useState({});
   const [date, setDate] = useState("");
   const [username, setUsername] = useState("");
+  const [trackId, setTrackId] = useState("");
+
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     fetch("/api/admin/tracking/123", {
       method: "GET",
@@ -20,6 +24,7 @@ export default function OtherTracking() {
       .then((json) => {
         if (json.status) {
           setTrackings(json.data);
+          setLoading(false);
         } else {
           alert(json.message);
         }
@@ -29,9 +34,9 @@ export default function OtherTracking() {
     setItem(item);
     setModalShowUpdate(true);
   };
-  const trackingFilter = (c) => {
+  const trackingFilter = () => {
     let temp = trackings;
-    if (c === 1 || c === 3) {
+    if (username !== "") {
       temp = temp.filter((u) => {
         let regex = new RegExp("(" + username + ")", "gi");
         let match = u.username.match(regex);
@@ -42,7 +47,18 @@ export default function OtherTracking() {
         }
       });
     }
-    if (c === 2 || c === 3) {
+    if (trackId !== "") {
+      temp = temp.filter((u) => {
+        let regex = new RegExp("(" + trackId + ")", "gi");
+        let match = u.track_id.match(regex);
+        if (match != null) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+    }
+    if (date !== "") {
       temp = temp.filter((u) => {
         let regex = new RegExp("(" + date + ")", "gi");
         let fdate = formatDate(u.date);
@@ -165,6 +181,17 @@ export default function OtherTracking() {
             />
           </Form.Group>
         </Col>
+        <Col>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label>Track Id</Form.Label>
+            <Form.Control
+              ttype="text"
+              name="track_id"
+              onChange={(e) => setTrackId(e.target.value)}
+              placeholder="Enter Track Id"
+            />
+          </Form.Group>
+        </Col>
       </Row>
       <AddTrackModal
         show={modalShowAdd}
@@ -193,13 +220,39 @@ export default function OtherTracking() {
             <th>Edit</th>
           </tr>
         </thead>
-        <tbody>
-          {date === "" && username !== "" && trackingFilter(1)}
-          {date !== "" && username === "" && trackingFilter(2)}
-          {date !== "" && username !== "" && trackingFilter(3)}
-          {date === "" && username === "" && trackingFilter(4)}
-        </tbody>
+        <tbody>{trackingFilter()}</tbody>
       </Table>
+      {loading && (
+        <>
+          <div
+            style={{
+              position: "fixed",
+              top: "0",
+              left: "0",
+              background: "rgba(0,0,0,0.3)",
+              width: "100vw",
+              height: "100vh",
+              zIndex: "999",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+              }}
+            >
+              <ReactLoading
+                type={"bubbles"}
+                color={"rgba(0,0,0,0.2)"}
+                height={400}
+                width={300}
+              />
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 }
