@@ -63,6 +63,22 @@ export default function PaymentTable() {
         }
       });
     }
+    const handleDelete = (id) => {
+      fetch("/api/admin/orders", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: id }),
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          if (json.status) {
+            alert(json.message);
+            window.location.reload(false);
+          } else {
+            alert(json.message);
+          }
+        });
+    };
 
     return (
       <>
@@ -97,8 +113,20 @@ export default function PaymentTable() {
               {item.payment_status === "paid" && "ชำระเงินเรียบร้อยแล้ว"}
             </td>
             <td className="align-middle">
-              <Button variant="warning" onClick={() => handleUpdateWin(item)}>
-                Edit
+              <Button
+                size="sm"
+                variant="success"
+                onClick={() => handleUpdateWin(item)}
+              >
+                <i class="fas fa-pencil-alt"></i>
+              </Button>
+              &nbsp;
+              <Button
+                variant="danger"
+                onClick={() => handleDelete(item.id)}
+                size="sm"
+              >
+                <i class="fas fa-times"></i>
               </Button>
             </td>
           </tr>

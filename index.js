@@ -427,6 +427,23 @@ app.get("/api/yahoo/orders", (req, res) => {
     });
   }
 });
+app.delete("/api/admin/orders", (req, res) => {
+  const sql = "DELETE FROM orders WHERE id = ?;";
+  conn.query(sql, [req.body.id], (err, result) => {
+    if (err) {
+      console.log(err.sqlMessage);
+      res.status(400).json({
+        status: false,
+        message: err.sqlMessage,
+      });
+    } else {
+      res.status(200).json({
+        status: true,
+        message: "delete order successfully!",
+      });
+    }
+  });
+});
 
 app.get("/api/yahoo/payment", (req, res) => {
   let decoded = jwt.verify(
