@@ -128,12 +128,12 @@ export default function YahooAllPayment(props) {
                           </Col>
                           <Col>
                             <div>{item.link.split("/")[5]}</div>
-                            <div>bid: {item.bid} (¥)</div>
+                            <div>Bid: {item.bid} (¥)</div>
                             <div>
-                              tranferFee: {item.tranfer_fee_injapan} (bath)
+                              Tranfer Fee: {item.tranfer_fee_injapan} (bath)
                             </div>
                             <div>
-                              delivery_in_thai: {item.delivery_in_thai} (yen)
+                              ค่าขนส่งในญี่ปุ่น: {item.delivery_in_thai} (yen)
                             </div>
                           </Col>
                         </Row>

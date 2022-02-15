@@ -152,8 +152,7 @@ export default function Profile() {
                   <Form.Check
                     type="radio"
                     label="มารับเอง"
-                    name="case"
-                    id="formHorizontalRadios1"
+                    name="address_case"
                     value="มารับเอง"
                     checked={register.address_case === "มารับเอง"}
                     onChange={handleChange}
@@ -161,8 +160,7 @@ export default function Profile() {
                   <Form.Check
                     type="radio"
                     label="ขนส่งในประเทศ"
-                    name="case"
-                    id="formHorizontalRadios2"
+                    name="address_case"
                     value="ขนส่งในประเทศ"
                     checked={register.address_case === "ขนส่งในประเทศ"}
                     onChange={handleChange}

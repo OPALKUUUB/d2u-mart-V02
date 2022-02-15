@@ -80,7 +80,7 @@ export default function YahooPayment() {
             <th>Date</th>
             <th>Order</th>
             <th>Link</th>
-            <th>bid(yen)</th>
+            <th>Bid(yen)</th>
             <th>Status</th>
           </tr>
         </thead>
@@ -168,9 +168,11 @@ function MyVerticallyCenteredModal(props) {
                     </Col>
                     <Col>
                       <div>{item.link.split("/")[5]}</div>
-                      <div>bid: {item.bid} (yen)</div>
-                      <div>tranferFee: {item.tranfer_fee_injapan} (bath)</div>
-                      <div>delivery_in_thai: {item.delivery_in_thai} (yen)</div>
+                      <div>Bid: {item.bid} (yen)</div>
+                      <div>Tranfer Fee: {item.tranfer_fee_injapan} (bath)</div>
+                      <div>
+                        ค่าขนส่งในญี่ปุ่น: {item.delivery_in_thai} (yen)
+                      </div>
                     </Col>
                   </Row>
                 </Container>

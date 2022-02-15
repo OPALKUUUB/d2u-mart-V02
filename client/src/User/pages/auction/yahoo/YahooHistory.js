@@ -34,8 +34,8 @@ export default function YahooHistory() {
             <th>Order</th>
             <th>Link</th>
             <th>Bid(yen)</th>
-            <th>Tranfer fee(bath)</th>
-            <th>Delivery(yen)</th>
+            <th>Tranfer Fee(bath)</th>
+            <th>ค่าขนส่งในญี่ปุ่น(yen)</th>
             <th>Status</th>
             <th>Payment Status</th>
             <th>Track id</th>
