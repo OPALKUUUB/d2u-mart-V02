@@ -14,6 +14,7 @@ import ReactLoading from "react-loading";
 export default function HistoryTable() {
   const [date, setDate] = useState("");
   const [username, setUsername] = useState("");
+  const [status, setStatus] = useState("all");
   const [yen, setYen] = useState("");
   const [orders, setOrders] = useState([]);
   const [modalShow, setModalShow] = useState(false);
@@ -61,7 +62,7 @@ export default function HistoryTable() {
 
   const auctionFilter = (c) => {
     let t = orders;
-    if (c === 1 || c === 3) {
+    if (username !== "") {
       t = t.filter((u) => {
         let regex = new RegExp("(" + username + ")", "gi");
         let match = u.username.match(regex);
@@ -72,11 +73,22 @@ export default function HistoryTable() {
         }
       });
     }
-    if (c === 2 || c === 3) {
+    if (date !== "") {
       t = t.filter((u) => {
         let regex = new RegExp("(" + date + ")", "gi");
         let fdate = formatDate(u.created_at);
         let match = fdate.match(regex);
+        if (match != null) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+    }
+    if (status !== "all") {
+      t = t.filter((u) => {
+        let regex = new RegExp("(" + status + ")", "gi");
+        let match = u.status.match(regex);
         if (match != null) {
           return true;
         } else {
@@ -214,11 +226,24 @@ export default function HistoryTable() {
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Username</Form.Label>
             <Form.Control
-              ttype="text"
+              type="text"
               name="username"
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Enter Username"
             />
+          </Form.Group>
+        </Col>
+        <Col>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label>สถานะ</Form.Label>
+            <Form.Select
+              aria-label="Default select example"
+              onChange={(e) => setStatus(e.target.value)}
+            >
+              <option value="all">all</option>
+              <option value="win">win</option>
+              <option value="lose">lose</option>
+            </Form.Select>
           </Form.Group>
         </Col>
       </Row>
@@ -239,7 +264,7 @@ export default function HistoryTable() {
           </tr>
         </thead>
         <tbody style={{ textAlign: "center" }}>
-          {date === "" && username !== "" && auctionFilter(1)}
+          {date === "" && status !== "" && auctionFilter(1)}
           {date !== "" && username === "" && auctionFilter(2)}
           {date !== "" && username !== "" && auctionFilter(3)}
           {date === "" && username === "" && auctionFilter(4)}
