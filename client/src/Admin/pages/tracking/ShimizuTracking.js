@@ -98,11 +98,6 @@ export default function ShimizuTracking() {
             </td>
             <td className="align-middle">{item.channel}</td>
             <td className="align-middle">{item.username}</td>
-            <td className="align-middle">
-              <a href={item.url} target="_blank">
-                link
-              </a>
-            </td>
             <td className="align-middle">{item.track_id}</td>
             <td className="align-middle">{item.box_id}</td>
             <td className="align-middle">{item.weight}</td>
