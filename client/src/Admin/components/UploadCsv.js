@@ -25,7 +25,7 @@ export default function UploadCsv() {
 
   const handleAdd = () => {
     setLoading(true);
-    fetch("/api/admin/csv/shimuzu", {
+    fetch("/api/admin/csv/shimizu", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ data: data }),
@@ -44,7 +44,7 @@ export default function UploadCsv() {
         <Form.Label>Default file input example</Form.Label>
         <Form.Control
           type="file"
-          accept=".csv,.xlsx,.xls"
+          accept=".csv"
           onChange={handleChangeCsvFile}
         />
       </Form.Group>
@@ -89,10 +89,6 @@ const columns = [
   {
     name: "date",
     selector: (row) => row.date,
-  },
-  {
-    name: "channel",
-    selector: (row) => row.channel,
   },
   {
     name: "username",

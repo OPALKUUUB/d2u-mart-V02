@@ -1177,11 +1177,11 @@ app.post("/api/admin/read/csv", upload.single("file"), (req, res) => {
     });
 });
 
-app.post("/api/admin/csv/shimuzu", (req, res) => {
+app.post("/api/admin/csv/shimizu", (req, res) => {
   let date = genDate();
   let tracking = [
     req.body.data[0].box_id,
-    req.body.data[0].channel,
+    "shimizu",
     req.body.data[0].date,
     req.body.data[0].username,
     req.body.data[0].track_id,
