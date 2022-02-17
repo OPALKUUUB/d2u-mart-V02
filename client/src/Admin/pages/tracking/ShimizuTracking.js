@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Button, Form, Modal, Row, Table, Col } from "react-bootstrap";
 import AutoComplete from "../../components/AutoComplete";
 import ReactLoading from "react-loading";
+import UploadCsv from "../../components/UploadCsv";
 
 export default function ShimizuTracking() {
   const [trackings, setTrackings] = useState([]);
   const [modalShowAdd, setModalShowAdd] = React.useState(false);
+  const [modalShowAddCsv, setModalShowAddCsv] = React.useState(false);
   const [modalShowUpdate, setModalShowUpdate] = React.useState(false);
   const [item, setItem] = useState({});
   const [date, setDate] = useState("");
@@ -145,9 +147,15 @@ export default function ShimizuTracking() {
     <>
       <div className="mb-3 d-flex justify-content-between align-items-center">
         <h3 className="bg-success p-2">Shimizu Tracking</h3>
-        <Button variant="primary" onClick={() => setModalShowAdd(true)}>
-          Add Tracking
-        </Button>
+        <div>
+          <Button variant="primary" onClick={() => setModalShowAdd(true)}>
+            Add Tracking
+          </Button>
+          &nbsp;
+          <Button variant="warning" onClick={() => setModalShowAddCsv(true)}>
+            Upload CSV
+          </Button>
+        </div>
       </div>
       <Row>
         <Col>
@@ -196,6 +204,12 @@ export default function ShimizuTracking() {
       <UpdateTrackModal
         show={modalShowUpdate}
         onHide={() => setModalShowUpdate(false)}
+        item={item}
+        loading={setLoading}
+      />
+      <UploadCsvModal
+        show={modalShowAddCsv}
+        onHide={() => setModalShowAddCsv(false)}
         item={item}
         loading={setLoading}
       />
@@ -906,6 +920,26 @@ function UpdateTrackModal(props) {
           Close
         </Button>
       </Modal.Footer>
+    </Modal>
+  );
+}
+
+function UploadCsvModal(props) {
+  return (
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledb
+      sm={12}
+      y="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">Upload CSV</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <UploadCsv />
+      </Modal.Body>
     </Modal>
   );
 }

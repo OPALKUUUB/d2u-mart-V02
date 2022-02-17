@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const app = express();
 const multer = require("multer");
+var fs = require("fs");
 var request = require("request");
 dotenv.config();
 let PD_SRC_IMAGE = "./client/build/slip/";
@@ -559,32 +560,6 @@ app.patch("/api/yahoo/order/addbid", (req, res) => {
     );
   }
 });
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    if (port === 5000) {
-      cb(null, SRC_IMAGE);
-    } else {
-      cb(null, PD_SRC_IMAGE);
-    }
-  },
-  filename: (req, file, cb) => {
-    cb(
-      null,
-      "file-" +
-        Date.now() +
-        "." +
-        file.originalname.split(".")[file.originalname.split(".").length - 1]
-    );
-  },
-});
-const upload = multer({ storage: storage });
-app.patch("/api/upload/slip", upload.single("image"), (req, res) => {
-  res.status(200).json({
-    status: true,
-    message: "upload successfully!",
-    slip_image_filename: req.file.filename,
-  });
-});
 
 app.patch("/api/payment/confirm", (req, res) => {
   var decoded = jwt.verify(
@@ -961,30 +936,6 @@ app.patch("/api/admin/yahoo/tracking", (req, res) => {
 });
 
 // tracking
-const trackingStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    if (port === 5000) {
-      cb(null, SRC_IMAGE_TRACKING);
-    } else {
-      cb(null, PD_SRC_IMAGE_TRACKING);
-    }
-  },
-  filename: (req, file, cb) => {
-    cb(
-      null,
-      "file-" +
-        Date.now() +
-        "." +
-        file.originalname.split(".")[file.originalname.split(".").length - 1]
-    );
-  },
-});
-const trackingUpload = multer({ storage: trackingStorage });
-app.post("/api/upload", trackingUpload.single("image"), (req, res) => {
-  res.status(200).json({
-    filename: req.file.filename,
-  });
-});
 
 app.get("/api/tracking", (req, res) => {
   let decoded = jwt.verify(
@@ -1199,6 +1150,77 @@ app.post("/api/admin/yahoo/offer", (req, res) => {
       }
     }
   );
+});
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads");
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, file.fieldname + "-" + uniqueSuffix + ".csv");
+  },
+});
+
+const upload = multer({ storage: storage });
+const csv = require("csv-parser");
+app.post("/api/admin/read/csv", upload.single("file"), (req, res) => {
+  let results = [];
+  console.log(req.file);
+  fs.createReadStream("uploads/" + req.file.filename)
+    .pipe(csv())
+    .on("data", (data) => results.push(data))
+    .on("end", () => {
+      res.status(200).json({
+        data: results,
+      });
+    });
+});
+
+app.post("/api/admin/csv/shimuzu", (req, res) => {
+  let date = genDate();
+  let tracking = [
+    req.body.data[0].box_id,
+    req.body.data[0].channel,
+    req.body.data[0].date,
+    req.body.data[0].username,
+    req.body.data[0].track_id,
+    req.body.data[0].weight,
+    req.body.data[0].round_boat,
+    req.body.data[0].remark,
+    date,
+    date,
+  ];
+  let sql =
+    "INSERT INTO trackings (box_id,channel,date,username,track_id,weight,round_boat,remark, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?)";
+  for (let i = 1; i < req.body.data.length; i++) {
+    sql += ",(?,?,?,?,?,?,?,?,?,?)";
+    tracking.push(req.body.data[i].box_id);
+    tracking.push(req.body.data[i].channel);
+    tracking.push(req.body.data[i].date);
+    tracking.push(req.body.data[i].username);
+    tracking.push(req.body.data[i].track_id);
+    tracking.push(req.body.data[i].weight);
+    tracking.push(req.body.data[i].round_boat);
+    tracking.push(req.body.data[i].remark);
+    tracking.push(date);
+    tracking.push(date);
+  }
+  conn.query(sql, tracking, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({
+        status: false,
+        message: "Error: " + err.sqlMessage,
+      });
+    } else {
+      console.log(result);
+      res.status(200).json({
+        status: true,
+        message: "add data in trackings success!",
+      });
+    }
+  });
 });
 
 // The "catchall" handler: for any request that doesn't
