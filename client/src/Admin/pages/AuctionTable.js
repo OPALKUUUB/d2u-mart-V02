@@ -146,6 +146,9 @@ export default function AuctionTable() {
                 </div>
               )}
             </td>
+            <td className="align-middle" width={100}>
+              {item.remark === null ? "-" : <>{item.remark}</>}
+            </td>
             <td className="align-middle">
               <Button
                 variant="success"
@@ -215,6 +218,7 @@ export default function AuctionTable() {
             <th>Maxbid</th>
             <th>Addbid1</th>
             <th>Addbid2</th>
+            <th>Remark</th>
             <th>Status</th>
           </tr>
         </thead>
