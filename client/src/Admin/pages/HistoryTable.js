@@ -263,12 +263,7 @@ export default function HistoryTable() {
             <th>Edit Tracking</th>
           </tr>
         </thead>
-        <tbody style={{ textAlign: "center" }}>
-          {date === "" && status !== "" && auctionFilter(1)}
-          {date !== "" && username === "" && auctionFilter(2)}
-          {date !== "" && username !== "" && auctionFilter(3)}
-          {date === "" && username === "" && auctionFilter(4)}
-        </tbody>
+        <tbody style={{ textAlign: "center" }}>{auctionFilter()}</tbody>
       </Table>
       {loading && (
         <>
