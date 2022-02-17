@@ -1164,6 +1164,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 const csv = require("csv-parser");
+
 app.post("/api/admin/read/csv", upload.single("file"), (req, res) => {
   let results = [];
   console.log(req.file);
@@ -1177,16 +1178,34 @@ app.post("/api/admin/read/csv", upload.single("file"), (req, res) => {
     });
 });
 
+function dmy2ymd(date) {
+  const re = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;
+  if (re.test(date)) {
+    let t = [];
+    if (date[2] === "-" || date[1] === "-") {
+      t = date.split("-");
+    } else if (date[2] === "/" || date[1] === "/") {
+      t = date.split("/");
+    } else {
+      return null;
+    }
+    let m = t[1].length === 1 ? `0${t[1]}` : t[1];
+    let d = t[0].length === 1 ? `0${t[0]}` : t[0];
+    return t[2] + "-" + m + "-" + d;
+  }
+  return null;
+}
+
 app.post("/api/admin/csv/shimizu", (req, res) => {
   let date = genDate();
   let tracking = [
     req.body.data[0].box_id,
     "shimizu",
-    req.body.data[0].date,
+    dmy2ymd(req.body.data[0].date),
     req.body.data[0].username,
     req.body.data[0].track_id,
     req.body.data[0].weight,
-    req.body.data[0].round_boat,
+    dmy2ymd(req.body.data[0].round_boat),
     req.body.data[0].remark,
     date,
     date,
@@ -1197,11 +1216,11 @@ app.post("/api/admin/csv/shimizu", (req, res) => {
     sql += ",(?,?,?,?,?,?,?,?,?,?)";
     tracking.push(req.body.data[i].box_id);
     tracking.push("shimizu");
-    tracking.push(req.body.data[i].date);
+    tracking.push(dmy2ymd(req.body.data[i].date));
     tracking.push(req.body.data[i].username);
     tracking.push(req.body.data[i].track_id);
     tracking.push(req.body.data[i].weight);
-    tracking.push(req.body.data[i].round_boat);
+    tracking.push(dmy2ymd(req.body.data[i].round_boat));
     tracking.push(req.body.data[i].remark);
     tracking.push(date);
     tracking.push(date);

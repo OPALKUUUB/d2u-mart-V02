@@ -27,7 +27,7 @@ export default function UploadCsv() {
     setLoading(true);
     fetch("/api/admin/csv/shimizu", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json; charset=utf-8" },
       body: JSON.stringify({ data: data }),
     })
       .then((res) => res.json())
