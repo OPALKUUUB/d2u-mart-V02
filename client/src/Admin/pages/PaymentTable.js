@@ -16,10 +16,24 @@ export default function PaymentTable() {
   const [orders, setOrders] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [temp, setTemp] = useState({});
-
+  const [yen, setYen] = useState("");
   const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    fetch("/api/admin/yahoo/payment", {
+  useEffect(async () => {
+    await fetch("/api/yen", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.status) {
+          setYen(json.yen);
+        } else {
+          alert(json.message);
+        }
+      });
+    await fetch("/api/admin/yahoo/payment", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -111,6 +125,18 @@ export default function PaymentTable() {
             <td className="align-middle">{item.tranfer_fee_injapan}</td>
             <td className="align-middle">{item.delivery_in_thai}</td>
             <td className="align-middle">
+              {item.tranfer_fee_injapan === null &&
+              item.delivery_in_thai === null ? (
+                "ข้อมูลยังไม่ครบ"
+              ) : (
+                <>
+                  {Math.round((item.bid + item.delivery_in_thai) * yen) +
+                    item.tranfer_fee_injapan}{" "}
+                  (฿)
+                </>
+              )}
+            </td>
+            <td className="align-middle">
               {item.payment_status === "pending1" && "รอค่าส่ง"}
               {item.payment_status === "pending2" && "รอการชำระ"}
               {item.payment_status === "pending3" && "รอการตรวจสอบ"}
@@ -186,8 +212,9 @@ export default function PaymentTable() {
             <th>Username</th>
             <th>Link</th>
             <th>Bid(yen)</th>
-            <th>tranfer fee(bath)</th>
-            <th>delivery(yen)</th>
+            <th>Tranfer fee(bath)</th>
+            <th>Delivery(yen)</th>
+            <th>Sum(bath)</th>
             <th>Payment Status</th>
             <th>Edit</th>
           </tr>
