@@ -1196,7 +1196,7 @@ app.post("/api/admin/csv/shimizu", (req, res) => {
   for (let i = 1; i < req.body.data.length; i++) {
     sql += ",(?,?,?,?,?,?,?,?,?,?)";
     tracking.push(req.body.data[i].box_id);
-    tracking.push(req.body.data[i].channel);
+    tracking.push("shimizu");
     tracking.push(req.body.data[i].date);
     tracking.push(req.body.data[i].username);
     tracking.push(req.body.data[i].track_id);
