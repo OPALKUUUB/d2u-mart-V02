@@ -64,12 +64,31 @@ export default function Tracking() {
               ) : (
                 <>
                   <td className="align-middle">{index + 1}</td>
-                  <td className="align-middle">{item.date}</td>
+                  <td className="align-middle">
+                    {item.date !== null && item.date !== "" ? (
+                      <>
+                        {item.date.split("-")[2]}{" "}
+                        {month[parseInt(item.date.split("-")[1])]}{" "}
+                        {item.date.split("-")[0]}
+                      </>
+                    ) : (
+                      "-"
+                    )}
+                  </td>
                   <td className="align-middle">{item.channel}</td>
                   <td className="align-middle">{item.track_id}</td>
                   <td className="align-middle">{item.box_id}</td>
                   <td className="align-middle">{item.weight}</td>
-                  <td className="align-middle">{item.round_boat}</td>
+                  <td className="align-middle">
+                    {item.round_boat !== null && item.round_boat !== "" ? (
+                      <>
+                        {item.round_boat.split("-")[2]}{" "}
+                        {month[parseInt(item.round_boat.split("-")[1])]}
+                      </>
+                    ) : (
+                      "-"
+                    )}
+                  </td>
                   <td className="align-middle">
                     <img
                       src={item.pic1_filename}
@@ -94,3 +113,18 @@ export default function Tracking() {
     </>
   );
 }
+
+const month = {
+  1: "JAN",
+  2: "FEB",
+  3: "MAR",
+  4: "APR",
+  5: "MAY",
+  6: "JUN",
+  7: "JUL",
+  8: "AUG",
+  9: "SEPT",
+  10: "OCT",
+  11: "NOV",
+  12: "DEC",
+};
