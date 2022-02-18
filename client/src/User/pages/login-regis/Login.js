@@ -102,7 +102,7 @@ function ModalRegister(props) {
     phone: "",
     password: "",
     confirm_password: "",
-    case: "มารับเอง",
+    address_case: "มารับเอง",
     address: "",
   });
   const [alertUsername, setAlertUsername] = useState(null);
@@ -166,7 +166,7 @@ function ModalRegister(props) {
                 phone: "",
                 password: "",
                 confirm_password: "",
-                case: "มารับเอง",
+                address_case: "มารับเอง",
                 address: "",
               });
               props.onHide();
@@ -288,19 +288,19 @@ function ModalRegister(props) {
                     <Form.Check
                       type="radio"
                       label="มารับเอง"
-                      name="case"
+                      name="address_case"
                       id="formHorizontalRadios1"
                       value="มารับเอง"
-                      checked={register.case === "มารับเอง"}
+                      checked={register.address_case === "มารับเอง"}
                       onChange={handleChange}
                     />
                     <Form.Check
                       type="radio"
                       label="ขนส่งในประเทศ"
-                      name="case"
+                      name="address_case"
                       id="formHorizontalRadios2"
                       value="ขนส่งในประเทศ"
-                      checked={register.case === "ขนส่งในประเทศ"}
+                      checked={register.address_case === "ขนส่งในประเทศ"}
                       onChange={handleChange}
                     />
                   </Col>
@@ -308,7 +308,7 @@ function ModalRegister(props) {
               </fieldset>
             </Col>
             <Col lg="9">
-              {register.case === "มารับเอง" && (
+              {register.address_case === "มารับเอง" && (
                 <>
                   <fieldset>
                     <Form.Group className="mb-3">
@@ -335,7 +335,7 @@ function ModalRegister(props) {
                   </fieldset>
                 </>
               )}
-              {register.case === "ขนส่งในประเทศ" && (
+              {register.address_case === "ขนส่งในประเทศ" && (
                 <>
                   <Form.Group className="mb-3" controlId="formGroupPassword">
                     <Form.Label>
