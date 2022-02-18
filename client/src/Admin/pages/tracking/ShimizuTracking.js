@@ -3,6 +3,7 @@ import { Button, Form, Modal, Row, Table, Col } from "react-bootstrap";
 import AutoComplete from "../../components/AutoComplete";
 import ReactLoading from "react-loading";
 import UploadCsv from "../../components/UploadCsv";
+import Loading from "../../components/Loading";
 
 export default function ShimizuTracking() {
   const [trackings, setTrackings] = useState([]);
@@ -274,6 +275,7 @@ function AddTrackModal(props) {
   const [users, setUsers] = useState([]);
   const [image1, setImage1] = useState(null);
   const [image2, setImage2] = useState(null);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     setImage1(null);
     setImage2(null);
@@ -312,61 +314,49 @@ function AddTrackModal(props) {
     const objectUrl = URL.createObjectURL(e.target.files[0]);
     setImage2(objectUrl);
   };
-  const handleUploadPic1File = () => {
-    if (pic1File === null) {
-      alert(`please choose slip first!`);
-    } else {
-      props.loading(true);
+  const handleAddTracking = async () => {
+    setLoading(true);
+    let t = tracking;
+    if (pic1File !== null) {
       const data = new FormData();
       data.append("file", pic1File);
       data.append("upload_preset", "d2u-service");
       data.append("cloud_name", "d2u-service");
-      fetch("  https://api.cloudinary.com/v1_1/d2u-service/upload", {
-        method: "POST",
-        body: data,
-      })
+      let urlname = await fetch(
+        "  https://api.cloudinary.com/v1_1/d2u-service/upload",
+        {
+          method: "POST",
+          body: data,
+        }
+      )
         .then((resp) => resp.json())
-        .then((data) => {
-          setTracking({
-            ...tracking,
-            pic1_filename: data.url,
-          });
-          props.loading(false);
-          alert("upload slip successfully");
-        })
+        .then((data) => data.url)
         .catch((err) => console.log(err));
+      t.pic1_filename = urlname;
     }
-  };
-  const handleUploadPic2File = () => {
-    if (pic2File === null) {
-      alert(`please choose slip first!`);
-    } else {
+    if (pic2File !== null) {
       const data = new FormData();
       data.append("file", pic2File);
       data.append("upload_preset", "d2u-service");
       data.append("cloud_name", "d2u-service");
-      fetch("  https://api.cloudinary.com/v1_1/d2u-service/upload", {
-        method: "POST",
-        body: data,
-      })
+      let urlname = await fetch(
+        "  https://api.cloudinary.com/v1_1/d2u-service/upload",
+        {
+          method: "POST",
+          body: data,
+        }
+      )
         .then((resp) => resp.json())
-        .then((data) => {
-          setTracking({
-            ...tracking,
-            pic2_filename: data.url,
-          });
-          alert("upload slip successfully");
-        })
+        .then((data) => data.url)
         .catch((err) => console.log(err));
+      t.pic2_filename = urlname;
     }
-  };
-  const handleAddTracking = () => {
     fetch("/api/admin/tracking/shimizu", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(tracking),
+      body: JSON.stringify(t),
     })
       .then((res) => res.json())
       .then((json) => {
@@ -377,6 +367,7 @@ function AddTrackModal(props) {
         } else {
           alert(json.message);
         }
+        setLoading(false);
       });
   };
 
@@ -475,16 +466,7 @@ function AddTrackModal(props) {
             </Col>
             <Col lg={6} sm={12} className="mb-3">
               <Form.Group controlId="formFileSm">
-                <Form.Label>
-                  Pic 1
-                  <Button
-                    onClick={handleUploadPic1File}
-                    size="sm"
-                    className="ms-3 me-3"
-                  >
-                    upload
-                  </Button>
-                </Form.Label>
+                <Form.Label>Pic 1</Form.Label>
                 <Form.Control
                   type="file"
                   size="sm"
@@ -519,16 +501,7 @@ function AddTrackModal(props) {
             </Col>
             <Col lg={6} sm={12} className="mb-3">
               <Form.Group controlId="formFileSm">
-                <Form.Label>
-                  Pic 2
-                  <Button
-                    onClick={handleUploadPic2File}
-                    size="sm"
-                    className="ms-3"
-                  >
-                    upload
-                  </Button>
-                </Form.Label>
+                <Form.Label>Pic 2</Form.Label>
                 <Form.Control
                   type="file"
                   size="sm"
@@ -580,6 +553,7 @@ function AddTrackModal(props) {
           Close
         </Button>
       </Modal.Footer>
+      {loading && <Loading />}
     </Modal>
   );
 }
@@ -590,6 +564,7 @@ function UpdateTrackModal(props) {
   const [users, setUsers] = useState([]);
   const [image1, setImage1] = useState(null);
   const [image2, setImage2] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setImage1(null);
@@ -638,60 +613,49 @@ function UpdateTrackModal(props) {
       setImage2(objectUrl);
     }
   };
-  const handleUploadPic1File = () => {
-    if (pic1File === null) {
-      alert(`please choose slip first!`);
-    } else {
+  const handleUpdateTracking = async () => {
+    setLoading(true);
+    let t = tracking;
+    if (pic1File !== null) {
       const data = new FormData();
       data.append("file", pic1File);
       data.append("upload_preset", "d2u-service");
       data.append("cloud_name", "d2u-service");
-      fetch("  https://api.cloudinary.com/v1_1/d2u-service/upload", {
-        method: "POST",
-        body: data,
-      })
+      let urlname = await fetch(
+        "  https://api.cloudinary.com/v1_1/d2u-service/upload",
+        {
+          method: "POST",
+          body: data,
+        }
+      )
         .then((resp) => resp.json())
-        .then((data) => {
-          setTracking({
-            ...tracking,
-            pic1_filename: data.url,
-          });
-          alert("upload slip successfully");
-        })
+        .then((data) => data.url)
         .catch((err) => console.log(err));
+      t.pic1_filename = urlname;
     }
-  };
-  const handleUploadPic2File = () => {
-    if (pic2File === null) {
-      alert(`please choose slip first!`);
-    } else {
+    if (pic2File !== null) {
       const data = new FormData();
       data.append("file", pic2File);
       data.append("upload_preset", "d2u-service");
       data.append("cloud_name", "d2u-service");
-      fetch("  https://api.cloudinary.com/v1_1/d2u-service/upload", {
-        method: "POST",
-        body: data,
-      })
+      let urlname = await fetch(
+        "  https://api.cloudinary.com/v1_1/d2u-service/upload",
+        {
+          method: "POST",
+          body: data,
+        }
+      )
         .then((resp) => resp.json())
-        .then((data) => {
-          setTracking({
-            ...tracking,
-            pic2_filename: data.url,
-          });
-          alert("upload slip successfully");
-        })
+        .then((data) => data.url)
         .catch((err) => console.log(err));
+      t.pic2_filename = urlname;
     }
-  };
-  const handleUpdateTracking = () => {
-    console.log(tracking);
     fetch("/api/admin/tracking", {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(tracking),
+      body: JSON.stringify(t),
     })
       .then((res) => res.json())
       .then((json) => {
@@ -702,6 +666,7 @@ function UpdateTrackModal(props) {
         } else {
           alert(json.message);
         }
+        setLoading(false);
       });
   };
   const handleChangeUsername = (data) => {
@@ -814,16 +779,7 @@ function UpdateTrackModal(props) {
             </Col>
             <Col lg={6} sm={12} className="mb-3">
               <Form.Group controlId="formFileSm">
-                <Form.Label>
-                  Pic 1
-                  <Button
-                    onClick={handleUploadPic1File}
-                    size="sm"
-                    className="ms-3"
-                  >
-                    upload
-                  </Button>
-                </Form.Label>
+                <Form.Label>Pic 1</Form.Label>
                 <Form.Control
                   type="file"
                   size="sm"
@@ -858,16 +814,7 @@ function UpdateTrackModal(props) {
             </Col>
             <Col lg={6} sm={12} className="mb-3">
               <Form.Group controlId="formFileSm">
-                <Form.Label>
-                  Pic 2
-                  <Button
-                    onClick={handleUploadPic2File}
-                    size="sm"
-                    className="ms-3"
-                  >
-                    upload
-                  </Button>
-                </Form.Label>
+                <Form.Label>Pic 2</Form.Label>
                 <Form.Control
                   type="file"
                   size="sm"
