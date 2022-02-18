@@ -4,6 +4,7 @@ import AutoComplete from "../../components/AutoComplete";
 import ReactLoading from "react-loading";
 import UploadCsv from "../../components/UploadCsv";
 import Loading from "../../components/Loading";
+import ShowImage from "../../components/ShowImage";
 
 export default function ShimizuTracking() {
   const [trackings, setTrackings] = useState([]);
@@ -15,6 +16,8 @@ export default function ShimizuTracking() {
   const [username, setUsername] = useState("");
   const [trackId, setTrackId] = useState("");
   const [loading, setLoading] = useState(true);
+  const [image, setImage] = useState("");
+  const [modalShowImage, setModalShowImage] = useState(false);
   useEffect(() => {
     fetch("/api/admin/tracking/shimizu", {
       method: "GET",
@@ -109,10 +112,34 @@ export default function ShimizuTracking() {
               {month[parseInt(item.round_boat.split("-")[1])]}
             </td>
             <td className="align-middle">
-              <img src={item.pic1_filename} alt="image for pic1" width={100} />
+              {item.pic1_filename !== null && item.pic1_filename !== "" ? (
+                <img
+                  onClick={() => {
+                    setImage(item.pic1_filename);
+                    setModalShowImage(true);
+                  }}
+                  src={item.pic1_filename}
+                  alt="image for pic1"
+                  width={100}
+                />
+              ) : (
+                "-"
+              )}
             </td>
             <td className="align-middle">
-              <img src={item.pic2_filename} alt="image for pic2" width={100} />
+              {item.pic2_filename !== null && item.pic2_filename !== "" ? (
+                <img
+                  onClick={() => {
+                    setImage(item.pic2_filename);
+                    setModalShowImage(true);
+                  }}
+                  src={item.pic2_filename}
+                  alt="image for pic2"
+                  width={100}
+                />
+              ) : (
+                "-"
+              )}
             </td>
             <td className="align-middle" style={{ minWidth: "130px" }}>
               {item.remark}
@@ -134,6 +161,11 @@ export default function ShimizuTracking() {
             </td>
           </tr>
         ))}
+        <ShowImage
+          show={modalShowImage}
+          onHide={() => setModalShowImage(false)}
+          src={image}
+        />
       </>
     );
   };
@@ -973,8 +1005,3 @@ const month = {
   11: "NOV",
   12: "DEC",
 };
-function packFile(file) {
-  const fd = new FormData();
-  fd.append("image", file, file.name);
-  return fd;
-}
