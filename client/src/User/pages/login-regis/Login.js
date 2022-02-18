@@ -105,8 +105,8 @@ function ModalRegister(props) {
     case: "มารับเอง",
     address: "",
   });
-  const [alertUsername, setAlertUsername] = useState(false);
-  const [alertPassword, setAlertPassword] = useState(false);
+  const [alertUsername, setAlertUsername] = useState(null);
+  const [alertPassword, setAlertPassword] = useState(null);
   const handleChange = (e) => {
     if (e.target.name === "case") {
       setRegister({
@@ -136,7 +136,18 @@ function ModalRegister(props) {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (IsNotEmpty(register) && alertUsername && alertPassword) {
+    let check = true;
+    var re = new RegExp("^\\w[\\w.]{2,18}\\w$");
+    if (register.password.match(re) === null) {
+      check = false;
+      alert("Please match format password that we required!");
+    }
+    if (register.username.match(re) === null) {
+      check = false;
+      alert("Please match format Username that we required!");
+    }
+
+    if (IsNotEmpty(register) && check) {
       if (ConfirmPassword(register)) {
         fetch("/api/regist", {
           method: "POST",

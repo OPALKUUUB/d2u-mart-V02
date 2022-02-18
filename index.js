@@ -239,11 +239,11 @@ app.post("/api/regist", (req, res) => {
       });
     } else {
       console.log(result);
-      if (!IsEmpty(result.insertId)) {
+      if (result.insertId > 0) {
         res.status(200).json({
           status: true,
           message:
-            "insert into usercustomers is successfully at row " +
+            "insert into user customers is successfully at row " +
             result.insertId,
         });
       } else {
