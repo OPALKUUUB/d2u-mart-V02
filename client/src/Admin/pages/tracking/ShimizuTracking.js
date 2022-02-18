@@ -778,74 +778,130 @@ function UpdateTrackModal(props) {
               </Form.Group>
             </Col>
             <Col lg={6} sm={12} className="mb-3">
-              <Form.Group controlId="formFileSm">
-                <Form.Label>Pic 1</Form.Label>
-                <Form.Control
-                  type="file"
-                  size="sm"
-                  onChange={handleSelectPic1File}
-                  name="pic1_filename"
-                />
-              </Form.Group>
-              <div
-                style={{
-                  cursor: "pointer",
-                }}
-                onPaste={handlePaste1}
-              >
-                {image1 === null ? (
-                  <div
+              {tracking.pic1_filename !== null &&
+              tracking.pic1_filename !== "" ? (
+                <div style={{ position: "relative" }}>
+                  <span
+                    onClick={() =>
+                      setTracking({ ...tracking, pic1_filename: "" })
+                    }
                     style={{
-                      background: "gray",
-                      width: "100%",
-                      height: "150px",
-                      color: "white",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
+                      position: "absolute",
+                      top: "0",
+                      right: "0",
+                      padding: "10px",
+                      fontWeight: "900",
+                      cursor: "pointer",
                     }}
                   >
-                    paste image hear
+                    X
+                  </span>
+                  <img
+                    style={{ width: "100%" }}
+                    src={tracking.pic1_filename}
+                    alt={tracking.pic1_filename}
+                  />
+                </div>
+              ) : (
+                <>
+                  <Form.Group controlId="formFileSm">
+                    <Form.Label>Pic 1</Form.Label>
+                    <Form.Control
+                      type="file"
+                      size="sm"
+                      onChange={handleSelectPic1File}
+                      name="pic1_filename"
+                    />
+                  </Form.Group>
+                  <div
+                    style={{
+                      cursor: "pointer",
+                    }}
+                    onPaste={handlePaste1}
+                  >
+                    {image1 === null ? (
+                      <div
+                        style={{
+                          background: "gray",
+                          width: "100%",
+                          height: "150px",
+                          color: "white",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        paste image hear
+                      </div>
+                    ) : (
+                      <img src={image1} width="100%" />
+                    )}
                   </div>
-                ) : (
-                  <img src={image1} width="100%" />
-                )}
-              </div>
+                </>
+              )}
             </Col>
             <Col lg={6} sm={12} className="mb-3">
-              <Form.Group controlId="formFileSm">
-                <Form.Label>Pic 2</Form.Label>
-                <Form.Control
-                  type="file"
-                  size="sm"
-                  onChange={handleSelectPic2File}
-                  name="pic2_filename"
-                />
-              </Form.Group>
-              <div
-                style={{
-                  cursor: "pointer",
-                }}
-                onPaste={handlePaste2}
-              >
-                {image2 === null ? (
-                  <div
+              {tracking.pic2_filename !== null &&
+              tracking.pic2_filename !== "" ? (
+                <div style={{ position: "relative" }}>
+                  <span
+                    onClick={() =>
+                      setTracking({ ...tracking, pic2_filename: "" })
+                    }
                     style={{
-                      background: "gray",
-                      width: "100%",
-                      height: "150px",
-                      color: "white",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
+                      position: "absolute",
+                      top: "0",
+                      right: "0",
+                      padding: "10px",
+                      fontWeight: "900",
+                      cursor: "pointer",
                     }}
                   >
-                    paste image hear
+                    X
+                  </span>
+                  <img
+                    style={{ width: "100%" }}
+                    src={tracking.pic2_filename}
+                    alt={tracking.pic2_filename}
+                  />
+                </div>
+              ) : (
+                <>
+                  <Form.Group controlId="formFileSm">
+                    <Form.Label>Pic 2</Form.Label>
+                    <Form.Control
+                      type="file"
+                      size="sm"
+                      onChange={handleSelectPic2File}
+                      name="pic2_filename"
+                    />
+                  </Form.Group>
+                  <div
+                    style={{
+                      cursor: "pointer",
+                    }}
+                    onPaste={handlePaste2}
+                  >
+                    {image2 === null ? (
+                      <div
+                        style={{
+                          background: "gray",
+                          width: "100%",
+                          height: "150px",
+                          color: "white",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        paste image hear
+                      </div>
+                    ) : (
+                      <img src={image2} width="100%" />
+                    )}
                   </div>
-                ) : (
-                  <img src={image2} width="100%" />
-                )}
-              </div>
+                </>
+              )}
             </Col>
             <Col lg={12} sm={12}>
               <Form.Group>
@@ -867,6 +923,7 @@ function UpdateTrackModal(props) {
           Close
         </Button>
       </Modal.Footer>
+      {loading && <Loading />}
     </Modal>
   );
 }
