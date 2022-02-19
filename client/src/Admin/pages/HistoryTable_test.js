@@ -60,14 +60,12 @@ export default function HistoryTable_test() {
       <Row>
         <Col>
           <Form.Group className="mb-3">
-            <Form.Label>
-              Date&nbsp;
-              <Form.Text className="text-muted">Such as 1/1/2022</Form.Text>
-            </Form.Label>
+            <Form.Label>Date</Form.Label>
             <Form.Control
               type="date"
               name="date"
               onChange={(e) => setDate(e.target.value)}
+              value={date}
             />
           </Form.Group>
         </Col>
@@ -79,6 +77,7 @@ export default function HistoryTable_test() {
               name="username"
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Enter Username"
+              value={username}
             />
           </Form.Group>
         </Col>
@@ -88,6 +87,7 @@ export default function HistoryTable_test() {
             <Form.Select
               aria-label="Default select example"
               onChange={(e) => setStatus(e.target.value)}
+              value={status}
             >
               <option value="all">all</option>
               <option value="win">win</option>
