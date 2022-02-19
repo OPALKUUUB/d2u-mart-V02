@@ -761,6 +761,55 @@ app.get("/api/admin/yahoo/history", (req, res) => {
     }
   });
 });
+app.get("/api/yahoo/history/filter", (req, res) => {
+  let sql = "SELECT * FROM orders WHERE created_at LIKE ? AND username LIKE ?";
+  if (req.query.status === "win") {
+    sql += "AND status = 'win';";
+  } else if (req.query.status === "lose") {
+    sql += "AND status = 'lose';";
+  } else {
+    sql += "AND status = 'win' OR status = 'lose';";
+  }
+  conn.query(
+    sql,
+    [req.query.date + "%", req.query.username + "%"],
+    (err, result) => {
+      if (err) {
+        console.log(err.sqlMessage);
+        res.status(400).json({
+          status: false,
+          message: "Error: " + err.sqlMessage,
+        });
+      } else {
+        console.log(result);
+        res.status(200).json({
+          status: true,
+          message: "Select data from order that status 'Auction'",
+          data: result,
+        });
+      }
+    }
+  );
+});
+app.get("/api/admin/yahoo/history/:id", (req, res) => {
+  const sql = "SELECT * FROM orders WHERE id = ?;";
+  conn.query(sql, [req.params.id], (err, result) => {
+    if (err) {
+      console.log(err.sqlMessage);
+      res.status(400).json({
+        status: false,
+        message: "Error: " + err.sqlMessage,
+      });
+    } else {
+      // console.log(result);
+      res.status(200).json({
+        status: true,
+        message: "Select data from order that status 'Auction'",
+        data: result[0],
+      });
+    }
+  });
+});
 
 app.patch("/api/admin/workby", (req, res) => {
   let decoded = jwt.verify(

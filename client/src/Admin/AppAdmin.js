@@ -5,6 +5,7 @@ import NavBarAdmin from "./components/NavBarAdmin";
 import AuctionAdmin from "./pages/AuctionAdmin";
 import AuctionTable from "./pages/AuctionTable";
 import HistoryTable from "./pages/HistoryTable";
+import HistoryTable_test from "./pages/HistoryTable_test";
 import LoginAdmin from "./pages/login/LoginAdmin";
 import PaymentTable from "./pages/PaymentTable";
 import FrilTracking from "./pages/tracking/Fril";
@@ -39,10 +40,15 @@ export default function AppAdmin() {
               path="/admin/table/yahoo/payment"
               component={PaymentTable}
             />
-            <Route
+            {/* <Route
               exact
               path="/admin/table/yahoo/history"
               component={HistoryTable}
+            /> */}
+            <Route
+              exact
+              path="/admin/table/yahoo/history"
+              component={HistoryTable_test}
             />
             <Route
               exact
