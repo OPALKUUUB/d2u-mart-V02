@@ -390,6 +390,9 @@ function MydModalWithGrid(props) {
                   </Form.Select>
                 </Form.Group>
               </Form>
+              {item.payment_status === "รอการชำระ" && (
+                <Button>Upload Slip</Button>
+              )}
               {item.payment_id !== null && (
                 <Button onClick={() => handleShowSlip(item.payment_id)}>
                   Slip

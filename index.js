@@ -9,10 +9,6 @@ const multer = require("multer");
 var fs = require("fs");
 var request = require("request");
 dotenv.config();
-let PD_SRC_IMAGE = "./client/build/slip/";
-let SRC_IMAGE = "./client/public/slip/";
-let PD_SRC_IMAGE_TRACKING = "./client/build/image/";
-let SRC_IMAGE_TRACKING = "./client/public/image/";
 
 const conn = mysql.createConnection({
   host: process.env.PD_DB_HOST,
@@ -704,23 +700,28 @@ app.get("/api/admin/users", (req, res) => {
   });
 });
 app.get("/api/admin/yahoo/auction", (req, res) => {
-  const sql = "SELECT * FROM orders WHERE status = ?";
-  conn.query(sql, ["Auction"], (err, result) => {
-    if (err) {
-      console.log(err.sqlMessage);
-      res.status(400).json({
-        status: false,
-        message: "Error: " + err.sqlMessage,
-      });
-    } else {
-      // console.log(result);
-      res.status(200).json({
-        status: true,
-        message: "Select data from order that status 'Auction'",
-        data: result,
-      });
+  const sql =
+    "SELECT * FROM orders WHERE status = ? AND username LIKE ? AND created_at LIKE ?;";
+  conn.query(
+    sql,
+    ["Auction", req.query.username + "%", req.query.date + "%"],
+    (err, result) => {
+      if (err) {
+        console.log(err.sqlMessage);
+        res.status(400).json({
+          status: false,
+          message: "Error: " + err.sqlMessage,
+        });
+      } else {
+        // console.log(result);
+        res.status(200).json({
+          status: true,
+          message: "Select data from order that status 'Auction'",
+          data: result,
+        });
+      }
     }
-  });
+  );
 });
 app.get("/api/admin/yahoo/payment", (req, res) => {
   const sql =

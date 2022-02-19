@@ -10,6 +10,7 @@ import {
 } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import ReactLoading from "react-loading";
+import Loading from "../components/Loading";
 
 export default function AuctionTable() {
   const [date, setDate] = useState("");
@@ -19,25 +20,19 @@ export default function AuctionTable() {
   const [id, setId] = useState("");
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    fetch("/api/admin/yahoo/auction", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        token: localStorage.getItem("AdminToken"),
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.status) {
-          setOrders(json.data);
-          setLoading(false);
-        } else {
-          alert(json.message);
-          localStorage.removeItem("AdminToken");
-          window.location.reload(false);
-        }
-      });
-  }, []);
+    const fetchOrders = async () => {
+      const result = await fetch(
+        `/api/admin/yahoo/auction?username=${username}&date=${date}`
+      ).then((res) => res.json());
+      if (result.status) {
+        setOrders(result.data);
+      } else {
+        alert("fetch fail from history yahoo!");
+      }
+    };
+    fetchOrders();
+    setLoading(false);
+  }, [username, date, loading]);
 
   const handleUpdateWin = (id) => {
     setModalShow(true);
@@ -61,121 +56,11 @@ export default function AuctionTable() {
           } else {
             alert(json.message);
             localStorage.removeItem("AdminToken");
+            window.location.reload(false);
           }
-          window.location.reload(false);
         });
     }
   };
-  const auctionFilter = (c) => {
-    let temp = orders;
-    if (c === 1 || c === 3) {
-      temp = temp.filter((u) => {
-        let regex = new RegExp("(" + username + ")", "gi");
-        let match = u.username.match(regex);
-        if (match != null) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-    }
-    if (c === 2 || c === 3) {
-      temp = temp.filter((u) => {
-        let regex = new RegExp("(" + date + ")", "gi");
-        let fdate = formatDate(u.created_at);
-        let match = fdate.match(regex);
-        if (match != null) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-    }
-
-    return (
-      <>
-        {temp.map((item, index) => (
-          <tr key={index}>
-            <td className="align-middle">{index + 1}</td>
-            <td className="align-middle">
-              {parseInt(item.created_at.split("T")[0].split("-")[2])}{" "}
-              {month[parseInt(item.created_at.split("T")[0].split("-")[1])]}{" "}
-              {parseInt(item.created_at.split("T")[0].split("-")[0])}
-            </td>
-            <td className="align-middle">
-              <img src={item.imgsrc} width={100} />
-            </td>
-            <td className="align-middle">{item.username}</td>
-            <td className="align-middle">
-              <a href={item.link} target="_blank">
-                {item.link.split("/")[5]}
-              </a>
-            </td>
-            <td className="align-middle">
-              <div>
-                <span>{item.maxbid} (¥)</span>
-                <br />
-                <span>
-                  <WorkBy item={item} by={item.maxbid_work_by} mode={1} />
-                </span>
-              </div>
-            </td>
-            <td className="align-middle">
-              {item.addbid1 === null ? (
-                "-"
-              ) : (
-                <div>
-                  <span>{item.addbid1} (¥)</span>
-                  <br />
-                  <span>
-                    <WorkBy item={item} by={item.addbid1_work_by} mode={2} />
-                  </span>
-                </div>
-              )}
-            </td>
-            <td className="align-middle">
-              {item.addbid2 === null ? (
-                "-"
-              ) : (
-                <div>
-                  <span>{item.addbid2} (¥)</span>
-                  <br />
-                  <span>
-                    <WorkBy item={item} by={item.addbid2_work_by} mode={3} />
-                  </span>
-                </div>
-              )}
-            </td>
-            <td className="align-middle" width={100}>
-              {item.remark === null ? "-" : <>{item.remark}</>}
-            </td>
-            <td className="align-middle">
-              <Button
-                variant="success"
-                onClick={() => handleUpdateWin(item.id)}
-              >
-                win
-              </Button>{" "}
-              <Button
-                variant="danger"
-                onClick={() => handleUpdateLose(item.id)}
-              >
-                lose
-              </Button>
-            </td>
-          </tr>
-        ))}
-      </>
-    );
-  };
-  function formatDate(date) {
-    let temp2 = date.split("T")[0];
-    let temp = temp2.split("-");
-    let y = parseInt(temp[0]);
-    let m = parseInt(temp[1]);
-    let d = parseInt(temp[2]);
-    return `${d}/${m}/${y}`;
-  }
 
   return (
     <>
@@ -188,10 +73,10 @@ export default function AuctionTable() {
               <Form.Text className="text-muted">Such as 1/1/2022</Form.Text>
             </Form.Label>
             <Form.Control
-              type="text"
+              type="date"
               name="date"
               onChange={(e) => setDate(e.target.value)}
-              placeholder="D/M/Y"
+              value={date}
             />
           </Form.Group>
         </Col>
@@ -199,10 +84,11 @@ export default function AuctionTable() {
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Username</Form.Label>
             <Form.Control
-              ttype="text"
+              type="text"
               name="username"
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Enter Username"
+              value={username}
             />
           </Form.Group>
         </Col>
@@ -223,10 +109,92 @@ export default function AuctionTable() {
           </tr>
         </thead>
         <tbody style={{ textAlign: "center" }}>
-          {date === "" && username !== "" && auctionFilter(1)}
-          {date !== "" && username === "" && auctionFilter(2)}
-          {date !== "" && username !== "" && auctionFilter(3)}
-          {date === "" && username === "" && auctionFilter(4)}
+          {orders.map((item, index) => (
+            <tr key={index}>
+              <td className="align-middle">{index + 1}</td>
+              <td className="align-middle">
+                {parseInt(item.created_at.split("T")[0].split("-")[2])}{" "}
+                {month[parseInt(item.created_at.split("T")[0].split("-")[1])]}{" "}
+                {parseInt(item.created_at.split("T")[0].split("-")[0])}
+              </td>
+              <td className="align-middle">
+                <img src={item.imgsrc} width={100} />
+              </td>
+              <td className="align-middle">{item.username}</td>
+              <td className="align-middle">
+                <a href={item.link} target="_blank">
+                  {item.link.split("/")[5]}
+                </a>
+              </td>
+              <td className="align-middle">
+                <div>
+                  <span>{item.maxbid} (¥)</span>
+                  <br />
+                  <span>
+                    <WorkBy
+                      item={item}
+                      by={item.maxbid_work_by}
+                      mode={1}
+                      setLoading={setLoading}
+                    />
+                  </span>
+                </div>
+              </td>
+              <td className="align-middle">
+                {item.addbid1 === null ? (
+                  "-"
+                ) : (
+                  <div>
+                    <span>{item.addbid1} (¥)</span>
+                    <br />
+                    <span>
+                      <WorkBy
+                        item={item}
+                        by={item.addbid1_work_by}
+                        mode={2}
+                        setLoading={setLoading}
+                      />
+                    </span>
+                  </div>
+                )}
+              </td>
+              <td className="align-middle">
+                {item.addbid2 === null ? (
+                  "-"
+                ) : (
+                  <div>
+                    <span>{item.addbid2} (¥)</span>
+                    <br />
+                    <span>
+                      <WorkBy
+                        item={item}
+                        by={item.addbid2_work_by}
+                        mode={3}
+                        setLoading={setLoading}
+                      />
+                    </span>
+                  </div>
+                )}
+              </td>
+              <td className="align-middle" width={100}>
+                {item.remark === null ? "-" : <>{item.remark}</>}
+              </td>
+              <td className="align-middle">
+                <Button
+                  variant="success"
+                  onClick={() => handleUpdateWin(item.id)}
+                >
+                  win
+                </Button>{" "}
+                <Button
+                  variant="danger"
+                  onClick={() => handleUpdateLose(item.id)}
+                >
+                  lose
+                </Button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </Table>
       {loading && (
@@ -251,12 +219,51 @@ export default function AuctionTable() {
 }
 
 function WorkBy(props) {
-  let item = props.item;
-  let by = props.by;
-  const [workBy, setWorkBy] = useState(by !== null ? by : "none");
-  const [check, setCheck] = useState(by !== null);
+  const [workBy, setWorkBy] = useState("");
+  const [check, setCheck] = useState();
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    if (props.mode === 1) {
+      if (
+        props.item.maxbid_work_by !== "" &&
+        props.item.maxbid_work_by !== null
+      ) {
+        setWorkBy(props.item.maxbid_work_by);
+        setCheck(true);
+      } else {
+        setWorkBy("none");
+        setCheck(false);
+      }
+    }
+    if (props.mode === 2) {
+      if (
+        props.item.addbid1_work_by !== "" &&
+        props.item.addbid1_work_by !== null
+      ) {
+        setWorkBy(props.item.addbid1_work_by);
+        setCheck(true);
+      } else {
+        setWorkBy("none");
+        setCheck(false);
+      }
+    }
+    if (props.mode === 3) {
+      if (
+        props.item.addbid2_work_by !== "" &&
+        props.item.addbid2_work_by !== null
+      ) {
+        setWorkBy(props.item.addbid2_work_by);
+        setCheck(true);
+      } else {
+        setWorkBy("none");
+        setCheck(false);
+      }
+    }
+  }, [props, check]);
 
-  const handleWorkBy = (item) => {
+  const handleWorkBy = () => {
+    setLoading(true);
+    setCheck(!check);
     fetch("/api/admin/workby", {
       method: "PATCH",
       headers: {
@@ -265,8 +272,8 @@ function WorkBy(props) {
       },
       body: JSON.stringify({
         mode: props.mode,
-        id: item.id,
-        value: workBy === "none" ? false : true,
+        id: props.item.id,
+        value: check,
       }),
     })
       .then((res) => res.json())
@@ -276,19 +283,15 @@ function WorkBy(props) {
           localStorage.removeItem("AdminToken");
         } else {
           setWorkBy(json.value !== null ? json.value : "none");
-          setCheck(!check);
         }
-        window.location.reload(false);
+        props.setLoading(true);
+        setLoading(false);
       });
   };
   return (
     <>
-      <input
-        type="checkbox"
-        checked={check}
-        onChange={() => handleWorkBy(item)}
-      />{" "}
-      {workBy}
+      <input type="checkbox" checked={check} onChange={handleWorkBy} /> {workBy}
+      {loading && <Loading />}
     </>
   );
 }
