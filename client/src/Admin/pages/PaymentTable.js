@@ -9,6 +9,7 @@ import {
   Table,
 } from "react-bootstrap";
 import ReactLoading from "react-loading";
+import Loading from "../components/Loading";
 
 export default function PaymentTable() {
   const [date, setDate] = useState("");
@@ -251,6 +252,7 @@ function MydModalWithGrid(props) {
   const [item, setItem] = useState(props.item);
   const [slip, setSlip] = useState("");
   const [modalShowSlip, setModalShowSlip] = useState(false);
+  const [modalShowUploadSlip, setModalShowUploadSlip] = React.useState(false);
   useEffect(() => {
     setItem(props.item);
   }, [props.item]);
@@ -390,9 +392,19 @@ function MydModalWithGrid(props) {
                   </Form.Select>
                 </Form.Group>
               </Form>
-              {item.payment_status === "รอการชำระ" && (
-                <Button>Upload Slip</Button>
+              {item.payment_status === "pending2" && (
+                <Button
+                  variant="primary"
+                  onClick={() => setModalShowUploadSlip(true)}
+                >
+                  Upload Slip
+                </Button>
               )}
+              <ModalUploadSlip
+                show={modalShowUploadSlip}
+                onHide={() => setModalShowUploadSlip(false)}
+                item={item}
+              />
               {item.payment_id !== null && (
                 <Button onClick={() => handleShowSlip(item.payment_id)}>
                   Slip
@@ -429,6 +441,99 @@ function ModalSlip(props) {
       onClick={props.onHide}
     >
       <img src={props.src} />
+    </Modal>
+  );
+}
+
+function ModalUploadSlip(props) {
+  const [image, setImage] = useState(null);
+  const [file, setFile] = useState();
+  const [yen, setYen] = useState("");
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    fetch("/api/yen", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.status) {
+          setYen(json.yen);
+        } else {
+          alert(json.message);
+        }
+      });
+  });
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+    setImage(URL.createObjectURL(e.target.files[0]));
+  };
+  const handleUpload = () => {
+    if (file === null) {
+      alert(`please choose slip first!`);
+    } else {
+      setLoading(true);
+      let sum =
+        Math.round((props.item.bid + props.item.delivery_in_thai) * yen) +
+        props.item.tranfer_fee_injapan;
+      const data = new FormData();
+      data.append("file", file);
+      data.append("upload_preset", "d2u-service");
+      data.append("cloud_name", "d2u-service");
+      fetch("  https://api.cloudinary.com/v1_1/d2u-service/upload", {
+        method: "POST",
+        body: data,
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          fetch("/api/admin/payment/confirm", {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              slip_image_filename: data.url,
+              price: sum,
+              order_id: props.item.id,
+            }),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.status) {
+                alert("Your payment is already submit");
+                setLoading(false);
+                window.location.reload(false);
+              }
+            });
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+  return (
+    <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter">
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">
+          Upload Slip
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form.Group>
+          <Form.Label>Slip</Form.Label>
+          <Form.Control
+            type="file"
+            size="sm"
+            name="pic1_filename"
+            onChange={handleFileChange}
+          />
+        </Form.Group>
+        {image !== "" && <img src={image} width={200} />}
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={handleUpload}>Upload</Button>
+      </Modal.Footer>
+      {loading && <Loading />}
     </Modal>
   );
 }

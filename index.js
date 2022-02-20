@@ -620,6 +620,45 @@ app.patch("/api/payment/confirm", (req, res) => {
   }
 });
 
+app.patch("/api/admin/payment/confirm", (req, res) => {
+  let sql = "INSERT INTO payments (price, slip_image_filename) VALUES (?,?);";
+  conn.query(
+    sql,
+    [req.body.price, req.body.slip_image_filename],
+    (err, result) => {
+      if (err) {
+        console.log(err.sqlMessage);
+        res.status(400).json({
+          status: false,
+          message: "Error: " + err.sqlMessage,
+        });
+      } else {
+        sql =
+          "UPDATE orders SET payment_id = ?, payment_status = ? WHERE id = ?;";
+        conn.query(
+          sql,
+          [result.insertId, "paid", req.body.order_id],
+          (err1, result1) => {
+            if (err1) {
+              console.log(err1.sqlMessage);
+              res.status(400).json({
+                status: false,
+                message: "Error: " + err1.sqlMessage,
+              });
+            } else {
+              console.log(result1);
+              res.status(200).json({
+                status: true,
+                message: "created payment successfully!",
+              });
+            }
+          }
+        );
+      }
+    }
+  );
+});
+
 app.get("/api/payment/slip/:id", (req, res) => {
   const sql = "SELECT slip_image_filename FROM payments WHERE id = ?;";
   conn.query(sql, [req.params.id], (err, row) => {
@@ -820,7 +859,8 @@ app.patch("/api/admin/workby", (req, res) => {
       if (err) {
         res.status(400).json({
           status: false,
-          message: err.sqlMessage,
+          message: err,
+          error: 1,
         });
         console.log("Error: Your login session is expired!");
       } else {
@@ -849,6 +889,7 @@ app.patch("/api/admin/workby", (req, res) => {
         res.status(400).json({
           status: false,
           message: "Error: " + err.sqlMessage,
+          error: 2,
         });
       } else {
         console.log(result);

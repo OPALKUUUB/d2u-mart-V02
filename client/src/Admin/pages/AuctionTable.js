@@ -279,8 +279,12 @@ function WorkBy(props) {
       .then((res) => res.json())
       .then((json) => {
         if (!json.status) {
-          alert(json.message);
-          localStorage.removeItem("AdminToken");
+          if (json.error === 1) {
+            alert("Your token is expired please log in again!");
+            localStorage.removeItem("AdminToken");
+          } else if (json.error === 2) {
+            alert(json.message);
+          }
         } else {
           setWorkBy(json.value !== null ? json.value : "none");
         }
