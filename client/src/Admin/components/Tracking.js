@@ -14,7 +14,7 @@ export default function Tracking(props) {
   const [date, setDate] = useState("");
   const [username, setUsername] = useState("");
   const [trackId, setTrackId] = useState("");
-  const [orderBy, setOrderBy] = useState("ASC1");
+  const [orderBy, setOrderBy] = useState("DESC1");
   const [roundBoat, setRoundBoat] = useState("");
   const [loading, setLoading] = useState(true);
   const [image, setImage] = useState("");
@@ -193,8 +193,8 @@ export default function Tracking(props) {
               }}
               value={orderBy}
             >
-              <option value="ASC1">เก่าไปใหม่</option>
               <option value="DESC1">ใหม่ไปเก่า</option>
+              <option value="ASC1">เก่าไปใหม่</option>
               <option value="ASC2">รอบเรือเก่าไปใหม่</option>
               <option value="DESC2">รอบเรือใหม่ไปเก่า</option>
             </Form.Select>

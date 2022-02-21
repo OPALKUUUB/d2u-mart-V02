@@ -1183,9 +1183,9 @@ app.get("/api/admin/track/:mode", (req, res) => {
     "SELECT * FROM trackings WHERE channel = ? AND username LIKE ? AND track_id LIKE ? AND date LIKE ? AND round_boat LIKE ? AND check1 IS ? AND check2 IS ? ";
   let orderBy = req.query.orderBy;
   if (orderBy === "ASC1") {
-    sql += "ORDER BY date ASC;";
+    sql += "ORDER BY created_at ASC;";
   } else if (orderBy === "DESC1") {
-    sql += "ORDER BY date DESC;";
+    sql += "ORDER BY created_at DESC;";
   } else if (orderBy === "ASC2") {
     sql += "ORDER BY round_boat ASC;";
   } else if (orderBy === "DESC2") {
