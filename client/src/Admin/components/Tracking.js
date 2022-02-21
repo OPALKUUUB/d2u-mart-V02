@@ -14,67 +14,35 @@ export default function Tracking(props) {
   const [date, setDate] = useState("");
   const [username, setUsername] = useState("");
   const [trackId, setTrackId] = useState("");
+  const [orderBy, setOrderBy] = useState("ASC1");
+  const [roundBoat, setRoundBoat] = useState("");
   const [loading, setLoading] = useState(true);
   const [image, setImage] = useState("");
   const [modalShowImage, setModalShowImage] = useState(false);
+  const [trigger, setTrigger] = useState(false);
   useEffect(() => {
-    fetch("/api/admin/tracking/" + props.mode, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.status) {
-          setTrackings(json.data);
-          setLoading(false);
-        } else {
-          alert(json.message);
-        }
-      });
-  }, []);
+    const fetchTrack = async () => {
+      const result = await fetch(
+        `/api/admin/track/${props.mode}?username=${username}&trackId=${trackId}&date=${date}&orderBy=${orderBy}&roundBoat=${roundBoat}`
+      ).then((res) => res.json());
+      if (result.status) {
+        setTrackings(result.data);
+        setLoading(false);
+      } else {
+        alert("fetch fail from tracking " + props.mode + "!");
+        window.location.reload(false);
+      }
+    };
+    fetchTrack();
+  }, [username, trackId, date, orderBy, roundBoat, trigger]);
   const handleConfigs = (item) => {
     setItem(item);
     setModalShowUpdate(true);
   };
-  const trackingFilter = () => {
-    let temp = trackings;
-    if (username !== "") {
-      temp = temp.filter((u) => {
-        let regex = new RegExp("(" + username + ")", "gi");
-        let match = u.username.match(regex);
-        if (match != null) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-    }
-    if (trackId !== "") {
-      temp = temp.filter((u) => {
-        let regex = new RegExp("(" + trackId + ")", "gi");
-        let match = u.track_id.match(regex);
-        if (match != null) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-    }
-    if (date !== "") {
-      temp = temp.filter((u) => {
-        let regex = new RegExp("(" + date + ")", "gi");
-        let fdate = formatDate(u.date);
-        let match = fdate.match(regex);
-        if (match != null) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-    }
-    const handleDelete = (id) => {
+
+  const handleDelete = (id, index) => {
+    if (window.confirm("คุณต้องการที่จะลบข้อมูลที่ " + index + "?")) {
+      setLoading(true);
       fetch("/api/admin/tracking", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
@@ -82,96 +50,43 @@ export default function Tracking(props) {
       })
         .then((res) => res.json())
         .then((json) => {
-          if (json.status) {
-            alert(json.message);
-            window.location.reload(false);
-          } else {
-            alert(json.message);
-          }
+          console.log(json);
         });
-    };
+    }
+  };
 
-    return (
-      <>
-        {temp.map((item, index) => (
-          <tr key={index}>
-            <td className="align-middle">{index + 1}</td>
-            <td className="align-middle" style={{ minWidth: "100px" }}>
-              {parseInt(item.date.split("-")[2])}{" "}
-              {month[parseInt(item.date.split("-")[1])]}{" "}
-              {parseInt(item.date.split("-")[0])}
-            </td>
-            <td className="align-middle">{item.channel}</td>
-            <td className="align-middle">{item.username}</td>
-            <td className="align-middle">
-              <a href={item.url} target="_blank">
-                link
-              </a>
-            </td>
-            <td className="align-middle">{item.track_id}</td>
-            <td className="align-middle">{item.box_id}</td>
-            <td className="align-middle">{item.weight}</td>
-            <td className="align-middle">
-              {parseInt(item.round_boat.split("-")[2])}{" "}
-              {month[parseInt(item.round_boat.split("-")[1])]}
-            </td>
-            <td className="align-middle">
-              {item.pic1_filename !== null && item.pic1_filename !== "" ? (
-                <img
-                  onClick={() => {
-                    setImage(item.pic1_filename);
-                    setModalShowImage(true);
-                  }}
-                  src={item.pic1_filename}
-                  alt="image for pic1"
-                  width={100}
-                />
-              ) : (
-                "-"
-              )}
-            </td>
-            <td className="align-middle">
-              {item.pic2_filename !== null && item.pic2_filename !== "" ? (
-                <img
-                  onClick={() => {
-                    setImage(item.pic2_filename);
-                    setModalShowImage(true);
-                  }}
-                  src={item.pic2_filename}
-                  alt="image for pic2"
-                  width={100}
-                />
-              ) : (
-                "-"
-              )}
-            </td>
-            <td className="align-middle" style={{ minWidth: "130px" }}>
-              {item.remark}
-            </td>
-            <td className="align-middle">
-              <div style={{ display: "flex" }}>
-                <Button
-                  size="sm"
-                  onClick={() => handleConfigs(item)}
-                  variant="success"
-                >
-                  <i class="fas fa-pencil-alt"></i>
-                </Button>
-                &nbsp;
-                <Button variant="danger" onClick={() => handleDelete(item.id)}>
-                  <i class="fas fa-times"></i>
-                </Button>
-              </div>
-            </td>
-          </tr>
-        ))}
-        <ShowImage
-          show={modalShowImage}
-          onHide={() => setModalShowImage(false)}
-          src={image}
-        />
-      </>
-    );
+  const handleCheck1 = (check, id) => {
+    setLoading(true);
+    fetch("/api/admin/check1/tracking", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: id, check: !check }),
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.status) {
+          setTrigger(!trigger);
+        } else {
+          alert(json.message);
+        }
+      });
+  };
+
+  const handleCheck2 = (check, id) => {
+    setLoading(true);
+    fetch("/api/admin/check2/tracking", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: id, check: !check }),
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.status) {
+          setTrigger(!trigger);
+        } else {
+          alert(json.message);
+        }
+      });
   };
 
   return (
@@ -183,32 +98,33 @@ export default function Tracking(props) {
         </Button>
       </div>
       <Row>
-        <Col>
+        <Col md>
           <Form.Group className="mb-3">
             <Form.Label>
               Date&nbsp;
               <Form.Text className="text-muted">Such as 1/1/2022</Form.Text>
             </Form.Label>
             <Form.Control
-              type="text"
+              type="date"
               name="date"
               onChange={(e) => setDate(e.target.value)}
-              placeholder="D/M/Y"
+              value={date}
             />
           </Form.Group>
         </Col>
-        <Col>
+        <Col md>
           <Form.Group className="mb-3">
             <Form.Label>Username</Form.Label>
             <Form.Control
-              ttype="text"
+              type="text"
               name="username"
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Enter Username"
+              value={username}
             />
           </Form.Group>
         </Col>
-        <Col>
+        <Col md>
           <Form.Group className="mb-3">
             <Form.Label>Track Id</Form.Label>
             <Form.Control
@@ -216,6 +132,36 @@ export default function Tracking(props) {
               name="track_id"
               onChange={(e) => setTrackId(e.target.value)}
               placeholder="Enter Track Id"
+              value={trackId}
+            />
+          </Form.Group>
+        </Col>
+        <Col md>
+          <Form.Group className="mb-3">
+            <Form.Label>เรียงวันที่</Form.Label>
+            <Form.Select
+              aria-label="Default select example"
+              onChange={(e) => {
+                setLoading(true);
+                setOrderBy(e.target.value);
+              }}
+              value={orderBy}
+            >
+              <option value="ASC1">เก่าไปใหม่</option>
+              <option value="DESC1">ใหม่ไปเก่า</option>
+              <option value="ASC2">รอบเรือเก่าไปใหม่</option>
+              <option value="DESC2">รอบเรือใหม่ไปเก่า</option>
+            </Form.Select>
+          </Form.Group>
+        </Col>
+        <Col md>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label>รอบเรือ&nbsp;</Form.Label>
+            <Form.Control
+              type="date"
+              name="roundBoat"
+              onChange={(e) => setRoundBoat(e.target.value)}
+              value={roundBoat}
             />
           </Form.Group>
         </Col>
@@ -226,20 +172,125 @@ export default function Tracking(props) {
           <tr>
             <th>#</th>
             <th>Date</th>
-            <th>Channel</th>
             <th>Username</th>
             <th>URL</th>
             <th>Track Id</th>
-            <th>หมายเลขกล่อง</th>
-            <th>weight</th>
+            <th>Box no.</th>
+            <th>น้ำหนัก</th>
             <th>รอบเรือ</th>
-            <th>Pic1</th>
-            <th>Pic2</th>
-            <th>Remark</th>
+            <th>รูป 1</th>
+            <th>รูป 2</th>
+            <th>ตรวจสอบ</th>
+            <th>สถานะ</th>
+            <th>Noted</th>
             <th>Edit</th>
           </tr>
         </thead>
-        <tbody>{trackingFilter()}</tbody>
+        <tbody>
+          {trackings.map((item, index) => (
+            <tr key={index}>
+              <td className="align-middle">{index + 1}</td>
+              <td className="align-middle">
+                {parseInt(item.date.split("-")[2])}{" "}
+                {month[parseInt(item.date.split("-")[1])]}{" "}
+                {parseInt(item.date.split("-")[0])}
+              </td>
+              <td className="align-middle">{item.username}</td>
+              <td className="align-middle">
+                <a href={item.url} target="_blank">
+                  link
+                </a>
+              </td>
+              <td className="align-middle">
+                {item.track_id === null ? "-" : <>{item.track_id}</>}
+              </td>
+              <td className="align-middle">
+                {item.box_id === null ? "-" : <>{item.box_id}</>}
+              </td>
+              <td className="align-middle">
+                {item.weight === null || item.weight === "" ? (
+                  "-"
+                ) : (
+                  <>{item.weight} (Kg.)</>
+                )}
+              </td>
+              <td className="align-middle">
+                {parseInt(item.round_boat.split("-")[2])}{" "}
+                {month[parseInt(item.round_boat.split("-")[1])]}
+              </td>
+              <td className="align-middle">
+                {item.pic1_filename !== null && item.pic1_filename !== "" ? (
+                  <img
+                    onClick={() => {
+                      setImage(item.pic1_filename);
+                      setModalShowImage(true);
+                    }}
+                    src={item.pic1_filename}
+                    alt="image for pic1"
+                    width={100}
+                  />
+                ) : (
+                  "-"
+                )}
+              </td>
+              <td className="align-middle">
+                {item.pic2_filename !== null && item.pic2_filename !== "" ? (
+                  <img
+                    onClick={() => {
+                      setImage(item.pic2_filename);
+                      setModalShowImage(true);
+                    }}
+                    src={item.pic2_filename}
+                    alt="image for pic2"
+                    width={100}
+                  />
+                ) : (
+                  "-"
+                )}
+              </td>
+              <td className="align-middle text-center">
+                <input
+                  type="checkbox"
+                  checked={item.check1}
+                  onChange={() => handleCheck1(item.check1, item.id)}
+                />
+              </td>
+              <td className="align-middle text-center">
+                <input
+                  type="checkbox"
+                  checked={item.check2}
+                  onChange={() => handleCheck2(item.check2, item.id)}
+                />
+              </td>
+              <td className="align-middle" width={150}>
+                {item.remark}
+              </td>
+              <td className="align-middle">
+                <div style={{ display: "flex" }}>
+                  <Button
+                    size="sm"
+                    onClick={() => handleConfigs(item)}
+                    variant="success"
+                  >
+                    <i class="fas fa-pencil-alt"></i>
+                  </Button>
+                  &nbsp;
+                  <Button
+                    variant="danger"
+                    onClick={() => handleDelete(item.id, index + 1)}
+                  >
+                    <i class="fas fa-times"></i>
+                  </Button>
+                </div>
+              </td>
+            </tr>
+          ))}
+          <ShowImage
+            show={modalShowImage}
+            onHide={() => setModalShowImage(false)}
+            src={image}
+          />
+        </tbody>
       </Table>
       <AddTrackingModal
         show={modalShowAdd}
@@ -258,25 +309,7 @@ export default function Tracking(props) {
     </>
   );
 }
-function formatDate(date) {
-  let temp = date.split("-");
-  let y = parseInt(temp[0]);
-  let m = parseInt(temp[1]);
-  let d = parseInt(temp[2]);
-  return `${d}/${m}/${y}`;
-}
 
-let trackingModel = {
-  date: "",
-  username: "",
-  track_id: "",
-  weight: "",
-  noted: "",
-  round_boat: "",
-  pic1_filename: "",
-  pic2_filename: "",
-  box_id: "",
-};
 const month = {
   1: "JAN",
   2: "FEB",
@@ -291,8 +324,3 @@ const month = {
   11: "NOV",
   12: "DEC",
 };
-function packFile(file) {
-  const fd = new FormData();
-  fd.append("image", file, file.name);
-  return fd;
-}

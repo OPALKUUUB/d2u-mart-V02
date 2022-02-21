@@ -752,7 +752,6 @@ app.get("/api/admin/yahoo/auction", (req, res) => {
           message: "Error: " + err.sqlMessage,
         });
       } else {
-        // console.log(result);
         res.status(200).json({
           status: true,
           message: "Select data from order that status 'Auction'",
@@ -880,6 +879,42 @@ app.get("/api/admin/yahoo/history/:id", (req, res) => {
   });
 });
 
+app.patch("/api/admin/check1/tracking", (req, res) => {
+  const sql = "UPDATE trackings SET check1 = ? WHERE id = ?;";
+  conn.query(sql, [req.body.check, req.body.id], (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({
+        status: false,
+        message: "Error: " + err.sqlMessage,
+      });
+    } else {
+      console.log(result);
+      res.status(200).json({
+        status: true,
+        message: "update trackings at check1 successfully",
+      });
+    }
+  });
+});
+app.patch("/api/admin/check2/tracking", (req, res) => {
+  const sql = "UPDATE trackings SET check2 = ? WHERE id = ?;";
+  conn.query(sql, [req.body.check, req.body.id], (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({
+        status: false,
+        message: "Error: " + err.sqlMessage,
+      });
+    } else {
+      console.log(result);
+      res.status(200).json({
+        status: true,
+        message: "update trackings at check2 successfully",
+      });
+    }
+  });
+});
 app.patch("/api/admin/workby", (req, res) => {
   let decoded = jwt.verify(
     req.headers.token,
