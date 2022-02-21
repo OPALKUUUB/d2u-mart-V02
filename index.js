@@ -1164,8 +1164,23 @@ app.get("/api/admin/tracking/:mode", (req, res) => {
   });
 });
 app.get("/api/admin/track/:mode", (req, res) => {
+  let check1, check2;
+  if (req.query.check1 === "null") {
+    check1 = null;
+  } else if (req.query.check1 === "true") {
+    check1 = true;
+  } else if (req.query.check1 === "false") {
+    check1 = false;
+  }
+  if (req.query.check2 === "null") {
+    check2 = null;
+  } else if (req.query.check2 === "true") {
+    check2 = true;
+  } else if (req.query.check2 === "false") {
+    check2 = false;
+  }
   let sql =
-    "SELECT * FROM trackings WHERE channel = ? AND username LIKE ? AND track_id LIKE ? AND date LIKE ? AND round_boat LIKE ?";
+    "SELECT * FROM trackings WHERE channel = ? AND username LIKE ? AND track_id LIKE ? AND date LIKE ? AND round_boat LIKE ? AND check1 IS ? AND check2 IS ? ";
   let orderBy = req.query.orderBy;
   if (orderBy === "ASC1") {
     sql += "ORDER BY date ASC;";
@@ -1184,6 +1199,8 @@ app.get("/api/admin/track/:mode", (req, res) => {
       req.query.trackId + "%",
       req.query.date + "%",
       req.query.roundBoat + "%",
+      check1,
+      check2,
     ],
     (err, row) => {
       if (err) {

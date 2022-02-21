@@ -20,10 +20,12 @@ export default function Tracking(props) {
   const [image, setImage] = useState("");
   const [modalShowImage, setModalShowImage] = useState(false);
   const [trigger, setTrigger] = useState(false);
+  const [filterCheck1, setFilterCheck1] = useState(null);
+  const [filterCheck2, setFilterCheck2] = useState(null);
   useEffect(() => {
     const fetchTrack = async () => {
       const result = await fetch(
-        `/api/admin/track/${props.mode}?username=${username}&trackId=${trackId}&date=${date}&orderBy=${orderBy}&roundBoat=${roundBoat}`
+        `/api/admin/track/${props.mode}?username=${username}&trackId=${trackId}&date=${date}&orderBy=${orderBy}&roundBoat=${roundBoat}&check1=${filterCheck1}&check2=${filterCheck2}`
       ).then((res) => res.json());
       if (result.status) {
         setTrackings(result.data);
@@ -34,7 +36,16 @@ export default function Tracking(props) {
       }
     };
     fetchTrack();
-  }, [username, trackId, date, orderBy, roundBoat, trigger]);
+  }, [
+    username,
+    trackId,
+    date,
+    orderBy,
+    roundBoat,
+    trigger,
+    filterCheck1,
+    filterCheck2,
+  ]);
   const handleConfigs = (item) => {
     setItem(item);
     setModalShowUpdate(true);
@@ -97,6 +108,41 @@ export default function Tracking(props) {
           Add Tracking
         </Button>
       </div>
+      <Row>
+        <Col>
+          <Form.Group className="mb-3">
+            <Form.Select
+              aria-label="Default select example"
+              onChange={(e) => {
+                setLoading(true);
+                setFilterCheck1(e.target.value);
+              }}
+              value={filterCheck1}
+            >
+              <option value={null}>ทั้งหมด(ตรวจสอบ)</option>
+              <option value={true}>ตรวจสอบแล้ว</option>
+              <option value={false}>ยังไม่ตรวจสอบ</option>
+            </Form.Select>
+          </Form.Group>
+        </Col>
+        <Col>
+          <Form.Group className="mb-3">
+            <Form.Select
+              aria-label="Default select example"
+              onChange={(e) => {
+                setLoading(true);
+                setFilterCheck2(e.target.value);
+              }}
+              value={filterCheck2}
+            >
+              <option value={null}>ทั้งหมด(สถานะ)</option>
+              <option value={true}>check</option>
+              <option value={false}>not check</option>
+            </Form.Select>
+          </Form.Group>
+        </Col>
+      </Row>
+
       <Row>
         <Col md>
           <Form.Group className="mb-3">
