@@ -1099,6 +1099,40 @@ app.get("/api/admin/tracking/:mode", (req, res) => {
     }
   });
 });
+app.get("/api/admin/track/:mode", (req, res) => {
+  let sql =
+    "SELECT * FROM trackings WHERE channel = ? AND username LIKE ? AND track_id LIKE ? AND date LIKE ? AND round_boat LIKE ?";
+  if (req.query.orderBy === "ASC") {
+    sql += "ORDER BY id ASC;";
+  } else {
+    sql += "ORDER BY id DESC;";
+  }
+  conn.query(
+    sql,
+    [
+      req.params.mode,
+      req.query.username + "%",
+      req.query.trackId + "%",
+      req.query.date + "%",
+      req.query.roundBoat + "%",
+    ],
+    (err, row) => {
+      if (err) {
+        console.log(err.sqlMessage);
+        res.status(400).json({
+          status: false,
+          message: "Error: " + err.sqlMessage,
+        });
+      } else {
+        console.log(row);
+        res.status(200).json({
+          status: true,
+          data: row,
+        });
+      }
+    }
+  );
+});
 app.delete("/api/admin/tracking", (req, res) => {
   const sql = "DELETE FROM trackings WHERE id = ?;";
   conn.query(sql, [req.body.id], (err, result) => {
