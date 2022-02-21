@@ -119,9 +119,9 @@ export default function Tracking(props) {
               }}
               value={filterCheck1}
             >
-              <option value={null}>ทั้งหมด(ตรวจสอบ)</option>
-              <option value={true}>ตรวจสอบแล้ว</option>
-              <option value={false}>ยังไม่ตรวจสอบ</option>
+              <option value={null}>ทั้งหมด(กดรับของ)</option>
+              <option value={true}>กดรับของแล้ว</option>
+              <option value={false}>ยังไม่กดรับของ</option>
             </Form.Select>
           </Form.Group>
         </Col>
@@ -135,9 +135,9 @@ export default function Tracking(props) {
               }}
               value={filterCheck2}
             >
-              <option value={null}>ทั้งหมด(สถานะ)</option>
-              <option value={true}>check</option>
-              <option value={false}>not check</option>
+              <option value={null}>ทั้งหมด(done)</option>
+              <option value={true}>done</option>
+              <option value={false}>not done</option>
             </Form.Select>
           </Form.Group>
         </Col>
