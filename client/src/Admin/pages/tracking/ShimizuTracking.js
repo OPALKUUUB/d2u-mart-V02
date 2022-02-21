@@ -14,7 +14,7 @@ export default function ShimizuTracking() {
   const [date, setDate] = useState("");
   const [username, setUsername] = useState("");
   const [trackId, setTrackId] = useState("");
-  const [orderBy, setOrderBy] = useState("ASC");
+  const [orderBy, setOrderBy] = useState("ASC1");
   const [roundBoat, setRoundBoat] = useState("");
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState("");
@@ -110,8 +110,10 @@ export default function ShimizuTracking() {
               onChange={(e) => setOrderBy(e.target.value)}
               value={orderBy}
             >
-              <option value="ASC">เก่าไปใหม่</option>
-              <option value="DESC">ใหม่ไปเก่า</option>
+              <option value="ASC1">เก่าไปใหม่</option>
+              <option value="DESC1">ใหม่ไปเก่า</option>
+              <option value="ASC2">รอบเรือเก่าไปใหม่</option>
+              <option value="DESC2">รอบเรือใหม่ไปเก่า</option>
             </Form.Select>
           </Form.Group>
         </Col>

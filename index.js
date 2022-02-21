@@ -1102,10 +1102,15 @@ app.get("/api/admin/tracking/:mode", (req, res) => {
 app.get("/api/admin/track/:mode", (req, res) => {
   let sql =
     "SELECT * FROM trackings WHERE channel = ? AND username LIKE ? AND track_id LIKE ? AND date LIKE ? AND round_boat LIKE ?";
-  if (req.query.orderBy === "ASC") {
-    sql += "ORDER BY id ASC;";
-  } else {
-    sql += "ORDER BY id DESC;";
+  let orderBy = req.query.orderBy;
+  if (orderBy === "ASC1") {
+    sql += "ORDER BY date ASC;";
+  } else if (orderBy === "DESC1") {
+    sql += "ORDER BY date DESC;";
+  } else if (orderBy === "ASC2") {
+    sql += "ORDER BY round_boat ASC;";
+  } else if (orderBy === "DESC2") {
+    sql += "ORDER BY round_boat DESC;";
   }
   conn.query(
     sql,
