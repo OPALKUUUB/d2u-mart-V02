@@ -19,8 +19,9 @@ export default function PaymentTable() {
   const [temp, setTemp] = useState({});
   const [yen, setYen] = useState("");
   const [loading, setLoading] = useState(true);
-  useEffect(async () => {
-    await fetch("/api/yen", {
+  const [trigger, setTrigger] = useState(true);
+  useEffect(() => {
+    fetch("/api/yen", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -34,145 +35,61 @@ export default function PaymentTable() {
           alert(json.message);
         }
       });
-    await fetch("/api/admin/yahoo/payment", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        token: localStorage.getItem("AdminToken"),
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.status) {
-          setOrders(json.data);
-          setLoading(false);
-        } else {
-          alert(json.message);
-          localStorage.removeItem("AdminToken");
-          window.location.reload(false);
-        }
-      });
-  }, []);
+  }, [yen]);
+  useEffect(() => {
+    const fetchOrder = async () => {
+      const result = await fetch(
+        `/api/admin/yahoo/payment?username=${username}&date=${date}`
+      ).then((res) => res.json());
+      if (result.status) {
+        setOrders(result.data);
+        setLoading(false);
+      } else {
+        alert(result.message);
+        localStorage.removeItem("AdminToken");
+        window.location.reload(false);
+      }
+    };
+    fetchOrder();
+  }, [date, username, trigger]);
+
   const handleUpdateWin = (item) => {
     setModalShow(true);
     setTemp(item);
   };
-  const auctionFilter = (c) => {
-    let t = orders;
-    if (c === 1 || c === 3) {
-      t = t.filter((u) => {
-        let regex = new RegExp("(" + username + ")", "gi");
-        let match = u.username.match(regex);
-        if (match != null) {
-          return true;
+
+  const handleDelete = (id) => {
+    fetch("/api/admin/orders", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: id }),
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.status) {
+          alert(json.message);
+          window.location.reload(false);
         } else {
-          return false;
+          alert(json.message);
         }
       });
-    }
-    if (c === 2 || c === 3) {
-      t = t.filter((u) => {
-        let regex = new RegExp("(" + date + ")", "gi");
-        let fdate = formatDate(u.created_at);
-        let match = fdate.match(regex);
-        if (match != null) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-    }
-    const handleDelete = (id) => {
-      fetch("/api/admin/orders", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: id }),
-      })
-        .then((res) => res.json())
-        .then((json) => {
-          if (json.status) {
-            alert(json.message);
-            window.location.reload(false);
-          } else {
-            alert(json.message);
-          }
-        });
-    };
-
-    return (
-      <>
-        {t.map((item, index) => (
-          <tr key={index}>
-            <td className="align-middle">{index + 1}</td>
-            <td className="align-middle">
-              {parseInt(item.created_at.split("T")[0].split("-")[2])}{" "}
-              {month[parseInt(item.created_at.split("T")[0].split("-")[1])]}{" "}
-              {parseInt(item.created_at.split("T")[0].split("-")[0])}
-            </td>
-            <td className="align-middle">
-              <img src={item.imgsrc} width={100} />
-            </td>
-            <td className="align-middle">{item.username}</td>
-            <td className="align-middle">
-              <a href={item.link} target="_blank">
-                {item.link.split("/")[5]}
-              </a>
-            </td>
-
-            <td className="align-middle">
-              <div>{item.bid} (¥)</div>
-              <div style={{ backgroundColor: "yellow" }}>{item.bid_by}</div>
-            </td>
-            <td className="align-middle">{item.tranfer_fee_injapan}</td>
-            <td className="align-middle">{item.delivery_in_thai}</td>
-            <td className="align-middle">
-              {item.tranfer_fee_injapan === null &&
-              item.delivery_in_thai === null ? (
-                "ข้อมูลยังไม่ครบ"
-              ) : (
-                <>
-                  {Math.round((item.bid + item.delivery_in_thai) * yen) +
-                    item.tranfer_fee_injapan}{" "}
-                  (฿)
-                </>
-              )}
-            </td>
-            <td className="align-middle">
-              {item.payment_status === "pending1" && "รอค่าส่ง"}
-              {item.payment_status === "pending2" && "รอการชำระ"}
-              {item.payment_status === "pending3" && "รอการตรวจสอบ"}
-              {item.payment_status === "paid" && "ชำระเงินเรียบร้อยแล้ว"}
-            </td>
-            <td className="align-middle">
-              <Button
-                size="sm"
-                variant="success"
-                onClick={() => handleUpdateWin(item)}
-              >
-                <i class="fas fa-pencil-alt"></i>
-              </Button>
-              &nbsp;
-              <Button
-                variant="danger"
-                onClick={() => handleDelete(item.id)}
-                size="sm"
-              >
-                <i class="fas fa-times"></i>
-              </Button>
-            </td>
-          </tr>
-        ))}
-      </>
-    );
   };
-  function formatDate(date) {
-    let temp2 = date.split("T")[0];
-    let temp = temp2.split("-");
-    let y = parseInt(temp[0]);
-    let m = parseInt(temp[1]);
-    let d = parseInt(temp[2]);
-    return `${d}/${m}/${y}`;
-  }
+
+  const handleCheckInformBill = (check, id) => {
+    setLoading(true);
+    setTrigger(!trigger);
+    fetch("/api/admin/check/inform/bill", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ check: !check, id: id }),
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (!json.status) {
+          alert(json.message);
+        }
+      });
+  };
 
   return (
     <>
@@ -180,15 +97,11 @@ export default function PaymentTable() {
       <Row>
         <Col>
           <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>
-              Date&nbsp;
-              <Form.Text className="text-muted">Such as 1/1/2022</Form.Text>
-            </Form.Label>
+            <Form.Label>Date&nbsp;</Form.Label>
             <Form.Control
-              type="text"
+              type="date"
               name="date"
               onChange={(e) => setDate(e.target.value)}
-              placeholder="D/M/Y"
             />
           </Form.Group>
         </Col>
@@ -196,7 +109,7 @@ export default function PaymentTable() {
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Username</Form.Label>
             <Form.Control
-              ttype="text"
+              type="text"
               name="username"
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Enter Username"
@@ -212,33 +125,101 @@ export default function PaymentTable() {
             <th>Order</th>
             <th>Username</th>
             <th>Link</th>
-            <th>Bid(yen)</th>
-            <th>Tranfer fee(bath)</th>
-            <th>Delivery(yen)</th>
-            <th>Sum(bath)</th>
-            <th>Payment Status</th>
+            <th>Bid(¥)</th>
+            <th>ค่าโอน(฿)</th>
+            <th>ค่าขนส่ง(¥)</th>
+            <th>รวม(฿)</th>
+            <th>แจ้งชำระ</th>
+            <th>สถานะ</th>
             <th>Edit</th>
           </tr>
         </thead>
         <tbody style={{ textAlign: "center" }}>
-          {date === "" && username !== "" && auctionFilter(1)}
-          {date !== "" && username === "" && auctionFilter(2)}
-          {date !== "" && username !== "" && auctionFilter(3)}
-          {date === "" && username === "" && auctionFilter(4)}
+          {orders.map((item, index) => (
+            <tr key={index}>
+              <td className="align-middle">{index + 1}</td>
+              <td className="align-middle">
+                {parseInt(item.created_at.split("T")[0].split("-")[2])}{" "}
+                {month[parseInt(item.created_at.split("T")[0].split("-")[1])]}{" "}
+                {parseInt(item.created_at.split("T")[0].split("-")[0])}
+              </td>
+              <td className="align-middle">
+                <img src={item.imgsrc} width={100} />
+              </td>
+              <td className="align-middle">{item.username}</td>
+              <td className="align-middle">
+                <a href={item.link} target="_blank">
+                  link
+                </a>
+              </td>
+
+              <td className="align-middle">
+                <div>{item.bid} (¥)</div>
+                <div style={{ backgroundColor: "yellow" }}>{item.bid_by}</div>
+              </td>
+              <td className="align-middle">
+                {item.tranfer_fee_injapan === null ? (
+                  "-"
+                ) : (
+                  <>{item.tranfer_fee_injapan} (฿)</>
+                )}
+              </td>
+              <td className="align-middle">
+                {item.delivery_in_thai === null ? (
+                  "-"
+                ) : (
+                  <>{item.delivery_in_thai} (¥)</>
+                )}
+              </td>
+              <td className="align-middle">
+                {item.tranfer_fee_injapan === null &&
+                item.delivery_in_thai === null ? (
+                  "ข้อมูลยังไม่ครบ"
+                ) : (
+                  <>
+                    {Math.round((item.bid + item.delivery_in_thai) * yen) +
+                      item.tranfer_fee_injapan}{" "}
+                    (฿)
+                  </>
+                )}
+              </td>
+              <td className="align-middle">
+                <input
+                  type="checkbox"
+                  checked={item.inform_bill}
+                  onChange={() =>
+                    handleCheckInformBill(item.inform_bill, item.id)
+                  }
+                />
+              </td>
+              <td className="align-middle">
+                {item.payment_status === "pending1" && "รอค่าส่ง"}
+                {item.payment_status === "pending2" && "รอการชำระ"}
+                {item.payment_status === "pending3" && "รอการตรวจสอบ"}
+                {item.payment_status === "paid" && "ชำระเงินเรียบร้อยแล้ว"}
+              </td>
+              <td className="align-middle">
+                <Button
+                  size="sm"
+                  variant="success"
+                  onClick={() => handleUpdateWin(item)}
+                >
+                  <i class="fas fa-pencil-alt"></i>
+                </Button>
+                &nbsp;
+                <Button
+                  variant="danger"
+                  onClick={() => handleDelete(item.id)}
+                  size="sm"
+                >
+                  <i class="fas fa-times"></i>
+                </Button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </Table>
-      {loading && (
-        <>
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <ReactLoading
-              type={"bubbles"}
-              color={"rgba(0,0,0,0.2)"}
-              height={400}
-              width={300}
-            />
-          </div>
-        </>
-      )}
+      {loading && <Loading />}
       <MydModalWithGrid
         show={modalShow}
         onHide={() => setModalShow(false)}

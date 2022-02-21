@@ -762,25 +762,54 @@ app.get("/api/admin/yahoo/auction", (req, res) => {
     }
   );
 });
-app.get("/api/admin/yahoo/payment", (req, res) => {
-  const sql =
-    "SELECT * FROM orders WHERE payment_status = ? OR payment_status = ? OR payment_status = ?;";
-  conn.query(sql, ["pending1", "pending2", "pending3"], (err, result) => {
+
+app.patch("/api/admin/check/inform/bill", (req, res) => {
+  const sql = "UPDATE orders SET inform_bill = ? WHERE id = ?;";
+  conn.query(sql, [req.body.check, req.body.id], (err, result) => {
     if (err) {
-      console.log(err.sqlMessage);
+      console.log(err);
       res.status(400).json({
         status: false,
         message: "Error: " + err.sqlMessage,
       });
     } else {
-      // console.log(result);
+      console.log(result);
       res.status(200).json({
         status: true,
-        message: "Select data from order that status 'Auction'",
-        data: result,
+        message: "update check at id " + req.body.id,
       });
     }
   });
+});
+app.get("/api/admin/yahoo/payment", (req, res) => {
+  const sql =
+    "SELECT * FROM orders WHERE (payment_status = ? OR payment_status = ? OR payment_status = ?) AND username LIKE ? AND created_at LIKE ?;";
+  conn.query(
+    sql,
+    [
+      "pending1",
+      "pending2",
+      "pending3",
+      req.query.username + "%",
+      req.query.date + "%",
+    ],
+    (err, result) => {
+      if (err) {
+        console.log(err.sqlMessage);
+        res.status(400).json({
+          status: false,
+          message: "Token is Expired!",
+          error: "1",
+        });
+      } else {
+        res.status(200).json({
+          status: true,
+          message: "Select data from order that status 'Auction'",
+          data: result,
+        });
+      }
+    }
+  );
 });
 app.get("/api/admin/yahoo/history", (req, res) => {
   const sql = "SELECT * FROM orders WHERE payment_status = ? OR status = ?;";
