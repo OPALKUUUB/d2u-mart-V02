@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import Loading from "../../../../Admin/components/Loading";
 import {
   Button,
   Card,
@@ -8,19 +10,16 @@ import {
   Modal,
   Row,
 } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
-import ReactLoading from "react-loading";
 
 export default function YahooAllPayment(props) {
   const [yen, setYen] = useState("");
   const [payment, setPayment] = useState(props.location.state);
-  const [modalShow, setModalShow] = React.useState(false);
   const [image, setImage] = useState(null);
-  const [file, setFile] = useState();
-  const [slipImageFilename, setSlipImageFilename] = useState();
+  const [file, setFile] = useState(null);
+  const [slipImageFilename, setSlipImageFilename] = useState("");
   const [arrId, setArrId] = useState([]);
   const [sum, setSum] = useState("");
-
+  const [modalShow, setModalShow] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -37,9 +36,11 @@ export default function YahooAllPayment(props) {
           setLoading(false);
         } else {
           alert(json.message);
+          window.location.reload(false);
         }
       });
   }, []);
+
   useEffect(() => {
     setPayment(props.location.state);
   }, [props.location.state]);
@@ -54,36 +55,45 @@ export default function YahooAllPayment(props) {
     }
     return temp;
   };
+
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-    setImage(URL.createObjectURL(e.target.files[0]));
-  };
-  const handleUpload = () => {
-    setLoading(true);
-    if (file === null) {
-      alert(`please choose slip first!`);
+    if (e.target.files[0] === undefined) {
+      setFile(null);
+      setImage(null);
     } else {
-      const data = new FormData();
-      data.append("file", file);
-      data.append("upload_preset", "d2u-service");
-      data.append("cloud_name", "d2u-service");
-      fetch("  https://api.cloudinary.com/v1_1/d2u-service/upload", {
-        method: "POST",
-        body: data,
-      })
-        .then((resp) => resp.json())
-        .then((data) => {
-          let temp = [];
-          for (let i = 0; i < payment.length; i++) {
-            temp.push(payment[i].id);
+      setFile(e.target.files[0]);
+      setImage(URL.createObjectURL(e.target.files[0]));
+    }
+  };
+
+  const handleUpload = () => {
+    if (file === null) {
+      alert(`กรุณาเลือกใบเสร็จ!`);
+    } else {
+      const FetchPostImage = async () => {
+        const data = new FormData();
+        data.append("file", file);
+        data.append("upload_preset", "d2u-service");
+        data.append("cloud_name", "d2u-service");
+        const result = await fetch(
+          "https://api.cloudinary.com/v1_1/d2u-service/upload",
+          {
+            method: "POST",
+            body: data,
           }
-          setArrId(temp);
-          setSlipImageFilename(data.url);
-          setSum(handleSumPayment());
-          setModalShow(true);
-          setLoading(false);
-        })
-        .catch((err) => console.log(err));
+        ).then((resp) => resp.json());
+        let temp = [];
+        for (let i = 0; i < payment.length; i++) {
+          temp.push(payment[i].id);
+        }
+        setArrId(temp);
+        setSlipImageFilename(result.url);
+        setSum(handleSumPayment());
+        setModalShow(true);
+        setLoading(false);
+      };
+      setLoading(true);
+      FetchPostImage();
     }
   };
 
@@ -106,11 +116,9 @@ export default function YahooAllPayment(props) {
                           <Col>
                             <div>{item.link.split("/")[5]}</div>
                             <div>Bid: {item.bid} (¥)</div>
+                            <div>ค่าโอน: {item.tranfer_fee_injapan} (฿)</div>
                             <div>
-                              Tranfer Fee: {item.tranfer_fee_injapan} (bath)
-                            </div>
-                            <div>
-                              ค่าขนส่งในญี่ปุ่น: {item.delivery_in_thai} (yen)
+                              ค่าขนส่งในญี่ปุ่น: {item.delivery_in_thai} (¥)
                             </div>
                           </Col>
                         </Row>
@@ -176,37 +184,10 @@ export default function YahooAllPayment(props) {
           </Col>
         </Row>
       </Container>
-      {loading && (
-        <>
-          <div
-            style={{
-              position: "fixed",
-              top: "0",
-              left: "0",
-              background: "rgba(0,0,0,0.3)",
-              width: "100vw",
-              height: "100vh",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100%",
-              }}
-            >
-              <ReactLoading
-                type={"bubbles"}
-                color={"rgba(0,0,0,0.2)"}
-                height={400}
-                width={300}
-              />
-            </div>
-          </div>
-        </>
-      )}
-      <MyVerticallyCenteredModal
+      {/* Loadin */}
+      {loading && <Loading />}
+      {/* Modal */}
+      <ConfirmAddSlipModal
         show={modalShow}
         onHide={() => setModalShow(false)}
         image={image}
@@ -219,10 +200,12 @@ export default function YahooAllPayment(props) {
   );
 }
 
-function MyVerticallyCenteredModal(props) {
+function ConfirmAddSlipModal(props) {
   const history = useHistory();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = () => {
+    setLoading(true);
     fetch("/api/payment/confirm", {
       method: "PATCH",
       headers: {
@@ -238,36 +221,39 @@ function MyVerticallyCenteredModal(props) {
       .then((res) => res.json())
       .then((data) => {
         if (data.status) {
-          alert("Your payment is already submit");
+          setLoading(false);
           history.push("/auction/yahoo/payment");
         }
       });
   };
   return (
-    <Modal
-      {...props}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">Payment</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <h4>Confirm</h4>
-        <p>
-          Amount Order({props.amount})
-          <br />
-          Sum: {props.sum} bath
-        </p>
-        <img src={props.image} width={100} />
-      </Modal.Body>
-      <Modal.Footer>
-        <Button onClick={handleSubmit}>Confirm</Button>
-        <Button onClick={props.onHide} variant="secondary">
-          Close
-        </Button>
-      </Modal.Footer>
-    </Modal>
+    <>
+      <Modal
+        {...props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">Payment</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <h4>Confirm</h4>
+          <p>
+            Amount Order({props.amount})
+            <br />
+            Sum: {props.sum} bath
+          </p>
+          <img src={props.image} width={100} />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={handleSubmit}>Confirm</Button>
+          <Button onClick={props.onHide} variant="secondary">
+            Close
+          </Button>
+        </Modal.Footer>
+        {loading && <Loading />}
+      </Modal>
+    </>
   );
 }

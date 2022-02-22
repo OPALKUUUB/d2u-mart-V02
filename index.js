@@ -442,6 +442,8 @@ app.delete("/api/admin/orders", (req, res) => {
   });
 });
 
+// PAYMENT YAHOO
+
 app.get("/api/yahoo/payment", (req, res) => {
   let decoded = jwt.verify(
     req.headers.token,
@@ -451,6 +453,7 @@ app.get("/api/yahoo/payment", (req, res) => {
         res.status(400).json({
           status: false,
           message: err.sqlMessage,
+          error: "jwt",
         });
         console.log("Error: Your login session is expired!");
       } else {
@@ -465,12 +468,13 @@ app.get("/api/yahoo/payment", (req, res) => {
     conn.query(
       sql,
       [decoded.username, "pending1", "pending2", "pending3"],
-      (err, row) => {
-        if (err) {
-          console.log(err.sqlMessage);
+      (error, row) => {
+        if (error) {
+          console.log(error);
           res.status(400).json({
             status: false,
-            message: "Error: " + err.sqlMessage,
+            message: "Error: " + error.sqlMessage,
+            error: "sql",
           });
         } else {
           console.log(row);

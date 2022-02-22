@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import Loading from "../../../../Admin/components/Loading";
 import {
   Button,
   Card,
@@ -8,38 +10,43 @@ import {
   Row,
   Table,
 } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
-import ReactLoading from "react-loading";
 
 export default function YahooPayment() {
   const [orders, setOrders] = useState([]);
-  const [modalShow, setModalShow] = useState(false);
-  const [modalShowSlip, setModalShowSlip] = useState(false);
   const [payment, setPayment] = useState([]);
   const [slip, setSlip] = useState("");
+  const [continuePaymentModalShow, setContinuePaymentModalShow] =
+    useState(false);
+  const [slipModalShow, setSlipModalShow] = useState(false);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    fetch("/api/yahoo/payment", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        token: localStorage.getItem("token"),
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.status) {
-          setOrders(json.data);
-          setLoading(false);
-        } else {
-          alert(json.message);
+    const FetchPayment = async () => {
+      const result = await fetch("/api/yahoo/payment", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          token: localStorage.getItem("token"),
+        },
+      }).then((res) => res.json());
+      // check status
+      if (result.status) {
+        setOrders(result.data);
+        setLoading(false);
+      } else {
+        if (result.error === "jwt") {
+          alert("Your Login Session Is Expired,\nPlease Sign In Again!");
           localStorage.removeItem("token");
-          window.location.reload(false);
+        } else {
+          alert(result.message);
         }
-      });
+        window.location.reload(false);
+      }
+    };
+    FetchPayment();
   }, []);
+
   const handleCheckBox = (e, item) => {
-    // console.log(e.target.checked, id);
     if (e.target.checked) {
       setPayment([item, ...payment]);
     } else {
@@ -52,9 +59,7 @@ export default function YahooPayment() {
       setPayment(temp);
     }
   };
-  const handlePayment = () => {
-    setModalShow(true);
-  };
+
   const handleShowSlip = (payment_id) => {
     fetch("/api/payment/slip/" + payment_id, {
       method: "GET",
@@ -70,8 +75,17 @@ export default function YahooPayment() {
           alert(json.message);
         }
       });
-    setModalShowSlip(true);
+    setSlipModalShow(true);
   };
+
+  const handleClickPayment = () => {
+    if (payment.length === 0) {
+      alert("กรุณาเลือกรายการที่ต้องการชำระ!");
+    } else {
+      setContinuePaymentModalShow(true);
+    }
+  };
+
   return (
     <>
       <h2 className="mb-3">Yahoo Payment</h2>
@@ -83,7 +97,7 @@ export default function YahooPayment() {
             <th>Date</th>
             <th>Order</th>
             <th>Link</th>
-            <th>Bid(yen)</th>
+            <th>Bid(¥)</th>
             <th>Status</th>
           </tr>
         </thead>
@@ -125,58 +139,49 @@ export default function YahooPayment() {
           ))}
         </tbody>
       </Table>
-      <Button onClick={handlePayment}>Payment</Button>
-      {loading && (
-        <>
-          <div
-            style={{
-              position: "fixed",
-              top: "0",
-              left: "0",
-              background: "rgba(0,0,0,0.3)",
-              width: "100vw",
-              height: "100vh",
-              zIndex: "999",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100%",
-              }}
-            >
-              <ReactLoading
-                type={"bubbles"}
-                color={"rgba(0,0,0,0.2)"}
-                height={400}
-                width={300}
-              />
-            </div>
-          </div>
-        </>
-      )}
-      <MyVerticallyCenteredModal
-        show={modalShow}
-        onHide={() => setModalShow(false)}
+      <Button onClick={handleClickPayment}>Payment</Button>
+      {/* loading */}
+      {loading && <Loading />}
+      {/* Modal */}
+      <ContinuePaymentModal
+        show={continuePaymentModalShow}
+        onHide={() => setContinuePaymentModalShow(false)}
         arrItem={payment}
       />
       <ModalSlip
-        show={modalShowSlip}
-        onHide={() => setModalShowSlip(false)}
+        show={slipModalShow}
+        onHide={() => setSlipModalShow(false)}
         src={slip}
       />
     </>
   );
 }
 
-function MyVerticallyCenteredModal(props) {
+function ContinuePaymentModal(props) {
   const history = useHistory();
   const [payment, setPayment] = useState(props.arrItem);
+  const [yen, setYen] = useState("");
+
+  useEffect(() => {
+    fetch("/api/yen", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.status) {
+          setYen(json.yen);
+        } else {
+          alert(json.message);
+        }
+      });
+  }, []);
   useEffect(() => {
     setPayment(props.arrItem);
   }, [props.arrItem]);
+
   return (
     <Modal
       {...props}
@@ -198,14 +203,22 @@ function MyVerticallyCenteredModal(props) {
                 <Container>
                   <Row>
                     <Col xs={6} md={3}>
-                      <img src={item.imgsrc} width="120px" />
+                      <img src={item.imgsrc} height="120px" />
                     </Col>
                     <Col>
-                      <div>{item.link.split("/")[5]}</div>
-                      <div>Bid: {item.bid} (yen)</div>
-                      <div>Tranfer Fee: {item.tranfer_fee_injapan} (bath)</div>
                       <div>
-                        ค่าขนส่งในญี่ปุ่น: {item.delivery_in_thai} (yen)
+                        <a href={item.link}>{item.link.split("/")[5]}</a>
+                      </div>
+                      <div>ราคาที่ประมูลได้: {item.bid} (¥)</div>
+                      <div>ค่าโอนในไทย: {item.tranfer_fee_injapan} (฿)</div>
+                      <div>ค่าขนส่งในญี่ปุ่น: {item.delivery_in_thai} (¥)</div>
+                      <div>
+                        รวม:{" "}
+                        {Math.round(
+                          (item.bid + item.delivery_in_thai) * yen +
+                            item.tranfer_fee_injapan
+                        )}{" "}
+                        (฿)
                       </div>
                     </Col>
                   </Row>
