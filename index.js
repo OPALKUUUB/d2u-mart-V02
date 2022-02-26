@@ -1140,7 +1140,7 @@ app.get("/api/tracking", (req, res) => {
     }
   );
   if (decoded !== undefined) {
-    const sql = "SELECT * FROM trackings WHERE username like ?;";
+    const sql = "SELECT * FROM trackings WHERE username = ?;";
     conn.query(sql, [decoded.username], (err, row) => {
       if (err) {
         console.log(err);
@@ -1151,7 +1151,7 @@ app.get("/api/tracking", (req, res) => {
         });
       } else {
         const sql2 =
-          "SELECT id,username, track_id, box_id, weight, round_boat, imgsrc, created_at FROM orders WHERE username like ? AND payment_status = ?;";
+          "SELECT id,username, track_id, box_id, weight, round_boat, imgsrc, created_at FROM orders WHERE username = ? AND payment_status = ?;";
         conn.query(sql2, [decoded.username, "paid"], (err2, row2) => {
           if (err2) {
             console.log(err);
