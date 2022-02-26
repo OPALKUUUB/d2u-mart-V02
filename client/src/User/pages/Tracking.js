@@ -100,18 +100,26 @@ export default function Tracking() {
                         )}
                       </td>
                       <td className="align-middle">
-                        <img
-                          src={item.pic1_filename}
-                          alt="image for pic1"
-                          width={100}
-                        />
+                        {item.pic1_filename === null ? (
+                          "-"
+                        ) : (
+                          <img
+                            src={item.pic1_filename}
+                            alt="image for pic1"
+                            width={100}
+                          />
+                        )}
                       </td>
                       <td className="align-middle">
-                        <img
-                          src={item.pic2_filename}
-                          alt="image for pic2"
-                          width={100}
-                        />
+                        {item.pic2_filename === null ? (
+                          "-"
+                        ) : (
+                          <img
+                            src={item.pic2_filename}
+                            alt="image for pic2"
+                            width={100}
+                          />
+                        )}
                       </td>
                       <td className="align-middle">{item.remark}</td>
                     </>
