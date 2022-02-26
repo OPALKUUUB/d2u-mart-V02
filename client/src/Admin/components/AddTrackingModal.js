@@ -109,9 +109,8 @@ export default function AddTrackingModal(props) {
       .then((res) => res.json())
       .then((json) => {
         if (json.status) {
-          alert(json.message);
+          props.setTrigger(!props.trigger);
           props.onHide();
-          window.location.reload(false);
         } else {
           alert(json.message);
         }

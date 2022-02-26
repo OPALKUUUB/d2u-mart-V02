@@ -261,8 +261,14 @@ export default function Tracking(props) {
                 )}
               </td>
               <td className="align-middle">
-                {parseInt(item.round_boat.split("-")[2])}{" "}
-                {month[parseInt(item.round_boat.split("-")[1])]}
+                {item.round_boat === "" ? (
+                  "-"
+                ) : (
+                  <>
+                    {parseInt(item.round_boat.split("-")[2])}{" "}
+                    {month[parseInt(item.round_boat.split("-")[1])]}
+                  </>
+                )}
               </td>
               <td className="align-middle">
                 {item.pic1_filename !== null && item.pic1_filename !== "" ? (
@@ -343,6 +349,8 @@ export default function Tracking(props) {
         onHide={() => setModalShowAdd(false)}
         mode={props.mode}
         header={props.header}
+        trigger={trigger}
+        setTrigger={setTrigger}
       />
       <UpdateTrackingModal
         show={modalShowUpdate}
@@ -350,6 +358,8 @@ export default function Tracking(props) {
         item={item}
         mode={props.mode}
         header={props.header}
+        trigger={trigger}
+        setTrigger={setTrigger}
       />
       {loading && <Loading />}
     </>

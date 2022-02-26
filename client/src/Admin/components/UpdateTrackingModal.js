@@ -106,11 +106,12 @@ export default function UpdateTrackingModal(props) {
       .then((res) => res.json())
       .then((json) => {
         if (json.status) {
-          setLoading(false);
+          props.setTrigger(!props.trigger);
           props.onHide();
         } else {
           alert(json.message);
         }
+        setLoading(false);
       });
   };
   const handleChangeUsername = (data) => {
