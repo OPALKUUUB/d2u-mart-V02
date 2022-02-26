@@ -10,6 +10,7 @@ import {
 } from "react-bootstrap";
 import "./YahooOrder.css";
 import ReactLoading from "react-loading";
+import Loading from "../../../../Admin/components/Loading";
 
 export default function YahooOrder() {
   const [orders, setOrders] = useState([]);
@@ -51,69 +52,84 @@ export default function YahooOrder() {
             <th>#</th>
             <th>Order</th>
             <th>Link</th>
-            <th>Maxbid/#1/#2</th>
+            <th>Bidding</th>
             <th>Status</th>
             <th>Addbid</th>
           </tr>
         </thead>
         <tbody style={{ textAlign: "center" }}>
-          {orders.map((item, index) => (
-            <tr key={index}>
-              <td className="align-middle">{index + 1}</td>
-              <td className="align-middle">
-                <img src={item.imgsrc} width={100} />
-              </td>
-              <td className="align-middle">
-                <a href={item.link} target="_blank">
-                  {item.link.split("/")[5]}
-                </a>
-              </td>
-              <td className="align-middle">
-                <p>
-                  {item.maxbid}/{item.addbid1 === null ? "-" : item.addbid1}/
-                  {item.addbid2 === null ? "-" : item.addbid2} (¥)
-                </p>
-              </td>
-              <td className="align-middle">{item.status}</td>
-              <td className="align-middle">
-                <Button size="sm" onClick={() => handleShowAddbidModal(item)}>
-                  Addbid
-                </Button>
-              </td>
-            </tr>
-          ))}
+          {!loading && (
+            <>
+              {orders.map((item, index) => (
+                <tr key={index}>
+                  <td className="align-middle">{index + 1}</td>
+                  <td className="align-middle">
+                    <img src={item.imgsrc} width={100} />
+                  </td>
+                  <td className="align-middle">
+                    <a href={item.link} target="_blank">
+                      {item.link.split("/")[5]}
+                    </a>
+                  </td>
+                  <td className="align-middle">
+                    Maxbid: {item.maxbid} (¥)
+                    {item.addbid1 !== null && (
+                      <>
+                        <br />
+                        Addbid#1: {item.addbid1 === null
+                          ? "-"
+                          : item.addbid1}{" "}
+                        (¥)
+                        {item.addbid2 !== null && (
+                          <>
+                            <br />
+                            Addbid#2:{" "}
+                            {item.addbid2 === null ? "-" : item.addbid2} (¥)
+                          </>
+                        )}
+                      </>
+                    )}
+                  </td>
+                  <td className="align-middle">
+                    {item.maxbid_work_by !== null ||
+                    item.addbid1_work_by !== null ||
+                    item.addbid2_work_by !== null
+                      ? "กำลังประมูล"
+                      : "รอเจ้าหน้าที่"}
+                  </td>
+                  <td className="align-middle">
+                    <Button
+                      size="sm"
+                      onClick={() => handleShowAddbidModal(item)}
+                    >
+                      Addbid
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </>
+          )}
         </tbody>
       </Table>
       {loading && (
         <>
-          <div
-            style={{
-              position: "fixed",
-              top: "0",
-              left: "0",
-              background: "rgba(0,0,0,0.3)",
-              width: "100vw",
-              height: "100vh",
-              zIndex: "999",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100%",
-              }}
-            >
-              <ReactLoading
-                type={"bubbles"}
-                color={"rgba(0,0,0,0.2)"}
-                height={400}
-                width={300}
-              />
-            </div>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <ReactLoading
+              type={"bubbles"}
+              color={"rgba(0,0,0,0.2)"}
+              height={400}
+              width={300}
+            />
           </div>
         </>
+      )}
+      {!loading && orders.length === 0 && (
+        <div
+          className="d-flex align-items-center justify-content-center"
+          style={{ height: "200px" }}
+        >
+          <h4>ไม่พบรายการสั่งประมูล!</h4>
+        </div>
       )}
       <AddbidModal
         show={modalShow}
@@ -127,8 +143,10 @@ export default function YahooOrder() {
 function AddbidModal(props) {
   const [addbid1, setAddbid1] = useState("");
   const [addbid2, setAddbid2] = useState("");
+  const [loading, setLoading] = useState(false);
   let link = props.item.link === undefined ? "" : props.item.link.split("/")[5];
   const handleAddbid = (mode) => {
+    setLoading(true);
     if (addbid1 === "" && props.item.addbid1 === null) {
       alert("Please fill price at addbid #1 before Add!");
     } else if (
@@ -153,8 +171,8 @@ function AddbidModal(props) {
         .then((res) => res.json())
         .then((json) => {
           if (json.status) {
-            alert(json.message);
             props.onHide();
+            setLoading(false);
           } else {
             alert(json.message);
             localStorage.removeItem("token");
@@ -221,6 +239,7 @@ function AddbidModal(props) {
       <Modal.Footer>
         <Button onClick={props.onHide}>Close</Button>
       </Modal.Footer>
+      {loading && <Loading />}
     </Modal>
   );
 }

@@ -209,7 +209,7 @@ export default function AuctionTable() {
           </div>
         </>
       )}
-      <MydModalWithGrid
+      <ChangeWinModal
         show={modalShow}
         onHide={() => setModalShow(false)}
         id={id}
@@ -300,13 +300,13 @@ function WorkBy(props) {
   );
 }
 
-function MydModalWithGrid(props) {
+function ChangeWinModal(props) {
   const history = useHistory();
   const [bid, setBid] = useState("");
   const [tranferFee, setTranferFee] = useState("");
   const [deliveryFee, setDeliveryFee] = useState("");
   const [status, setStatus] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const handleUpdateWin = () => {
     let win = {
       id: props.id,
@@ -315,26 +315,30 @@ function MydModalWithGrid(props) {
       deliveryFee: deliveryFee,
       paymentStatus: status,
     };
-    // console.log(win);
-    fetch("/api/admin/win", {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        token: localStorage.getItem("AdminToken"),
-      },
-      body: JSON.stringify(win),
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.status) {
-          alert(json.message);
-          history.push("/admin/table/yahoo/payment");
-        } else {
-          alert(json.message);
+    const FetchUpdateWin = async () => {
+      const result = await fetch("/api/admin/win", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          token: localStorage.getItem("AdminToken"),
+        },
+        body: JSON.stringify(win),
+      }).then((res) => res.json());
+      if (result.status) {
+        setLoading(false);
+        history.push("/admin/table/yahoo/payment");
+      } else {
+        alert(result.message);
+        if (result.error === "jwt") {
           localStorage.removeItem("AdminToken");
-          window.location.reload(false);
         }
-      });
+        window.location.reload(false);
+      }
+    };
+    if (window.confirm("คุณแน่ใจที่จะเปลี่ยนสถานะของรายการนี้เป็นชนะ?")) {
+      setLoading(true);
+      FetchUpdateWin();
+    }
   };
   return (
     <Modal
@@ -429,6 +433,7 @@ function MydModalWithGrid(props) {
           Close
         </Button>
       </Modal.Footer>
+      {loading && <Loading />}
     </Modal>
   );
 }

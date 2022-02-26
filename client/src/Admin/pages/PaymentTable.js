@@ -21,21 +21,16 @@ export default function PaymentTable() {
   const [loading, setLoading] = useState(true);
   const [trigger, setTrigger] = useState(true);
   useEffect(() => {
-    fetch("/api/yen", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.status) {
-          setYen(json.yen);
-        } else {
-          alert(json.message);
-        }
-      });
-  }, [yen]);
+    const FetchYen = async () => {
+      const result = await fetch("/api/yen").then((res) => res.json());
+      if (result.status) {
+        setYen(result.yen);
+      } else {
+        alert(result.message);
+      }
+    };
+    FetchYen();
+  }, []);
   useEffect(() => {
     const fetchOrder = async () => {
       const result = await fetch(
@@ -59,20 +54,23 @@ export default function PaymentTable() {
   };
 
   const handleDelete = (id) => {
-    fetch("/api/admin/orders", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: id }),
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.status) {
-          alert(json.message);
-          window.location.reload(false);
-        } else {
-          alert(json.message);
-        }
-      });
+    if (window.confirm("คุณต้องการที่จะลบรายการสั่งซื้อนี้ใช้หรือไม่ ?")) {
+      setLoading(true);
+      fetch("/api/admin/orders", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: id }),
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          if (json.status) {
+            setTrigger(!trigger);
+            setLoading(false);
+          } else {
+            alert(json.message);
+          }
+        });
+    }
   };
 
   const handleCheckInformBill = (check, id) => {

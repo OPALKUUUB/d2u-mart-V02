@@ -318,11 +318,12 @@ app.post("/api/yahoo/offer", (req, res) => {
   let decoded = jwt.verify(
     req.headers.token,
     process.env.SECRET_KEY,
-    (err, decoded) => {
-      if (err) {
+    (error, decoded) => {
+      if (error) {
         res.status(400).json({
           status: false,
-          message: err.sqlMessage,
+          message: "Error: " + error.sqlMessage,
+          error: "jwt",
         });
         console.log("Error: Your login session is expired!");
       } else {
@@ -352,6 +353,7 @@ app.post("/api/yahoo/offer", (req, res) => {
         res.status(400).json({
           status: false,
           message: "Error: " + err.sqlMessage,
+          error: "sql",
         });
       } else {
         console.log(result);
@@ -359,32 +361,32 @@ app.post("/api/yahoo/offer", (req, res) => {
           status: true,
           message: "Offer " + req.body.link + "is successfully",
         });
+        // ref: https://somnuekmueanprasan.medium.com/line-notify-nodejs-1feb050c1016
+        request(
+          {
+            method: "POST",
+            uri: url_line_notification,
+            header: {
+              "Content-Type": "multipart/form-data",
+            },
+            auth: {
+              bearer: process.env.TOKEN,
+            },
+            form: {
+              message: `\nUsername: ${decoded.username}\nOffer Link: ${req.body.link}\nBiding: ${req.body.price} ¥`,
+            },
+          },
+          (err, httpResponse, body) => {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log(body);
+            }
+          }
+        );
       }
     });
   }
-  // ref: https://somnuekmueanprasan.medium.com/line-notify-nodejs-1feb050c1016
-  request(
-    {
-      method: "POST",
-      uri: url_line_notification,
-      header: {
-        "Content-Type": "multipart/form-data",
-      },
-      auth: {
-        bearer: process.env.TOKEN,
-      },
-      form: {
-        message: `${decoded.username}  Offer Link: ${req.body.link} bid: ${req.body.price} yen`,
-      },
-    },
-    (err, httpResponse, body) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(body);
-      }
-    }
-  );
 });
 
 app.get("/api/yahoo/orders", (req, res) => {
@@ -742,6 +744,26 @@ app.get("/api/admin/users", (req, res) => {
     }
   });
 });
+
+app.get("/api/admin/filter/users", (req, res) => {
+  const sql = "SELECT * FROM user_customers WHERE username LIKE ?;";
+  conn.query(sql, [req.query.username + "%"], (err, row) => {
+    if (err) {
+      console.log(err.sqlMessage);
+      res.status(400).json({
+        status: false,
+        message: "Error: " + err.sqlMessage,
+      });
+    } else {
+      res.status(200).json({
+        status: true,
+        message: "select * from user_customers",
+        data: row,
+      });
+    }
+  });
+});
+
 app.get("/api/admin/yahoo/auction", (req, res) => {
   const sql =
     "SELECT * FROM orders WHERE status = ? AND username LIKE ? AND created_at LIKE ?;";
@@ -978,11 +1000,12 @@ app.patch("/api/admin/win", (req, res) => {
   let decoded = jwt.verify(
     req.headers.token,
     process.env.SECRET_KEY,
-    (err, decoded) => {
-      if (err) {
+    (error, decoded) => {
+      if (error) {
         res.status(400).json({
           status: false,
-          message: err.sqlMessage,
+          message: "Error: " + error.sqlMessage,
+          error: "jwt",
         });
         console.log("Error: Your login session is expired!");
       } else {
@@ -1000,18 +1023,20 @@ app.patch("/api/admin/win", (req, res) => {
       req.body.tranferFee,
       req.body.deliveryFee,
       req.body.paymentStatus,
+      0,
       date,
       req.body.id,
     ];
 
     let sql =
-      "UPDATE orders SET bid_by=?,status = ?,bid =?, tranfer_fee_injapan =?, delivery_in_thai =?, payment_status=?, updated_at = ? WHERE id = ?;";
+      "UPDATE orders SET bid_by=?,status = ?,bid =?, tranfer_fee_injapan =?, delivery_in_thai =?, payment_status=?,inform_bill =?, updated_at = ? WHERE id = ?;";
     conn.query(sql, win, (err, result) => {
       if (err) {
         console.log(err.sqlMessage);
         res.status(400).json({
           status: false,
           message: "Error: " + err.sqlMessage,
+          error: "sql",
         });
       } else {
         console.log(result);
@@ -1325,7 +1350,6 @@ app.post("/api/admin/yahoo/offer", (req, res) => {
     date,
     date,
   ];
-  console.log(offer);
   const sql =
     "INSERT INTO orders (username, link, imgsrc, maxbid, status, remark, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?);";
   conn.query(sql, offer, (err, result) => {
@@ -1341,30 +1365,30 @@ app.post("/api/admin/yahoo/offer", (req, res) => {
         status: true,
         message: "Offer " + req.body.link + "is successfully",
       });
+      request(
+        {
+          method: "POST",
+          uri: url_line_notification,
+          header: {
+            "Content-Type": "multipart/form-data",
+          },
+          auth: {
+            bearer: process.env.TOKEN,
+          },
+          form: {
+            message: `${req.body.username}\nOffer Link: ${req.body.link}\nBiding: ${req.body.price} ¥`,
+          },
+        },
+        (err, httpResponse, body) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log(body);
+          }
+        }
+      );
     }
   });
-  request(
-    {
-      method: "POST",
-      uri: url_line_notification,
-      header: {
-        "Content-Type": "multipart/form-data",
-      },
-      auth: {
-        bearer: process.env.TOKEN,
-      },
-      form: {
-        message: `${req.body.username}  Offer Link: ${req.body.link} bid: ${req.body.price} yen`,
-      },
-    },
-    (err, httpResponse, body) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(body);
-      }
-    }
-  );
 });
 
 const storage = multer.diskStorage({
@@ -1455,6 +1479,30 @@ app.post("/api/admin/csv/shimizu", (req, res) => {
       });
     }
   });
+});
+
+// Project point acculate
+app.patch("/api/admin/point", (req, res) => {
+  let sql = `UPDATE user_customers SET point_old = ?, point_new = ? WHERE username = ?;`;
+  conn.query(
+    sql,
+    [req.body.point_old, req.body.point_new, req.body.username],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(400).json({
+          status: false,
+          message: "Error: " + err.sqlMessage,
+        });
+      } else {
+        console.log(result);
+        res.status(200).json({
+          status: true,
+          message: "update point successfully!",
+        });
+      }
+    }
+  );
 });
 
 // The "catchall" handler: for any request that doesn't

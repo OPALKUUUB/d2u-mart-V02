@@ -9,7 +9,7 @@ import {
   InputGroup,
   Row,
 } from "react-bootstrap";
-import ReactLoading from "react-loading";
+import Loading from "../../../../Admin/components/Loading";
 
 export default function YahooAuction() {
   const history = useHistory();
@@ -20,21 +20,16 @@ export default function YahooAuction() {
   const [yen, setYen] = useState();
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    fetch("/api/yen", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.status) {
-          setYen(json.yen);
-          setLoading(false);
-        } else {
-          alert(json.message);
-        }
-      });
+    const FetchYen = async () => {
+      const result = await fetch("/api/yen").then((res) => res.json());
+      if (result.status) {
+        setYen(result.yen);
+        setLoading(false);
+      } else {
+        alert(result.message);
+      }
+    };
+    FetchYen();
   }, []);
 
   const handleSearchImgsrc = () => {
@@ -52,6 +47,7 @@ export default function YahooAuction() {
         }
       });
   };
+
   const handleSubmitOffer = (e) => {
     e.preventDefault();
     let check = 1;
@@ -68,6 +64,7 @@ export default function YahooAuction() {
       setRemark("");
     }
     if (check === 1) {
+      setLoading(true);
       let offer = { link: link, imgsrc: imgsrc, price: price, remark: remark };
       fetch("/api/yahoo/offer", {
         method: "POST",
@@ -80,11 +77,13 @@ export default function YahooAuction() {
         .then((res) => res.json())
         .then((json) => {
           if (json.status) {
-            alert(json.message);
+            setLoading(false);
             history.push("/auction/yahoo/order");
           } else {
             alert(json.message);
-            localStorage.removeItem("token");
+            if (json.error === "jwt") {
+              localStorage.removeItem("token");
+            }
             window.location.reload(false);
           }
         });
@@ -92,37 +91,7 @@ export default function YahooAuction() {
   };
   return (
     <>
-      {loading && (
-        <>
-          <div
-            style={{
-              position: "fixed",
-              top: "0",
-              left: "0",
-              background: "rgba(0,0,0,0.3)",
-              width: "100vw",
-              height: "100vh",
-              zIndex: "999",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100%",
-              }}
-            >
-              <ReactLoading
-                type={"bubbles"}
-                color={"rgba(0,0,0,0.2)"}
-                height={400}
-                width={300}
-              />
-            </div>
-          </div>
-        </>
-      )}
+      {loading && <Loading />}
       <InputGroup className="mb-3">
         <FormControl
           placeholder="Example https://page.auctions.yahoo.co.jp/jp/auction/x0000000"
