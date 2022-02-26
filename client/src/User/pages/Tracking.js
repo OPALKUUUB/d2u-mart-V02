@@ -15,6 +15,7 @@ export default function Tracking() {
       .then((res) => res.json())
       .then((json) => {
         if (json.status) {
+          console.log(json.data);
           setTrackings(json.data);
           setLoading(false);
         } else {
@@ -45,7 +46,7 @@ export default function Tracking() {
           </tr>
         </thead>
         <tbody>
-          {loading && (
+          {!loading && (
             <>
               {trackings.map((item, index) => (
                 <tr key={index}>
