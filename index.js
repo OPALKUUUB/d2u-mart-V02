@@ -1129,7 +1129,8 @@ app.get("/api/tracking", (req, res) => {
       if (err) {
         res.status(400).json({
           status: false,
-          message: err.sqlMessage,
+          message: "Error: " + err.sqlMessage,
+          erorr: "jwt",
         });
         console.log("Error: Your login session is expired!");
       } else {
@@ -1146,6 +1147,7 @@ app.get("/api/tracking", (req, res) => {
         res.status(400).json({
           status: false,
           message: "Error: " + err.sqlMessage,
+          error: "sql",
         });
       } else {
         const sql2 =
@@ -1156,6 +1158,7 @@ app.get("/api/tracking", (req, res) => {
             res.status(400).json({
               status: false,
               message: "Error: " + err2.sqlMessage,
+              error: "sql",
             });
           } else {
             for (let i = 0; i < row2.length; i++) {

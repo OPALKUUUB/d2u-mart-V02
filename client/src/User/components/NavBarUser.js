@@ -16,7 +16,9 @@ export default function NavBarUser() {
       style={{ marginBottom: "30px" }}
     >
       <Container fluid>
-        <Navbar.Brand href="/">D2U SERVICES</Navbar.Brand>
+        <Navbar.Brand href="/">
+          <img src="/logo_web3.png" alt="logo_web" height={64} />
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav className="ms-auto my-2 my-lg-0">

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
 import ReactLoading from "react-loading";
+import Loading from "../../../../Admin/components/Loading";
 
 export default function YahooHistory() {
   const [orders, setOrders] = useState([]);
@@ -48,77 +49,70 @@ export default function YahooHistory() {
           </tr>
         </thead>
         <tbody style={{ textAlign: "center" }}>
-          {orders.map((item, index) => (
-            <tr key={index}>
-              <td className="align-middle">{index + 1}</td>
-              <td className="align-middle">{item.created_at}</td>
-              <td className="align-middle">
-                <img src={item.imgsrc} width={100} />
-              </td>
-              <td className="align-middle">
-                <a href={item.link} target="_blank">
-                  {item.link.split("/")[5]}
-                </a>
-              </td>
+          {loading && (
+            <>
+              {orders.map((item, index) => (
+                <tr key={index}>
+                  <td className="align-middle">{index + 1}</td>
+                  <td className="align-middle">{item.created_at}</td>
+                  <td className="align-middle">
+                    <img src={item.imgsrc} width={100} />
+                  </td>
+                  <td className="align-middle">
+                    <a href={item.link} target="_blank">
+                      {item.link.split("/")[5]}
+                    </a>
+                  </td>
 
-              <td className="align-middle">{item.bid} (¥)</td>
-              <td className="align-middle">{item.tranfer_fee_injapan}</td>
-              <td className="align-middle">{item.delivery_in_thai}</td>
-              <td className="align-middle">{item.status}</td>
-              <td className="align-middle">
-                {item.payment_status === null || item.payment_status === ""
-                  ? "-"
-                  : "ชำระเงินเรียบร้อยแล้ว"}
-              </td>
-              <td className="align-middle">{item.track_id}</td>
-              <td className="align-middle">{item.box_id}</td>
-              <td className="align-middle">{item.weight}</td>
-              <td className="align-middle">
-                {item.round_boat === null || item.round_boat === "" ? (
-                  ""
-                ) : (
-                  <>
-                    {parseInt(item.round_boat.split("-")[2])}{" "}
-                    {month[parseInt(item.round_boat.split("-")[1])]}
-                  </>
-                )}
-                {/* {parseInt(item.round_boat.split("-")[2])}{" "}
+                  <td className="align-middle">{item.bid} (¥)</td>
+                  <td className="align-middle">{item.tranfer_fee_injapan}</td>
+                  <td className="align-middle">{item.delivery_in_thai}</td>
+                  <td className="align-middle">{item.status}</td>
+                  <td className="align-middle">
+                    {item.payment_status === null || item.payment_status === ""
+                      ? "-"
+                      : "ชำระเงินเรียบร้อยแล้ว"}
+                  </td>
+                  <td className="align-middle">{item.track_id}</td>
+                  <td className="align-middle">{item.box_id}</td>
+                  <td className="align-middle">{item.weight}</td>
+                  <td className="align-middle">
+                    {item.round_boat === null || item.round_boat === "" ? (
+                      ""
+                    ) : (
+                      <>
+                        {parseInt(item.round_boat.split("-")[2])}{" "}
+                        {month[parseInt(item.round_boat.split("-")[1])]}
+                      </>
+                    )}
+                    {/* {parseInt(item.round_boat.split("-")[2])}{" "}
               {month[parseInt(item.round_boat.split("-")[1])]} */}
-              </td>
-            </tr>
-          ))}
+                  </td>
+                </tr>
+              ))}
+            </>
+          )}
         </tbody>
       </Table>
       {loading && (
         <>
-          <div
-            style={{
-              position: "fixed",
-              top: "0",
-              left: "0",
-              background: "rgba(0,0,0,0.3)",
-              width: "100vw",
-              height: "100vh",
-              zIndex: "999",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100%",
-              }}
-            >
-              <ReactLoading
-                type={"bubbles"}
-                color={"rgba(0,0,0,0.2)"}
-                height={400}
-                width={300}
-              />
-            </div>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <ReactLoading
+              type={"bubbles"}
+              color={"rgba(0,0,0,0.2)"}
+              height={400}
+              width={300}
+            />
           </div>
         </>
+      )}
+      {!loading && orders.length === 0 && (
+        <div
+          className="d-flex align-items-center justify-content-center"
+          style={{ height: "200px" }}
+        >
+          <h4>ไม่พบประวัติการประมูล!</h4>
+        </div>
       )}
     </>
   );

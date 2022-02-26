@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import ReactLoading from "react-loading";
 import Loading from "../../../../Admin/components/Loading";
 import {
   Button,
@@ -102,46 +103,69 @@ export default function YahooPayment() {
           </tr>
         </thead>
         <tbody style={{ textAlign: "center" }}>
-          {orders.map((item, index) => (
-            <tr key={index}>
-              <td className="align-middle">{index + 1}</td>
-              <td className="align-middle">
-                {item.payment_status === "pending1" && <>pending</>}
-                {item.payment_status === "pending2" && (
-                  <input
-                    type="checkbox"
-                    onChange={(e) => handleCheckBox(e, item)}
-                  />
-                )}
-                {item.payment_status === "pending3" && (
-                  <Button onClick={() => handleShowSlip(item.payment_id)}>
-                    Slip
-                  </Button>
-                )}
-              </td>
-              <td className="align-middle">{item.created_at}</td>
+          {!loading && (
+            <>
+              {orders.map((item, index) => (
+                <tr key={index}>
+                  <td className="align-middle">{index + 1}</td>
+                  <td className="align-middle">
+                    {item.payment_status === "pending1" && <>pending</>}
+                    {item.payment_status === "pending2" && (
+                      <input
+                        type="checkbox"
+                        onChange={(e) => handleCheckBox(e, item)}
+                      />
+                    )}
+                    {item.payment_status === "pending3" && (
+                      <Button onClick={() => handleShowSlip(item.payment_id)}>
+                        Slip
+                      </Button>
+                    )}
+                  </td>
+                  <td className="align-middle">{item.created_at}</td>
 
-              <td className="align-middle">
-                <img src={item.imgsrc} width={100} />
-              </td>
-              <td className="align-middle">
-                <a href={item.link} target="_blank">
-                  {item.link.split("/")[5]}
-                </a>
-              </td>
-              <td className="align-middle">{item.bid} (¥)</td>
-              <td className="align-middle">
-                {item.payment_status === "pending1" && "รอค่าส่ง"}
-                {item.payment_status === "pending2" && "รอการชำระ"}
-                {item.payment_status === "pending3" && "รอการตรวจสอบ"}
-              </td>
-            </tr>
-          ))}
+                  <td className="align-middle">
+                    <img src={item.imgsrc} width={100} />
+                  </td>
+                  <td className="align-middle">
+                    <a href={item.link} target="_blank">
+                      {item.link.split("/")[5]}
+                    </a>
+                  </td>
+                  <td className="align-middle">{item.bid} (¥)</td>
+                  <td className="align-middle">
+                    {item.payment_status === "pending1" && "รอค่าส่ง"}
+                    {item.payment_status === "pending2" && "รอการชำระ"}
+                    {item.payment_status === "pending3" && "รอการตรวจสอบ"}
+                  </td>
+                </tr>
+              ))}
+            </>
+          )}
         </tbody>
       </Table>
-      <Button onClick={handleClickPayment}>Payment</Button>
+
       {/* loading */}
-      {loading && <Loading />}
+      {loading && (
+        <>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <ReactLoading
+              type={"bubbles"}
+              color={"rgba(0,0,0,0.2)"}
+              height={400}
+              width={300}
+            />
+          </div>
+        </>
+      )}
+      {!loading && orders.length === 0 && (
+        <div
+          className="d-flex align-items-center justify-content-center"
+          style={{ height: "200px" }}
+        >
+          <h4>ไม่พบรายการที่ต้องชำระ!</h4>
+        </div>
+      )}
       {/* Modal */}
       <ContinuePaymentModal
         show={continuePaymentModalShow}
@@ -153,6 +177,7 @@ export default function YahooPayment() {
         onHide={() => setSlipModalShow(false)}
         src={slip}
       />
+      <Button onClick={handleClickPayment}>Payment</Button>
     </>
   );
 }
