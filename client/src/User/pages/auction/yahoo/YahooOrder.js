@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import "./YahooOrder.css";
+import ReactLoading from "react-loading";
+import Loading from "../../../../Admin/components/Loading";
 import {
   Button,
   Table,
@@ -8,35 +11,35 @@ import {
   InputGroup,
   FormControl,
 } from "react-bootstrap";
-import "./YahooOrder.css";
-import ReactLoading from "react-loading";
-import Loading from "../../../../Admin/components/Loading";
 
 export default function YahooOrder() {
   const [orders, setOrders] = useState([]);
   const [temp, setTemp] = useState({});
   const [modalShow, setModalShow] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [trigger, setTrigger] = useState(false);
   useEffect(() => {
-    fetch("/api/yahoo/orders", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        token: localStorage.getItem("token"),
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.status) {
-          setOrders(json.data);
-          setLoading(false);
-        } else {
-          alert(json.message);
+    const FetchOrder = async () => {
+      const json = await fetch("/api/yahoo/orders", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          token: localStorage.getItem("token"),
+        },
+      }).then((res) => res.json());
+      if (json.status) {
+        setOrders(json.data);
+        setLoading(false);
+      } else {
+        alert(json.message);
+        if (json.error === "jwt") {
           localStorage.removeItem("token");
-          window.location.reload(false);
         }
-      });
-  }, []);
+        window.location.reload(false);
+      }
+    };
+    FetchOrder();
+  }, [trigger]);
 
   const handleShowAddbidModal = (item) => {
     setModalShow(true);
@@ -135,6 +138,8 @@ export default function YahooOrder() {
         show={modalShow}
         onHide={() => setModalShow(false)}
         item={temp}
+        trigger={trigger}
+        setTrigger={setTrigger}
       />
     </>
   );
@@ -171,15 +176,18 @@ function AddbidModal(props) {
         .then((res) => res.json())
         .then((json) => {
           if (json.status) {
+            props.setTrigger(!props.trigger);
             props.onHide();
             setLoading(false);
           } else {
             alert(json.message);
-            localStorage.removeItem("token");
+            if (json.error === "jwt") {
+              localStorage.removeItem("token");
+            }
+            window.location.reload(false);
           }
         });
     }
-    window.location.reload(false);
   };
   return (
     <Modal {...props} aria-labelledby="contained-modal-title-vcenter">

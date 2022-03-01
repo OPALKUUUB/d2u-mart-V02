@@ -68,7 +68,7 @@ export default function UpdateTrackingModal(props) {
       data.append("upload_preset", "d2u-service");
       data.append("cloud_name", "d2u-service");
       let urlname = await fetch(
-        "  https://api.cloudinary.com/v1_1/d2u-service/upload",
+        "https://api.cloudinary.com/v1_1/d2u-service/upload",
         {
           method: "POST",
           body: data,

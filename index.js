@@ -393,11 +393,13 @@ app.get("/api/yahoo/orders", (req, res) => {
   let decoded = jwt.verify(
     req.headers.token,
     process.env.SECRET_KEY,
-    (err, decoded) => {
-      if (err) {
+    (error, decoded) => {
+      if (error) {
+        console.log(error);
         res.status(400).json({
           status: false,
-          message: err.sqlMessage,
+          message: error,
+          error: "jwt",
         });
         console.log("Error: Your login session is expired!");
       } else {
@@ -410,10 +412,11 @@ app.get("/api/yahoo/orders", (req, res) => {
     const sql = "SELECT * FROM orders WHERE username = ? and status = ?;";
     conn.query(sql, [decoded.username, "Auction"], (err, row) => {
       if (err) {
-        console.log(err.sqlMessage);
+        console.log(err);
         res.status(400).json({
           status: false,
           message: "Error: " + err.sqlMessage,
+          error: "sql",
         });
       } else {
         console.log(row);
@@ -495,11 +498,13 @@ app.patch("/api/yahoo/order/addbid", (req, res) => {
   let decoded = jwt.verify(
     req.headers.token,
     process.env.SECRET_KEY,
-    (err, decoded) => {
-      if (err) {
+    (error, decoded) => {
+      if (error) {
+        console.log(error);
         res.status(400).json({
           status: false,
-          message: err.sqlMessage,
+          message: error,
+          error: "jwt",
         });
         console.log("Error: Your login session is expired!");
       } else {
@@ -527,6 +532,7 @@ app.patch("/api/yahoo/order/addbid", (req, res) => {
           res.status(400).json({
             status: false,
             message: "Error: " + err.sqlMessage,
+            error: "sql",
           });
         } else {
           console.log(result);
@@ -549,9 +555,9 @@ app.patch("/api/yahoo/order/addbid", (req, res) => {
                 message: `${decoded.username}  Add bid`,
               },
             },
-            (err, httpResponse, body) => {
-              if (err) {
-                console.log(err);
+            (err1, httpResponse, body) => {
+              if (err1) {
+                console.log(err1);
               } else {
                 console.log(body);
               }
@@ -567,11 +573,12 @@ app.patch("/api/payment/confirm", (req, res) => {
   var decoded = jwt.verify(
     req.headers.token,
     process.env.SECRET_KEY,
-    (err, decoded) => {
-      if (err) {
+    (error, decoded) => {
+      if (error) {
         res.status(400).json({
           status: false,
-          message: err.sqlMessage,
+          message: error,
+          error: "jwt",
         });
         console.log("Error: " + err);
       } else {
@@ -591,6 +598,7 @@ app.patch("/api/payment/confirm", (req, res) => {
           res.status(400).json({
             status: false,
             message: "Error: " + err.sqlMessage,
+            error: "sql",
           });
         } else {
           console.log("insertId: " + result.insertId);
@@ -610,6 +618,7 @@ app.patch("/api/payment/confirm", (req, res) => {
                 res.status(400).json({
                   status: false,
                   message: "Error: " + err1.sqlMessage,
+                  error: "sql",
                 });
               } else {
                 console.log(result1);
@@ -688,13 +697,14 @@ app.get("/api/yahoo/history", (req, res) => {
   var decoded = jwt.verify(
     req.headers.token,
     process.env.SECRET_KEY,
-    (err, decoded) => {
-      if (err) {
+    (error, decoded) => {
+      if (error) {
         res.status(400).json({
           status: false,
-          message: err.sqlMessage,
+          message: error,
+          error: "jwt",
         });
-        console.log("Error: " + err);
+        console.log("Error: " + error);
       } else {
         console.log(decoded);
         return decoded;
@@ -710,6 +720,7 @@ app.get("/api/yahoo/history", (req, res) => {
         res.status(400).json({
           status: false,
           message: "Error: " + err.sqlMessage,
+          error: "sql",
         });
       } else {
         // console.log(result);

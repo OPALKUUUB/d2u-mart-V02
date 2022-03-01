@@ -35,6 +35,7 @@ export default function HistoryTable_test() {
         }
       });
   }, [yen]);
+
   useEffect(() => {
     const fetchOrders = async () => {
       const result = await fetch(
