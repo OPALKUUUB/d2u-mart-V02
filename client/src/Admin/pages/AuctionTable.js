@@ -328,9 +328,11 @@ function ChangeWinModal(props) {
         setLoading(false);
         history.push("/admin/table/yahoo/payment");
       } else {
-        alert(result.message);
         if (result.error === "jwt") {
+          alert("Your Login Session Is Expired,\nPlease Sign In Again!");
           localStorage.removeItem("AdminToken");
+        } else {
+          alert(result.message);
         }
         window.location.reload(false);
       }

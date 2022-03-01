@@ -20,8 +20,12 @@ export default function YahooHistory() {
           setOrders(json.data);
           setLoading(false);
         } else {
-          alert(json.message);
-          localStorage.removeItem("token");
+          if (json.error === "jwt") {
+            alert("Your Login Session Is Expired,\nPlease Sign In Again!");
+            localStorage.removeItem("token");
+          } else {
+            alert(json.message);
+          }
           window.location.reload(false);
         }
       });

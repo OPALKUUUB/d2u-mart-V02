@@ -33,6 +33,7 @@ export default function YahooOrder() {
       } else {
         alert(json.message);
         if (json.error === "jwt") {
+          alert("Your Login Session Is Expired,\nPlease Sign In Again!");
           localStorage.removeItem("token");
         }
         window.location.reload(false);
@@ -180,9 +181,11 @@ function AddbidModal(props) {
             props.onHide();
             setLoading(false);
           } else {
-            alert(json.message);
             if (json.error === "jwt") {
+              alert("Your Login Session Is Expired,\nPlease Sign In Again!");
               localStorage.removeItem("token");
+            } else {
+              alert(json.message);
             }
             window.location.reload(false);
           }

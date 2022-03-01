@@ -223,6 +223,14 @@ function ConfirmAddSlipModal(props) {
         if (data.status) {
           setLoading(false);
           history.push("/auction/yahoo/payment");
+        } else {
+          if (data.error === "jwt") {
+            alert("Your Login Session Is Expired,\nPlease Sign In Again!");
+            localStorage.removeItem("token");
+          } else {
+            alert(data.message);
+          }
+          window.location.reload(false);
         }
       });
   };
