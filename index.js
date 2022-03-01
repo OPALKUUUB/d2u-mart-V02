@@ -33,7 +33,7 @@ app.use(express.static(path.join(__dirname, "client/build")));
 // Put all API endpoints under '/api'
 function genToken(username) {
   return jwt.sign({ username: username }, process.env.SECRET_KEY, {
-    expiresIn: "1d",
+    expiresIn: "7d",
   });
 }
 
@@ -834,8 +834,7 @@ app.get("/api/admin/yahoo/payment", (req, res) => {
         console.log(err.sqlMessage);
         res.status(400).json({
           status: false,
-          message: "Token is Expired!",
-          error: "1",
+          message: "Error: " + err.sqlMessage,
         });
       } else {
         res.status(200).json({

@@ -41,7 +41,6 @@ export default function PaymentTable() {
         setLoading(false);
       } else {
         alert(result.message);
-        localStorage.removeItem("AdminToken");
         window.location.reload(false);
       }
     };
@@ -222,6 +221,8 @@ export default function PaymentTable() {
         show={modalShow}
         onHide={() => setModalShow(false)}
         item={temp}
+        trigger={trigger}
+        setTrigger={setTrigger}
       />
     </>
   );
@@ -232,6 +233,7 @@ function MydModalWithGrid(props) {
   const [slip, setSlip] = useState("");
   const [modalShowSlip, setModalShowSlip] = useState(false);
   const [modalShowUploadSlip, setModalShowUploadSlip] = React.useState(false);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     setItem(props.item);
   }, [props.item]);
@@ -239,6 +241,7 @@ function MydModalWithGrid(props) {
     setItem({ ...item, [e.target.name]: e.target.value });
   };
   const handleUpdateWin = () => {
+    setLoading(true);
     let win = {
       id: item.id,
       bid: item.bid,
@@ -259,11 +262,17 @@ function MydModalWithGrid(props) {
       .then((json) => {
         if (json.status) {
           alert(json.message);
+          props.onHide();
         } else {
-          alert(json.message);
-          localStorage.removeItem("AdminToken");
+          if (json.error === "jwt") {
+            alert("Your Login Session Is Expired,\nPlease Sign In Again!");
+            localStorage.removeItem("AdminToken");
+          } else {
+            alert(json.message);
+          }
+          window.location.reload(false);
         }
-        window.location.reload(false);
+        setLoading(false);
       });
   };
   const handleShowSlip = (payment_id) => {
@@ -405,7 +414,10 @@ function MydModalWithGrid(props) {
         show={modalShowSlip}
         onHide={() => setModalShowSlip(false)}
         src={slip}
+        trigger={props.trigger}
+        setTrigger={props.setTrigger}
       />
+      {loading && <Loading />}
     </Modal>
   );
 }
@@ -461,7 +473,7 @@ function ModalUploadSlip(props) {
       data.append("file", file);
       data.append("upload_preset", "d2u-service");
       data.append("cloud_name", "d2u-service");
-      fetch("  https://api.cloudinary.com/v1_1/d2u-service/upload", {
+      fetch("https://api.cloudinary.com/v1_1/d2u-service/upload", {
         method: "POST",
         body: data,
       })
@@ -479,10 +491,12 @@ function ModalUploadSlip(props) {
             }),
           })
             .then((res) => res.json())
-            .then((data) => {
-              if (data.status) {
-                alert("Your payment is already submit");
+            .then((data1) => {
+              if (data1.status) {
+                props.setTrigger(!props.trigger);
                 setLoading(false);
+              } else {
+                alert(data1.message);
                 window.location.reload(false);
               }
             });
