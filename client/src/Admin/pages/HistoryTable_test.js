@@ -19,6 +19,7 @@ export default function HistoryTable_test() {
   const [modalShow, setModalShow] = useState(false);
   const [temp, setTemp] = useState({});
   const [loading, setLoading] = useState(false);
+  const [trigger, setTrigger] = useState(false);
   useEffect(() => {
     fetch("/api/yen", {
       method: "GET",
@@ -46,10 +47,12 @@ export default function HistoryTable_test() {
       } else {
         alert("fetch fail from history yahoo!");
       }
+      setLoading(false);
     };
+    setLoading(true);
     fetchOrders();
-    setLoading(false);
-  }, [status, username, date, loading]);
+  }, [status, username, date, trigger]);
+
   const handleEdit = (item) => {
     setTemp(item);
     setModalShow(true);
@@ -218,13 +221,15 @@ export default function HistoryTable_test() {
         show={modalShow}
         onHide={() => setModalShow(false)}
         item={temp}
-        setLoading={setLoading}
+        trigger={trigger}
+        setTrigger={setTrigger}
       />
     </>
   );
 }
 function EditYahooHistory(props) {
   const [order, setOrder] = useState(props.item);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     setOrder(props.item);
   }, [props]);
@@ -266,7 +271,7 @@ function EditYahooHistory(props) {
     },
   ];
   const handleSubmit = () => {
-    props.setLoading(true);
+    setLoading(true);
     fetch("/api/admin/yahoo/tracking", {
       method: "PATCH",
       headers: {
@@ -277,11 +282,12 @@ function EditYahooHistory(props) {
       .then((res) => res.json())
       .then((json) => {
         if (json.status) {
-          alert(json.message);
+          props.setTrigger(!props.trigger);
           props.onHide();
         } else {
           alert(json.message);
         }
+        setLoading(false);
       });
   };
   return (
@@ -315,6 +321,7 @@ function EditYahooHistory(props) {
           Close
         </Button>
       </Modal.Footer>
+      {loading && <Loading />}
     </Modal>
   );
 }
