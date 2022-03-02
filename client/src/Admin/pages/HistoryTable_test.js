@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Loading from "../components/Loading";
 import {
   Button,
   Container,
@@ -8,7 +9,6 @@ import {
   Table,
   Col,
 } from "react-bootstrap";
-import Loading from "../components/Loading";
 
 export default function HistoryTable_test() {
   const [yen, setYen] = useState("");

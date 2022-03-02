@@ -50,50 +50,6 @@ function genDate() {
 
 const url_line_notification = "https://notify-api.line.me/api/notify";
 
-// app.get("/add/user/customer", (req, res) => {
-//   var date = genDate();
-//   let data = [];
-//   let sql =
-//     "INSERT INTO user_customers (username,name,phone,address_case,address,password,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?)";
-//   data.push(user[0].username);
-//   data.push(user[0].name);
-//   data.push(user[0].phone);
-//   data.push(user[0].case);
-//   data.push(user[0].address);
-//   data.push(user[0].password);
-//   data.push(date);
-//   data.push(date);
-//   for (let i = 1; i < user.length; i++) {
-//     sql += ",(?,?,?,?,?,?,?,?)";
-//     data.push(user[i].username);
-//     data.push(user[i].name);
-//     data.push(user[i].phone);
-//     data.push(user[i].case);
-//     data.push(user[i].address);
-//     data.push(user[i].password);
-//     data.push(date);
-//     data.push(date);
-//   }
-
-//   conn.query(sql, data, (err, result) => {
-//     if (err) {
-//       console.log(err.sqlMessage);
-//       res.status(400).json({
-//         status: false,
-//         message: "Error: " + err.sqlMessage,
-//       });
-//     } else {
-//       console.log(result);
-//       res.status(200).json({
-//         status: true,
-//         message:
-//           "insert into user_customers is successfully at row " +
-//           result.insertId,
-//       });
-//     }
-//   });
-// });
-
 app.get("/api/regist", (req, res) => {
   let decoded = jwt.verify(
     req.headers.token,
@@ -133,6 +89,7 @@ app.get("/api/regist", (req, res) => {
     });
   }
 });
+
 app.patch("/api/regist", (req, res) => {
   var date = genDate();
   var regist = [
@@ -398,10 +355,9 @@ app.get("/api/yahoo/orders", (req, res) => {
         console.log(error);
         res.status(400).json({
           status: false,
-          message: error,
+          message: "Your login session is expired,\nPlease Sign In Again!",
           error: "jwt",
         });
-        console.log("Error: Your login session is expired!");
       } else {
         console.log(decoded);
         return decoded;
@@ -1206,33 +1162,29 @@ app.get("/api/admin/tracking/:mode", (req, res) => {
   });
 });
 app.get("/api/admin/track/:mode", (req, res) => {
-  let check1, check2;
-  if (req.query.check1 === "null") {
-    check1 = null;
-  } else if (req.query.check1 === "true") {
-    check1 = true;
-  } else if (req.query.check1 === "false") {
-    check1 = false;
-  }
-  if (req.query.check2 === "null") {
-    check2 = null;
-  } else if (req.query.check2 === "true") {
-    check2 = true;
-  } else if (req.query.check2 === "false") {
-    check2 = false;
-  }
   let sql =
-    "SELECT * FROM trackings WHERE channel = ? AND username LIKE ? AND track_id LIKE ? AND date LIKE ? AND round_boat LIKE ? AND check1 IS ? AND check2 IS ? ";
+    "SELECT * FROM trackings WHERE channel = ? AND username LIKE ? AND track_id LIKE ? AND date LIKE ? AND round_boat LIKE ? ";
+  if (req.query.check1 === "true") {
+    sql += " AND check1 = 1 ";
+  } else if (req.query.check1 === "false") {
+    sql += " AND (check1 = 0 OR check1 IS NULL)";
+  }
+  if (req.query.check2 === "true") {
+    sql += " AND check2 = 1 ";
+  } else if (req.query.check2 === "false") {
+    sql += " AND (check2 = 0 OR check2 IS NULL)";
+  }
   let orderBy = req.query.orderBy;
   if (orderBy === "ASC1") {
-    sql += "ORDER BY created_at ASC;";
+    sql += " ORDER BY created_at ASC;";
   } else if (orderBy === "DESC1") {
-    sql += "ORDER BY created_at DESC;";
+    sql += " ORDER BY created_at DESC;";
   } else if (orderBy === "ASC2") {
-    sql += "ORDER BY round_boat ASC;";
+    sql += " ORDER BY round_boat ASC;";
   } else if (orderBy === "DESC2") {
-    sql += "ORDER BY round_boat DESC;";
+    sql += " ORDER BY round_boat DESC;";
   }
+
   conn.query(
     sql,
     [
@@ -1241,8 +1193,6 @@ app.get("/api/admin/track/:mode", (req, res) => {
       req.query.trackId + "%",
       req.query.date + "%",
       req.query.roundBoat + "%",
-      check1,
-      check2,
     ],
     (err, row) => {
       if (err) {
@@ -1257,6 +1207,7 @@ app.get("/api/admin/track/:mode", (req, res) => {
           status: true,
           data: row,
         });
+        console.log(sql);
       }
     }
   );
@@ -1529,3 +1480,47 @@ const port = process.env.PORT || 5000;
 app.listen(port);
 
 console.log(`Server listening on ${port}`);
+
+// app.get("/add/user/customer", (req, res) => {
+//   var date = genDate();
+//   let data = [];
+//   let sql =
+//     "INSERT INTO user_customers (username,name,phone,address_case,address,password,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?)";
+//   data.push(user[0].username);
+//   data.push(user[0].name);
+//   data.push(user[0].phone);
+//   data.push(user[0].case);
+//   data.push(user[0].address);
+//   data.push(user[0].password);
+//   data.push(date);
+//   data.push(date);
+//   for (let i = 1; i < user.length; i++) {
+//     sql += ",(?,?,?,?,?,?,?,?)";
+//     data.push(user[i].username);
+//     data.push(user[i].name);
+//     data.push(user[i].phone);
+//     data.push(user[i].case);
+//     data.push(user[i].address);
+//     data.push(user[i].password);
+//     data.push(date);
+//     data.push(date);
+//   }
+
+//   conn.query(sql, data, (err, result) => {
+//     if (err) {
+//       console.log(err.sqlMessage);
+//       res.status(400).json({
+//         status: false,
+//         message: "Error: " + err.sqlMessage,
+//       });
+//     } else {
+//       console.log(result);
+//       res.status(200).json({
+//         status: true,
+//         message:
+//           "insert into user_customers is successfully at row " +
+//           result.insertId,
+//       });
+//     }
+//   });
+// });
