@@ -226,8 +226,8 @@ export default function Tracking(props) {
             <th>รอบเรือ</th>
             <th>รูป 1</th>
             <th>รูป 2</th>
-            <th>ตรวจสอบ</th>
-            <th>สถานะ</th>
+            <th>กดรับของ</th>
+            <th>done</th>
             <th>Noted</th>
             <th>Edit</th>
           </tr>
