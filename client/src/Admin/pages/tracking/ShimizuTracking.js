@@ -99,7 +99,7 @@ export default function ShimizuTracking() {
         </div>
       </div>
       <Row>
-        <Col md>
+        <Col lg={2}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Date&nbsp;</Form.Label>
             <Form.Control
@@ -110,7 +110,7 @@ export default function ShimizuTracking() {
             />
           </Form.Group>
         </Col>
-        <Col md>
+        <Col lg={3}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Username</Form.Label>
             <Form.Control
@@ -122,7 +122,7 @@ export default function ShimizuTracking() {
             />
           </Form.Group>
         </Col>
-        <Col md>
+        <Col lg={3}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Track Id</Form.Label>
             <Form.Control
@@ -134,7 +134,7 @@ export default function ShimizuTracking() {
             />
           </Form.Group>
         </Col>
-        <Col md>
+        <Col md lg={2}>
           <Form.Group className="mb-3">
             <Form.Label>เรียงวันที่</Form.Label>
             <Form.Select
@@ -149,7 +149,7 @@ export default function ShimizuTracking() {
             </Form.Select>
           </Form.Group>
         </Col>
-        <Col md>
+        <Col md lg={2}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>รอบเรือ&nbsp;</Form.Label>
             <Form.Control
@@ -181,7 +181,7 @@ export default function ShimizuTracking() {
         <tbody>
           {trackings.map((item, index) => (
             <tr key={index}>
-              <td className="align-middle">{index + 1}</td>
+              <td className="align-middle">{index + 1 + currentPage * 10}</td>
               <td className="align-middle" style={{ minWidth: "100px" }}>
                 {parseInt(item.date.split("-")[2])}{" "}
                 {month[parseInt(item.date.split("-")[1])]}{" "}

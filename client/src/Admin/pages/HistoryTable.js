@@ -101,7 +101,7 @@ export default function HistoryTable() {
     <>
       <h3 className="mb-3">Yahoo History Table</h3>
       <Row>
-        <Col>
+        <Col sm={12} md={4} lg={2}>
           <Form.Group className="mb-3">
             <Form.Label>Date</Form.Label>
             <Form.Control
@@ -112,7 +112,7 @@ export default function HistoryTable() {
             />
           </Form.Group>
         </Col>
-        <Col>
+        <Col sm={12} md={4} lg={2}>
           <Form.Group className="mb-3">
             <Form.Label>Username</Form.Label>
             <Form.Control
@@ -124,7 +124,7 @@ export default function HistoryTable() {
             />
           </Form.Group>
         </Col>
-        <Col>
+        <Col sm={12} md={4} lg={2}>
           <Form.Group className="mb-3">
             <Form.Label>Track Id</Form.Label>
             <Form.Control
@@ -136,7 +136,7 @@ export default function HistoryTable() {
             />
           </Form.Group>
         </Col>
-        <Col md>
+        <Col sm={12} md={4} lg={2}>
           <Form.Group className="mb-3">
             <Form.Label>เรียงวันที่</Form.Label>
             <Form.Select
@@ -154,7 +154,7 @@ export default function HistoryTable() {
             </Form.Select>
           </Form.Group>
         </Col>
-        <Col md>
+        <Col sm={12} md={4} lg={2}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>รอบเรือ&nbsp;</Form.Label>
             <Form.Control
@@ -165,7 +165,7 @@ export default function HistoryTable() {
             />
           </Form.Group>
         </Col>
-        <Col>
+        <Col sm={12} md={4} lg={2}>
           <Form.Group className="mb-3">
             <Form.Label>สถานะ</Form.Label>
             <Form.Select
@@ -199,7 +199,7 @@ export default function HistoryTable() {
         <tbody style={{ textAlign: "center" }}>
           {orders.map((item, index) => (
             <tr key={index}>
-              <td className="align-middle">{index + 1}</td>
+              <td className="align-middle">{index + 1 + currentPage * 10}</td>
               <td className="align-middle">
                 {item.created_at === null || item.created_at === "" ? (
                   ""

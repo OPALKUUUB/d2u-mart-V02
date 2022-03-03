@@ -137,43 +137,9 @@ export default function Tracking(props) {
           Add Tracking
         </Button>
       </div>
-      <Row>
-        <Col>
-          <Form.Group className="mb-3">
-            <Form.Select
-              aria-label="Default select example"
-              onChange={(e) => {
-                setLoading(true);
-                setFilterCheck1(e.target.value);
-              }}
-              value={filterCheck1}
-            >
-              <option value={null}>ทั้งหมด(กดรับของ)</option>
-              <option value={true}>กดรับของแล้ว</option>
-              <option value={false}>ยังไม่กดรับของ</option>
-            </Form.Select>
-          </Form.Group>
-        </Col>
-        <Col>
-          <Form.Group className="mb-3">
-            <Form.Select
-              aria-label="Default select example"
-              onChange={(e) => {
-                setLoading(true);
-                setFilterCheck2(e.target.value);
-              }}
-              value={filterCheck2}
-            >
-              <option value={null}>ทั้งหมด(done)</option>
-              <option value={true}>done</option>
-              <option value={false}>not done</option>
-            </Form.Select>
-          </Form.Group>
-        </Col>
-      </Row>
 
       <Row>
-        <Col md>
+        <Col lg={2}>
           <Form.Group className="mb-3">
             <Form.Label>
               Date&nbsp;
@@ -187,7 +153,7 @@ export default function Tracking(props) {
             />
           </Form.Group>
         </Col>
-        <Col md>
+        <Col lg={3}>
           <Form.Group className="mb-3">
             <Form.Label>Username</Form.Label>
             <Form.Control
@@ -199,7 +165,7 @@ export default function Tracking(props) {
             />
           </Form.Group>
         </Col>
-        <Col md>
+        <Col lg={3}>
           <Form.Group className="mb-3">
             <Form.Label>Track Id</Form.Label>
             <Form.Control
@@ -211,7 +177,7 @@ export default function Tracking(props) {
             />
           </Form.Group>
         </Col>
-        <Col md>
+        <Col lg={2}>
           <Form.Group className="mb-3">
             <Form.Label>เรียงวันที่</Form.Label>
             <Form.Select
@@ -229,7 +195,7 @@ export default function Tracking(props) {
             </Form.Select>
           </Form.Group>
         </Col>
-        <Col md>
+        <Col lg={2}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>รอบเรือ&nbsp;</Form.Label>
             <Form.Control
@@ -255,8 +221,40 @@ export default function Tracking(props) {
             <th>รอบเรือ</th>
             <th>รูป 1</th>
             <th>รูป 2</th>
-            <th>กดรับของ</th>
-            <th>done</th>
+            <th>
+              <Form.Group>
+                <Form.Select
+                  size="sm"
+                  aria-label="Default select example"
+                  onChange={(e) => {
+                    setLoading(true);
+                    setFilterCheck1(e.target.value);
+                  }}
+                  value={filterCheck1}
+                >
+                  <option value={null}>กดรับของ(All)</option>
+                  <option value={true}>กดรับของแล้ว</option>
+                  <option value={false}>ยังไม่กดรับของ</option>
+                </Form.Select>
+              </Form.Group>
+            </th>
+            <th>
+              <Form.Group>
+                <Form.Select
+                  size="sm"
+                  aria-label="Default select example"
+                  onChange={(e) => {
+                    setLoading(true);
+                    setFilterCheck2(e.target.value);
+                  }}
+                  value={filterCheck2}
+                >
+                  <option value={null}>Done(All)</option>
+                  <option value={true}>Done</option>
+                  <option value={false}>Not Done</option>
+                </Form.Select>
+              </Form.Group>
+            </th>
             <th>Noted</th>
             <th>Edit</th>
           </tr>
