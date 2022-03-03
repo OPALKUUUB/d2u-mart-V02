@@ -75,7 +75,9 @@ export default function Tracking(props) {
       })
         .then((res) => res.json())
         .then((json) => {
-          console.log(json);
+          if (!json.status) {
+            alert(json.message);
+          }
         });
     }
   };
@@ -356,7 +358,9 @@ export default function Tracking(props) {
                   &nbsp;
                   <Button
                     variant="danger"
-                    onClick={() => handleDelete(item.id, index + 1)}
+                    onClick={() =>
+                      handleDelete(item.id, index + 1 + currentPage * 10)
+                    }
                   >
                     <i class="fas fa-times"></i>
                   </Button>

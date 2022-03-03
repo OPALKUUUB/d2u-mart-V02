@@ -3,7 +3,6 @@ import { Button, Form, Modal, Row, Table, Col } from "react-bootstrap";
 import AutoComplete from "../../components/AutoComplete";
 import UploadCsv from "../../components/UploadCsv";
 import Loading from "../../components/Loading";
-import ShowImage from "../../components/ShowImage";
 
 export default function ShimizuTracking() {
   const [trackings, setTrackings] = useState([]);
@@ -17,8 +16,7 @@ export default function ShimizuTracking() {
   const [orderBy, setOrderBy] = useState("ASC1");
   const [roundBoat, setRoundBoat] = useState("");
   const [loading, setLoading] = useState(false);
-  const [image, setImage] = useState("");
-  const [modalShowImage, setModalShowImage] = useState(false);
+  const [trigger, setTrigger] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [trackLength, setTrackLength] = useState();
 
@@ -46,28 +44,29 @@ export default function ShimizuTracking() {
     };
     setLoading(true);
     fetchTrack();
-  }, [username, trackId, date, orderBy, roundBoat, currentPage]);
+  }, [username, trackId, date, orderBy, roundBoat, currentPage, trigger]);
 
   const handleConfigs = (item) => {
     setItem(item);
     setModalShowUpdate(true);
   };
 
-  const handleDelete = (id) => {
-    fetch("/api/admin/tracking", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: id }),
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.status) {
-          alert(json.message);
-          window.location.reload(false);
-        } else {
-          alert(json.message);
-        }
-      });
+  const handleDelete = (id, index) => {
+    if (window.confirm("คุณต้องการที่จะลบข้อมูลที่ " + index + "?")) {
+      setLoading(true);
+      fetch("/api/admin/tracking", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: id }),
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          setTrigger(!trigger);
+          if (!json.status) {
+            alert(json.message);
+          }
+        });
+    }
   };
   const handlePrevious = () => {
     if (currentPage === 0) {
@@ -170,10 +169,8 @@ export default function ShimizuTracking() {
             <th>Username</th>
             <th>Track Id</th>
             <th>หมายเลขกล่อง</th>
-            <th>weight</th>
+            <th>Weight(Kg.)</th>
             <th>รอบเรือ</th>
-            <th>Pic1</th>
-            <th>Pic2</th>
             <th>Remark</th>
             <th>Edit</th>
           </tr>
@@ -196,36 +193,7 @@ export default function ShimizuTracking() {
                 {parseInt(item.round_boat.split("-")[2])}{" "}
                 {month[parseInt(item.round_boat.split("-")[1])]}
               </td>
-              <td className="align-middle">
-                {item.pic1_filename !== null && item.pic1_filename !== "" ? (
-                  <img
-                    onClick={() => {
-                      setImage(item.pic1_filename);
-                      setModalShowImage(true);
-                    }}
-                    src={item.pic1_filename}
-                    alt="image for pic1"
-                    width={100}
-                  />
-                ) : (
-                  "-"
-                )}
-              </td>
-              <td className="align-middle">
-                {item.pic2_filename !== null && item.pic2_filename !== "" ? (
-                  <img
-                    onClick={() => {
-                      setImage(item.pic2_filename);
-                      setModalShowImage(true);
-                    }}
-                    src={item.pic2_filename}
-                    alt="image for pic2"
-                    width={100}
-                  />
-                ) : (
-                  "-"
-                )}
-              </td>
+
               <td className="align-middle" style={{ minWidth: "130px" }}>
                 {item.remark}
               </td>
@@ -241,7 +209,9 @@ export default function ShimizuTracking() {
                   &nbsp;
                   <Button
                     variant="danger"
-                    onClick={() => handleDelete(item.id)}
+                    onClick={() =>
+                      handleDelete(item.id, index + 1 + currentPage * 10)
+                    }
                   >
                     <i class="fas fa-times"></i>
                   </Button>
@@ -249,11 +219,6 @@ export default function ShimizuTracking() {
               </td>
             </tr>
           ))}
-          <ShowImage
-            show={modalShowImage}
-            onHide={() => setModalShowImage(false)}
-            src={image}
-          />
         </tbody>
       </Table>
       <Row className="mb-3">
@@ -271,19 +236,22 @@ export default function ShimizuTracking() {
       <AddTrackModal
         show={modalShowAdd}
         onHide={() => setModalShowAdd(false)}
-        loading={setLoading}
+        trigger={trigger}
+        setTrigger={setTrigger}
       />
       <UpdateTrackModal
         show={modalShowUpdate}
         onHide={() => setModalShowUpdate(false)}
         item={item}
-        loading={setLoading}
+        trigger={trigger}
+        setTrigger={setTrigger}
       />
       <UploadCsvModal
         show={modalShowAddCsv}
         onHide={() => setModalShowAddCsv(false)}
         item={item}
-        loading={setLoading}
+        trigger={trigger}
+        setTrigger={setTrigger}
       />
     </>
   );
@@ -291,16 +259,9 @@ export default function ShimizuTracking() {
 
 function AddTrackModal(props) {
   const [tracking, setTracking] = useState(trackingModel);
-  const [pic1File, setPic1File] = useState(null);
-  const [pic2File, setPic2File] = useState(null);
   const [users, setUsers] = useState([]);
-  const [image1, setImage1] = useState(null);
-  const [image2, setImage2] = useState(null);
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    setImage1(null);
-    setImage2(null);
-  }, [props]);
+  useEffect(() => {}, [props]);
   useEffect(() => {
     fetch("/api/admin/users", {
       method: "GET",
@@ -325,53 +286,10 @@ function AddTrackModal(props) {
   const handleChangeTracking = (e) => {
     setTracking({ ...tracking, [e.target.name]: e.target.value });
   };
-  const handleSelectPic1File = (e) => {
-    setPic1File(e.target.files[0]);
-    const objectUrl = URL.createObjectURL(e.target.files[0]);
-    setImage1(objectUrl);
-  };
-  const handleSelectPic2File = (e) => {
-    setPic2File(e.target.files[0]);
-    const objectUrl = URL.createObjectURL(e.target.files[0]);
-    setImage2(objectUrl);
-  };
+
   const handleAddTracking = async () => {
     setLoading(true);
     let t = tracking;
-    if (pic1File !== null) {
-      const data = new FormData();
-      data.append("file", pic1File);
-      data.append("upload_preset", "d2u-service");
-      data.append("cloud_name", "d2u-service");
-      let urlname = await fetch(
-        "https://api.cloudinary.com/v1_1/d2u-service/upload",
-        {
-          method: "POST",
-          body: data,
-        }
-      )
-        .then((resp) => resp.json())
-        .then((data) => data.url)
-        .catch((err) => console.log(err));
-      t.pic1_filename = urlname;
-    }
-    if (pic2File !== null) {
-      const data = new FormData();
-      data.append("file", pic2File);
-      data.append("upload_preset", "d2u-service");
-      data.append("cloud_name", "d2u-service");
-      let urlname = await fetch(
-        "https://api.cloudinary.com/v1_1/d2u-service/upload",
-        {
-          method: "POST",
-          body: data,
-        }
-      )
-        .then((resp) => resp.json())
-        .then((data) => data.url)
-        .catch((err) => console.log(err));
-      t.pic2_filename = urlname;
-    }
     fetch("/api/admin/tracking/shimizu", {
       method: "POST",
       headers: {
@@ -382,29 +300,13 @@ function AddTrackModal(props) {
       .then((res) => res.json())
       .then((json) => {
         if (json.status) {
-          alert(json.message);
+          props.setTrigger(!props.trigger);
           props.onHide();
-          window.location.reload(false);
         } else {
           alert(json.message);
         }
         setLoading(false);
       });
-  };
-
-  const handlePaste1 = (e) => {
-    if (e.clipboardData.files.length) {
-      setPic1File(e.clipboardData.files[0]);
-      const objectUrl = URL.createObjectURL(e.clipboardData.files[0]);
-      setImage1(objectUrl);
-    }
-  };
-  const handlePaste2 = (e) => {
-    if (e.clipboardData.files.length) {
-      setPic2File(e.clipboardData.files[0]);
-      const objectUrl = URL.createObjectURL(e.clipboardData.files[0]);
-      setImage2(objectUrl);
-    }
   };
 
   return (
@@ -485,76 +387,7 @@ function AddTrackModal(props) {
                 />
               </Form.Group>
             </Col>
-            <Col lg={6} sm={12} className="mb-3">
-              <Form.Group controlId="formFileSm">
-                <Form.Label>Pic 1</Form.Label>
-                <Form.Control
-                  type="file"
-                  size="sm"
-                  onChange={handleSelectPic1File}
-                  name="pic1_filename"
-                />
-              </Form.Group>
-              <div
-                style={{
-                  cursor: "pointer",
-                }}
-                onPaste={handlePaste1}
-              >
-                {image1 === null ? (
-                  <div
-                    style={{
-                      background: "gray",
-                      width: "100%",
-                      height: "150px",
-                      color: "white",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    paste image hear
-                  </div>
-                ) : (
-                  <img src={image1} width="100%" />
-                )}
-              </div>
-            </Col>
-            <Col lg={6} sm={12} className="mb-3">
-              <Form.Group controlId="formFileSm">
-                <Form.Label>Pic 2</Form.Label>
-                <Form.Control
-                  type="file"
-                  size="sm"
-                  onChange={handleSelectPic2File}
-                  name="pic2_filename"
-                />
-              </Form.Group>
-              <div
-                style={{
-                  cursor: "pointer",
-                }}
-                onPaste={handlePaste2}
-              >
-                {image2 === null ? (
-                  <div
-                    style={{
-                      background: "gray",
-                      width: "100%",
-                      height: "150px",
-                      color: "white",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    paste image hear
-                  </div>
-                ) : (
-                  <img src={image2} width="100%" />
-                )}
-              </div>
-            </Col>
+
             <Col lg={12} sm={12}>
               <Form.Group>
                 <Form.Label>Remark</Form.Label>
@@ -581,16 +414,10 @@ function AddTrackModal(props) {
 
 function UpdateTrackModal(props) {
   const [tracking, setTracking] = useState({ ...props.item });
-  const [pic1File, setPic1File] = useState(null);
-  const [pic2File, setPic2File] = useState(null);
   const [users, setUsers] = useState([]);
-  const [image1, setImage1] = useState(null);
-  const [image2, setImage2] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setImage1(null);
-    setImage2(null);
     setTracking({ ...props.item });
   }, [props]);
   useEffect(() => {
@@ -610,68 +437,11 @@ function UpdateTrackModal(props) {
   const handleChangeTracking = (e) => {
     setTracking({ ...tracking, [e.target.name]: e.target.value });
   };
-  const handleSelectPic1File = (e) => {
-    setPic1File(e.target.files[0]);
-    const objectUrl = URL.createObjectURL(e.target.files[0]);
-    setImage1(objectUrl);
-    console.log(image1);
-  };
-  const handleSelectPic2File = (e) => {
-    setPic2File(e.target.files[0]);
-    const objectUrl = URL.createObjectURL(e.target.files[0]);
-    setImage2(objectUrl);
-  };
-  const handlePaste1 = (e) => {
-    if (e.clipboardData.files.length) {
-      setPic1File(e.clipboardData.files[0]);
-      const objectUrl = URL.createObjectURL(e.clipboardData.files[0]);
-      setImage1(objectUrl);
-    }
-  };
-  const handlePaste2 = (e) => {
-    if (e.clipboardData.files.length) {
-      setPic2File(e.clipboardData.files[0]);
-      const objectUrl = URL.createObjectURL(e.clipboardData.files[0]);
-      setImage2(objectUrl);
-    }
-  };
+
   const handleUpdateTracking = async () => {
     setLoading(true);
     let t = tracking;
-    if (pic1File !== null) {
-      const data = new FormData();
-      data.append("file", pic1File);
-      data.append("upload_preset", "d2u-service");
-      data.append("cloud_name", "d2u-service");
-      let urlname = await fetch(
-        "  https://api.cloudinary.com/v1_1/d2u-service/upload",
-        {
-          method: "POST",
-          body: data,
-        }
-      )
-        .then((resp) => resp.json())
-        .then((data) => data.url)
-        .catch((err) => console.log(err));
-      t.pic1_filename = urlname;
-    }
-    if (pic2File !== null) {
-      const data = new FormData();
-      data.append("file", pic2File);
-      data.append("upload_preset", "d2u-service");
-      data.append("cloud_name", "d2u-service");
-      let urlname = await fetch(
-        "  https://api.cloudinary.com/v1_1/d2u-service/upload",
-        {
-          method: "POST",
-          body: data,
-        }
-      )
-        .then((resp) => resp.json())
-        .then((data) => data.url)
-        .catch((err) => console.log(err));
-      t.pic2_filename = urlname;
-    }
+
     fetch("/api/admin/tracking", {
       method: "PATCH",
       headers: {
@@ -682,9 +452,8 @@ function UpdateTrackModal(props) {
       .then((res) => res.json())
       .then((json) => {
         if (json.status) {
-          alert(json.message);
+          props.setTrigger(!props.trigger);
           props.onHide();
-          window.location.reload(false);
         } else {
           alert(json.message);
         }
@@ -799,132 +568,7 @@ function UpdateTrackModal(props) {
                 />
               </Form.Group>
             </Col>
-            <Col lg={6} sm={12} className="mb-3">
-              {tracking.pic1_filename !== null &&
-              tracking.pic1_filename !== "" ? (
-                <div style={{ position: "relative" }}>
-                  <span
-                    onClick={() =>
-                      setTracking({ ...tracking, pic1_filename: "" })
-                    }
-                    style={{
-                      position: "absolute",
-                      top: "0",
-                      right: "0",
-                      padding: "10px",
-                      fontWeight: "900",
-                      cursor: "pointer",
-                    }}
-                  >
-                    X
-                  </span>
-                  <img
-                    style={{ width: "100%" }}
-                    src={tracking.pic1_filename}
-                    alt={tracking.pic1_filename}
-                  />
-                </div>
-              ) : (
-                <>
-                  <Form.Group controlId="formFileSm">
-                    <Form.Label>Pic 1</Form.Label>
-                    <Form.Control
-                      type="file"
-                      size="sm"
-                      onChange={handleSelectPic1File}
-                      name="pic1_filename"
-                    />
-                  </Form.Group>
-                  <div
-                    style={{
-                      cursor: "pointer",
-                    }}
-                    onPaste={handlePaste1}
-                  >
-                    {image1 === null ? (
-                      <div
-                        style={{
-                          background: "gray",
-                          width: "100%",
-                          height: "150px",
-                          color: "white",
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        paste image hear
-                      </div>
-                    ) : (
-                      <img src={image1} width="100%" />
-                    )}
-                  </div>
-                </>
-              )}
-            </Col>
-            <Col lg={6} sm={12} className="mb-3">
-              {tracking.pic2_filename !== null &&
-              tracking.pic2_filename !== "" ? (
-                <div style={{ position: "relative" }}>
-                  <span
-                    onClick={() =>
-                      setTracking({ ...tracking, pic2_filename: "" })
-                    }
-                    style={{
-                      position: "absolute",
-                      top: "0",
-                      right: "0",
-                      padding: "10px",
-                      fontWeight: "900",
-                      cursor: "pointer",
-                    }}
-                  >
-                    X
-                  </span>
-                  <img
-                    style={{ width: "100%" }}
-                    src={tracking.pic2_filename}
-                    alt={tracking.pic2_filename}
-                  />
-                </div>
-              ) : (
-                <>
-                  <Form.Group controlId="formFileSm">
-                    <Form.Label>Pic 2</Form.Label>
-                    <Form.Control
-                      type="file"
-                      size="sm"
-                      onChange={handleSelectPic2File}
-                      name="pic2_filename"
-                    />
-                  </Form.Group>
-                  <div
-                    style={{
-                      cursor: "pointer",
-                    }}
-                    onPaste={handlePaste2}
-                  >
-                    {image2 === null ? (
-                      <div
-                        style={{
-                          background: "gray",
-                          width: "100%",
-                          height: "150px",
-                          color: "white",
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        paste image hear
-                      </div>
-                    ) : (
-                      <img src={image2} width="100%" />
-                    )}
-                  </div>
-                </>
-              )}
-            </Col>
+
             <Col lg={12} sm={12}>
               <Form.Group>
                 <Form.Label>Remark</Form.Label>
