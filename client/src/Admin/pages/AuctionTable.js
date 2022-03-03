@@ -315,6 +315,7 @@ function ChangeWinModal(props) {
       deliveryFee: deliveryFee,
       paymentStatus: status,
     };
+
     const FetchUpdateWin = async () => {
       const result = await fetch("/api/admin/win", {
         method: "PATCH",
@@ -337,9 +338,13 @@ function ChangeWinModal(props) {
         window.location.reload(false);
       }
     };
-    if (window.confirm("คุณแน่ใจที่จะเปลี่ยนสถานะของรายการนี้เป็นชนะ?")) {
-      setLoading(true);
-      FetchUpdateWin();
+    if (status === "") {
+      alert("กรุณาเลือก payment status ก่อน!");
+    } else {
+      if (window.confirm("คุณแน่ใจที่จะเปลี่ยนสถานะของรายการนี้เป็นชนะ?")) {
+        setLoading(true);
+        FetchUpdateWin();
+      }
     }
   };
   return (
@@ -415,7 +420,7 @@ function ChangeWinModal(props) {
                     aria-label="Default select example"
                     onChange={(e) => setStatus(e.target.value)}
                   >
-                    <option value="pending1">select option</option>
+                    <option>select option</option>
                     <option value="pending1">รอค่าส่ง</option>
                     <option value="pending2">รอการชำระ</option>
                     <option value="pending3">รอการตรวจสอบ</option>
