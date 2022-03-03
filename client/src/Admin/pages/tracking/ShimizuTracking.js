@@ -19,6 +19,8 @@ export default function ShimizuTracking() {
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState("");
   const [modalShowImage, setModalShowImage] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [trackLength, setTrackLength] = useState();
 
   useEffect(() => {
     const fetchTrack = async () => {
@@ -26,7 +28,17 @@ export default function ShimizuTracking() {
         `/api/admin/track/shimizu?username=${username}&trackId=${trackId}&date=${date}&orderBy=${orderBy}&roundBoat=${roundBoat}`
       ).then((res) => res.json());
       if (result.status) {
-        setTrackings(result.data);
+        let len_tracking = result.data.length;
+        setTrackLength(len_tracking);
+        let temp = [];
+        let start = currentPage * 10;
+        for (let i = start; i < 10 * (currentPage + 1); i++) {
+          if (i >= len_tracking) {
+            break;
+          }
+          temp.push(result.data[i]);
+        }
+        setTrackings(temp);
       } else {
         alert("fetch fail from tracking shimizu!");
       }
@@ -56,6 +68,20 @@ export default function ShimizuTracking() {
           alert(json.message);
         }
       });
+  };
+  const handlePrevious = () => {
+    if (currentPage === 0) {
+      alert("This is a first page!");
+    } else {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+  const handleNext = () => {
+    if ((currentPage + 1) * 10 >= trackLength) {
+      alert("This is a last page!");
+    } else {
+      setCurrentPage(currentPage + 1);
+    }
   };
 
   return (
@@ -230,6 +256,17 @@ export default function ShimizuTracking() {
           />
         </tbody>
       </Table>
+      <Row className="mb-3">
+        <Col>
+          <Button onClick={handlePrevious}>Previous</Button>
+        </Col>
+        <Col className="d-flex justify-content-center">
+          <h5>Amount {trackLength} item</h5>
+        </Col>
+        <Col className="d-flex justify-content-end">
+          <Button onClick={handleNext}>Next</Button>
+        </Col>
+      </Row>
       {loading && <Loading />}
       <AddTrackModal
         show={modalShowAdd}

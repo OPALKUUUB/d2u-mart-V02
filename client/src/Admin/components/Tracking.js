@@ -22,13 +22,25 @@ export default function Tracking(props) {
   const [trigger, setTrigger] = useState(false);
   const [filterCheck1, setFilterCheck1] = useState(null);
   const [filterCheck2, setFilterCheck2] = useState(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [trackLength, setTrackLength] = useState();
   useEffect(() => {
     const fetchTrack = async () => {
       const result = await fetch(
         `/api/admin/track/${props.mode}?username=${username}&trackId=${trackId}&date=${date}&orderBy=${orderBy}&roundBoat=${roundBoat}&check1=${filterCheck1}&check2=${filterCheck2}`
       ).then((res) => res.json());
       if (result.status) {
-        setTrackings(result.data);
+        let len_tracking = result.data.length;
+        setTrackLength(len_tracking);
+        let temp = [];
+        let start = currentPage * 10;
+        for (let i = start; i < 10 * (currentPage + 1); i++) {
+          if (i >= len_tracking) {
+            break;
+          }
+          temp.push(result.data[i]);
+        }
+        setTrackings(temp);
         setLoading(false);
       } else {
         alert("fetch fail from tracking " + props.mode + "!");
@@ -38,6 +50,7 @@ export default function Tracking(props) {
     setLoading(true);
     fetchTrack();
   }, [
+    currentPage,
     username,
     trackId,
     date,
@@ -99,6 +112,21 @@ export default function Tracking(props) {
           alert(json.message);
         }
       });
+  };
+
+  const handlePrevious = () => {
+    if (currentPage === 0) {
+      alert("This is a first page!");
+    } else {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+  const handleNext = () => {
+    if ((currentPage + 1) * 10 >= trackLength) {
+      alert("This is a last page!");
+    } else {
+      setCurrentPage(currentPage + 1);
+    }
   };
 
   return (
@@ -236,7 +264,7 @@ export default function Tracking(props) {
         <tbody>
           {trackings.map((item, index) => (
             <tr key={index}>
-              <td className="align-middle">{index + 1}</td>
+              <td className="align-middle">{index + 1 + currentPage * 10}</td>
               <td className="align-middle">
                 {parseInt(item.date.split("-")[2])}{" "}
                 {month[parseInt(item.date.split("-")[1])]}{" "}
@@ -345,6 +373,17 @@ export default function Tracking(props) {
           />
         </tbody>
       </Table>
+      <Row className="mb-3">
+        <Col>
+          <Button onClick={handlePrevious}>Previous</Button>
+        </Col>
+        <Col className="d-flex justify-content-center">
+          <h5>Amount {trackLength} item</h5>
+        </Col>
+        <Col className="d-flex justify-content-end">
+          <Button onClick={handleNext}>Next</Button>
+        </Col>
+      </Row>
       <AddTrackingModal
         show={modalShowAdd}
         onHide={() => setModalShowAdd(false)}

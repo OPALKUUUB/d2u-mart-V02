@@ -1,10 +1,10 @@
 import React from "react";
 import Tracking from "../../components/Tracking";
 
-export default function MercariTracking_test() {
+export default function FrilTracking() {
   return (
     <>
-      <Tracking mode="mercari" header="Mercari" />
+      <Tracking mode="fril" header="Fril" />
     </>
   );
 }

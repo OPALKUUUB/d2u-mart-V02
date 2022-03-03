@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Loading from "../components/Loading";
 import {
   Button,
   Container,
@@ -9,20 +10,18 @@ import {
   Col,
 } from "react-bootstrap";
 
-import ReactLoading from "react-loading";
-
 export default function HistoryTable() {
-  const [date, setDate] = useState("");
-  const [username, setUsername] = useState("");
-  const [status, setStatus] = useState("all");
   const [yen, setYen] = useState("");
   const [orders, setOrders] = useState([]);
+  const [date, setDate] = useState("");
+  const [username, setUsername] = useState("");
+  const [status, setStatus] = useState("");
   const [modalShow, setModalShow] = useState(false);
   const [temp, setTemp] = useState({});
-  const [loading, setLoading] = useState(true);
-
-  useEffect(async () => {
-    await fetch("/api/yen", {
+  const [loading, setLoading] = useState(false);
+  const [trigger, setTrigger] = useState(false);
+  useEffect(() => {
+    fetch("/api/yen", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -36,209 +35,63 @@ export default function HistoryTable() {
           alert(json.message);
         }
       });
-    await fetch("/api/admin/yahoo/history", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        token: localStorage.getItem("AdminToken"),
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.status) {
-          setOrders(json.data);
-          setLoading(false);
-        } else {
-          alert(json.message);
-          localStorage.removeItem("AdminToken");
-          window.location.reload(false);
-        }
-      });
-  }, []);
+  }, [yen]);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      const result = await fetch(
+        `/api/yahoo/history/filter?status=${status}&username=${username}&date=${date}`
+      ).then((res) => res.json());
+      if (result.status) {
+        setOrders(result.data);
+      } else {
+        alert("fetch fail from history yahoo!");
+      }
+      setLoading(false);
+    };
+    setLoading(true);
+    fetchOrders();
+  }, [status, username, date, trigger]);
+
   const handleEdit = (item) => {
     setTemp(item);
     setModalShow(true);
   };
-
-  const auctionFilter = (c) => {
-    let t = orders;
-    if (username !== "") {
-      t = t.filter((u) => {
-        let regex = new RegExp("(" + username + ")", "gi");
-        let match = u.username.match(regex);
-        if (match != null) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-    }
-    if (date !== "") {
-      t = t.filter((u) => {
-        let regex = new RegExp("(" + date + ")", "gi");
-        let fdate = formatDate(u.created_at);
-        let match = fdate.match(regex);
-        if (match != null) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-    }
-    if (status !== "all") {
-      t = t.filter((u) => {
-        let regex = new RegExp("(" + status + ")", "gi");
-        let match = u.status.match(regex);
-        if (match != null) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-    }
-
-    return (
-      <>
-        {t.map((item, index) => (
-          <tr key={index}>
-            <td className="align-middle">{index + 1}</td>
-            <td className="align-middle">
-              {item.created_at === null || item.created_at === "" ? (
-                ""
-              ) : (
-                <>
-                  {parseInt(item.created_at.split("T")[0].split("-")[2])}{" "}
-                  {month[parseInt(item.created_at.split("T")[0].split("-")[1])]}{" "}
-                  {parseInt(item.created_at.split("T")[0].split("-")[0])}
-                </>
-              )}
-            </td>
-            <td className="align-middle">
-              <img src={item.imgsrc} width={100} />
-            </td>
-            <td className="align-middle">{item.username}</td>
-            <td className="align-middle">{item.status}</td>
-            <td className="align-middle">
-              {item.link === null || item.link === "" ? (
-                ""
-              ) : (
-                <>
-                  <a href={item.link} target="_blank">
-                    {item.link.split("/")[5]}
-                  </a>
-                </>
-              )}
-              <span
-                style={{
-                  backgroundColor: "yellow",
-                  width: "fit-content",
-                  marginLeft: "10px",
-                }}
-              >
-                ({item.bid_by})
-              </span>
-              {item.status === "win" && (
-                <>
-                  <br />
-                  {item.bid === null || item.bid === "" ? "-" : item.bid} (¥)/
-                  {item.tranfer_fee_injapan === null ||
-                  item.tranfer_fee_injapan === ""
-                    ? "-"
-                    : item.tranfer_fee_injapan}{" "}
-                  (฿)/
-                  {item.delivery_in_thai === null ||
-                  item.delivery_in_thai === ""
-                    ? "-"
-                    : item.delivery_in_thai}{" "}
-                  (¥)
-                  <br />
-                  sum:{" "}
-                  {item.bid === null ||
-                  item.bid === "" ||
-                  item.tranfer_fee_injapan === null ||
-                  item.tranfer_fee_injapan === "" ||
-                  item.delivery_in_thai === null ||
-                  item.delivery_in_thai === "" ? (
-                    ""
-                  ) : (
-                    <>
-                      {Math.round((item.bid + item.delivery_in_thai) * yen) +
-                        item.tranfer_fee_injapan}{" "}
-                    </>
-                  )}
-                  (฿)
-                </>
-              )}
-            </td>
-            <td className="align-middle">{item.track_id}</td>
-            <td className="align-middle">{item.box_id}</td>
-            <td className="align-middle">{item.weight}</td>
-            <td className="align-middle">
-              {item.round_boat === null || item.round_boat === "" ? (
-                ""
-              ) : (
-                <>
-                  {parseInt(item.round_boat.split("-")[2])}{" "}
-                  {month[parseInt(item.round_boat.split("-")[1])]}
-                </>
-              )}
-              {/* {parseInt(item.round_boat.split("-")[2])}{" "}
-              {month[parseInt(item.round_boat.split("-")[1])]} */}
-            </td>
-            <td className="align-middle">
-              <Button variant="primary" onClick={() => handleEdit(item)}>
-                Edit
-              </Button>
-            </td>
-          </tr>
-        ))}
-      </>
-    );
-  };
-  function formatDate(date) {
-    let temp2 = date.split("T")[0];
-    let temp = temp2.split("-");
-    let y = parseInt(temp[0]);
-    let m = parseInt(temp[1]);
-    let d = parseInt(temp[2]);
-    return `${d}/${m}/${y}`;
-  }
 
   return (
     <>
       <h3 className="mb-3">Yahoo History Table</h3>
       <Row>
         <Col>
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>
-              Date&nbsp;
-              <Form.Text className="text-muted">Such as 1/1/2022</Form.Text>
-            </Form.Label>
+          <Form.Group className="mb-3">
+            <Form.Label>Date</Form.Label>
             <Form.Control
-              type="text"
+              type="date"
               name="date"
               onChange={(e) => setDate(e.target.value)}
-              placeholder="D/M/Y"
+              value={date}
             />
           </Form.Group>
         </Col>
         <Col>
-          <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Group className="mb-3">
             <Form.Label>Username</Form.Label>
             <Form.Control
               type="text"
               name="username"
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Enter Username"
+              value={username}
             />
           </Form.Group>
         </Col>
         <Col>
-          <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Group className="mb-3">
             <Form.Label>สถานะ</Form.Label>
             <Form.Select
               aria-label="Default select example"
               onChange={(e) => setStatus(e.target.value)}
+              value={status}
             >
               <option value="all">all</option>
               <option value="win">win</option>
@@ -263,31 +116,120 @@ export default function HistoryTable() {
             <th>Edit Tracking</th>
           </tr>
         </thead>
-        <tbody style={{ textAlign: "center" }}>{auctionFilter()}</tbody>
+        <tbody style={{ textAlign: "center" }}>
+          {orders.map((item, index) => (
+            <tr key={index}>
+              <td className="align-middle">{index + 1}</td>
+              <td className="align-middle">
+                {item.created_at === null || item.created_at === "" ? (
+                  ""
+                ) : (
+                  <>
+                    {parseInt(item.created_at.split("T")[0].split("-")[2])}{" "}
+                    {
+                      month[
+                        parseInt(item.created_at.split("T")[0].split("-")[1])
+                      ]
+                    }{" "}
+                    {parseInt(item.created_at.split("T")[0].split("-")[0])}
+                  </>
+                )}
+              </td>
+              <td className="align-middle">
+                <img src={item.imgsrc} width={100} />
+              </td>
+              <td className="align-middle">{item.username}</td>
+              <td className="align-middle">{item.status}</td>
+              <td className="align-middle">
+                {item.link === null || item.link === "" ? (
+                  ""
+                ) : (
+                  <>
+                    <a href={item.link} target="_blank">
+                      {item.link.split("/")[5]}
+                    </a>
+                  </>
+                )}
+                <span
+                  style={{
+                    backgroundColor: "yellow",
+                    width: "fit-content",
+                    marginLeft: "10px",
+                  }}
+                >
+                  ({item.bid_by})
+                </span>
+                {item.status === "win" && (
+                  <>
+                    <br />
+                    {item.bid === null || item.bid === "" ? "-" : item.bid} (¥)/
+                    {item.tranfer_fee_injapan === null ||
+                    item.tranfer_fee_injapan === ""
+                      ? "-"
+                      : item.tranfer_fee_injapan}{" "}
+                    (฿)/
+                    {item.delivery_in_thai === null ||
+                    item.delivery_in_thai === ""
+                      ? "-"
+                      : item.delivery_in_thai}{" "}
+                    (¥)
+                    <br />
+                    sum:{" "}
+                    {item.bid === null ||
+                    item.bid === "" ||
+                    item.tranfer_fee_injapan === null ||
+                    item.tranfer_fee_injapan === "" ||
+                    item.delivery_in_thai === null ||
+                    item.delivery_in_thai === "" ? (
+                      ""
+                    ) : (
+                      <>
+                        {Math.round((item.bid + item.delivery_in_thai) * yen) +
+                          item.tranfer_fee_injapan}{" "}
+                      </>
+                    )}
+                    (฿)
+                  </>
+                )}
+              </td>
+              <td className="align-middle">{item.track_id}</td>
+              <td className="align-middle">{item.box_id}</td>
+              <td className="align-middle">{item.weight}</td>
+              <td className="align-middle">
+                {item.round_boat === null || item.round_boat === "" ? (
+                  ""
+                ) : (
+                  <>
+                    {parseInt(item.round_boat.split("-")[2])}{" "}
+                    {month[parseInt(item.round_boat.split("-")[1])]}
+                  </>
+                )}
+                {/* {parseInt(item.round_boat.split("-")[2])}{" "}
+              {month[parseInt(item.round_boat.split("-")[1])]} */}
+              </td>
+              <td className="align-middle">
+                <Button variant="primary" onClick={() => handleEdit(item)}>
+                  Edit
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
       </Table>
-      {loading && (
-        <>
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <ReactLoading
-              type={"bubbles"}
-              color={"rgba(0,0,0,0.2)"}
-              height={400}
-              width={300}
-            />
-          </div>
-        </>
-      )}
+      {loading && <Loading />}
       <EditYahooHistory
         show={modalShow}
         onHide={() => setModalShow(false)}
         item={temp}
+        trigger={trigger}
+        setTrigger={setTrigger}
       />
     </>
   );
 }
-
 function EditYahooHistory(props) {
   const [order, setOrder] = useState(props.item);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     setOrder(props.item);
   }, [props]);
@@ -329,6 +271,7 @@ function EditYahooHistory(props) {
     },
   ];
   const handleSubmit = () => {
+    setLoading(true);
     fetch("/api/admin/yahoo/tracking", {
       method: "PATCH",
       headers: {
@@ -339,11 +282,12 @@ function EditYahooHistory(props) {
       .then((res) => res.json())
       .then((json) => {
         if (json.status) {
-          alert(json.message);
-          window.location.reload(false);
+          props.setTrigger(!props.trigger);
+          props.onHide();
         } else {
           alert(json.message);
         }
+        setLoading(false);
       });
   };
   return (
@@ -377,6 +321,7 @@ function EditYahooHistory(props) {
           Close
         </Button>
       </Modal.Footer>
+      {loading && <Loading />}
     </Modal>
   );
 }
