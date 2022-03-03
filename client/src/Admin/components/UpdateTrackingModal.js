@@ -2,21 +2,31 @@ import React, { useState, useEffect } from "react";
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 import AutoComplete from "./AutoComplete";
 import Loading from "./Loading";
+let trackingModel = {
+  channel: "",
+  date: "",
+  username: "",
+  box_id: "",
+  url: "",
+  track_id: "",
+  weight: "",
+  round_boat: "",
+  pic1_filename: "",
+  pic2_filename: "",
+  remark: "",
+};
 
 export default function UpdateTrackingModal(props) {
-  const [tracking, setTracking] = useState({ ...props.item });
+  const [tracking, setTracking] = useState({});
   const [pic1File, setPic1File] = useState(null);
   const [pic2File, setPic2File] = useState(null);
   const [users, setUsers] = useState([]);
   const [image1, setImage1] = useState(null);
   const [image2, setImage2] = useState(null);
   const [loading, setLoading] = useState(false);
+
   useEffect(() => {
-    setImage1(null);
-    setImage2(null);
-    setTracking({ ...props.item });
-  }, [props]);
-  useEffect(() => {
+    setTracking(trackingModel);
     fetch("/api/admin/users", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -30,6 +40,11 @@ export default function UpdateTrackingModal(props) {
         }
       });
   }, []);
+  useEffect(() => {
+    setImage1(null);
+    setImage2(null);
+    setTracking({ ...props.item });
+  }, [props]);
   const handleChangeTracking = (e) => {
     setTracking({ ...tracking, [e.target.name]: e.target.value });
   };
@@ -106,12 +121,12 @@ export default function UpdateTrackingModal(props) {
       .then((res) => res.json())
       .then((json) => {
         if (json.status) {
-          props.setTrigger(!props.trigger);
           props.onHide();
+          props.setTrigger(!props.trigger);
+          setLoading(false);
         } else {
           alert(json.message);
         }
-        setLoading(false);
       });
   };
   const handleChangeUsername = (data) => {

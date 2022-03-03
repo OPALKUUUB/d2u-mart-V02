@@ -35,6 +35,7 @@ export default function Tracking(props) {
         window.location.reload(false);
       }
     };
+    setLoading(true);
     fetchTrack();
   }, [
     username,
