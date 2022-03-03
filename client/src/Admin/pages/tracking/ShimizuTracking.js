@@ -46,7 +46,7 @@ export default function ShimizuTracking() {
     };
     setLoading(true);
     fetchTrack();
-  }, [username, trackId, date, orderBy, roundBoat]);
+  }, [username, trackId, date, orderBy, roundBoat, currentPage]);
 
   const handleConfigs = (item) => {
     setItem(item);

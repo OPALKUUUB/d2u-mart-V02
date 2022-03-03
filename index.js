@@ -802,37 +802,35 @@ app.get("/api/admin/yahoo/payment", (req, res) => {
     }
   );
 });
-app.get("/api/admin/yahoo/history", (req, res) => {
-  const sql = "SELECT * FROM orders WHERE payment_status = ? OR status = ?;";
-  conn.query(sql, ["paid", "lose"], (err, result) => {
-    if (err) {
-      console.log(err.sqlMessage);
-      res.status(400).json({
-        status: false,
-        message: "Error: " + err.sqlMessage,
-      });
-    } else {
-      // console.log(result);
-      res.status(200).json({
-        status: true,
-        message: "Select data from order that status 'Auction'",
-        data: result,
-      });
-    }
-  });
-});
-app.get("/api/yahoo/history/filter", (req, res) => {
-  let sql = "SELECT * FROM orders WHERE created_at LIKE ? AND username LIKE ?";
+
+app.get("/api/admin/yahoo/history/filter", (req, res) => {
+  let sql =
+    "SELECT * FROM orders WHERE created_at LIKE ? AND username LIKE ? AND track_id LIKE ? AND round_boat LIKE ? ";
   if (req.query.status === "win") {
-    sql += "AND status = 'win';";
+    sql += "AND status = 'win'";
   } else if (req.query.status === "lose") {
-    sql += "AND status = 'lose';";
+    sql += "AND status = 'lose'";
   } else {
-    sql += "AND status = 'win' OR status = 'lose';";
+    sql += "AND status = 'win' OR status = 'lose'";
+  }
+  let orderBy = req.query.orderBy;
+  if (orderBy === "ASC1") {
+    sql += " ORDER BY created_at ASC;";
+  } else if (orderBy === "DESC1") {
+    sql += " ORDER BY created_at DESC;";
+  } else if (orderBy === "ASC2") {
+    sql += " ORDER BY round_boat ASC;";
+  } else if (orderBy === "DESC2") {
+    sql += " ORDER BY round_boat DESC;";
   }
   conn.query(
     sql,
-    [req.query.date + "%", req.query.username + "%"],
+    [
+      req.query.date + "%",
+      req.query.username + "%",
+      req.query.trackId + "%",
+      req.query.roundBoat + "%",
+    ],
     (err, result) => {
       if (err) {
         console.log(err.sqlMessage);

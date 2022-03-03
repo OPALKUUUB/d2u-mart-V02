@@ -16,10 +16,15 @@ export default function HistoryTable() {
   const [date, setDate] = useState("");
   const [username, setUsername] = useState("");
   const [status, setStatus] = useState("");
+  const [trackId, setTrackId] = useState("");
+  const [orderBy, setOrderBy] = useState("DESC1");
+  const [roundBoat, setRoundBoat] = useState("");
   const [modalShow, setModalShow] = useState(false);
   const [temp, setTemp] = useState({});
   const [loading, setLoading] = useState(false);
   const [trigger, setTrigger] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [trackLength, setTrackLength] = useState();
   useEffect(() => {
     fetch("/api/yen", {
       method: "GET",
@@ -40,10 +45,20 @@ export default function HistoryTable() {
   useEffect(() => {
     const fetchOrders = async () => {
       const result = await fetch(
-        `/api/yahoo/history/filter?status=${status}&username=${username}&date=${date}`
+        `/api/admin/yahoo/history/filter?status=${status}&username=${username}&date=${date}&trackId=${trackId}&orderBy=${orderBy}&roundBoat=${roundBoat}`
       ).then((res) => res.json());
       if (result.status) {
-        setOrders(result.data);
+        let len_tracking = result.data.length;
+        setTrackLength(len_tracking);
+        let temp = [];
+        let start = currentPage * 10;
+        for (let i = start; i < 10 * (currentPage + 1); i++) {
+          if (i >= len_tracking) {
+            break;
+          }
+          temp.push(result.data[i]);
+        }
+        setOrders(temp);
       } else {
         alert("fetch fail from history yahoo!");
       }
@@ -51,11 +66,35 @@ export default function HistoryTable() {
     };
     setLoading(true);
     fetchOrders();
-  }, [status, username, date, trigger]);
+  }, [
+    currentPage,
+    status,
+    username,
+    date,
+    orderBy,
+    trackId,
+    roundBoat,
+    trigger,
+  ]);
 
   const handleEdit = (item) => {
     setTemp(item);
     setModalShow(true);
+  };
+
+  const handlePrevious = () => {
+    if (currentPage === 0) {
+      alert("This is a first page!");
+    } else {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+  const handleNext = () => {
+    if ((currentPage + 1) * 10 >= trackLength) {
+      alert("This is a last page!");
+    } else {
+      setCurrentPage(currentPage + 1);
+    }
   };
 
   return (
@@ -82,6 +121,47 @@ export default function HistoryTable() {
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Enter Username"
               value={username}
+            />
+          </Form.Group>
+        </Col>
+        <Col>
+          <Form.Group className="mb-3">
+            <Form.Label>Track Id</Form.Label>
+            <Form.Control
+              type="text"
+              name="track_id"
+              onChange={(e) => setTrackId(e.target.value)}
+              placeholder="Enter Track Id"
+              value={trackId}
+            />
+          </Form.Group>
+        </Col>
+        <Col md>
+          <Form.Group className="mb-3">
+            <Form.Label>เรียงวันที่</Form.Label>
+            <Form.Select
+              aria-label="Default select example"
+              onChange={(e) => {
+                setLoading(true);
+                setOrderBy(e.target.value);
+              }}
+              value={orderBy}
+            >
+              <option value="DESC1">ใหม่ไปเก่า</option>
+              <option value="ASC1">เก่าไปใหม่</option>
+              <option value="ASC2">รอบเรือเก่าไปใหม่</option>
+              <option value="DESC2">รอบเรือใหม่ไปเก่า</option>
+            </Form.Select>
+          </Form.Group>
+        </Col>
+        <Col md>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label>รอบเรือ&nbsp;</Form.Label>
+            <Form.Control
+              type="date"
+              name="roundBoat"
+              onChange={(e) => setRoundBoat(e.target.value)}
+              value={roundBoat}
             />
           </Form.Group>
         </Col>
@@ -216,6 +296,17 @@ export default function HistoryTable() {
           ))}
         </tbody>
       </Table>
+      <Row className="mb-3">
+        <Col>
+          <Button onClick={handlePrevious}>Previous</Button>
+        </Col>
+        <Col className="d-flex justify-content-center">
+          <h5>Amount {trackLength} item</h5>
+        </Col>
+        <Col className="d-flex justify-content-end">
+          <Button onClick={handleNext}>Next</Button>
+        </Col>
+      </Row>
       {loading && <Loading />}
       <EditYahooHistory
         show={modalShow}
