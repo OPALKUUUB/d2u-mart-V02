@@ -775,7 +775,7 @@ app.patch("/api/admin/check/inform/bill", (req, res) => {
 });
 app.get("/api/admin/yahoo/payment", (req, res) => {
   const sql =
-    "SELECT * FROM orders WHERE (payment_status = ? OR payment_status = ? OR payment_status = ?) AND username LIKE ? AND created_at LIKE ?;";
+    "SELECT * FROM orders WHERE (payment_status = ? OR payment_status = ? OR payment_status = ?) AND username LIKE ? AND created_at LIKE ? ORDER BY created_at DESC;";
   conn.query(
     sql,
     [
