@@ -62,7 +62,7 @@ export default function YahooPayment() {
   };
 
   const handleShowSlip = (payment_id) => {
-    fetch("/api/payment/slip/" + payment_id, {
+    fetch("/api/yahoo/payment/slip/" + payment_id, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

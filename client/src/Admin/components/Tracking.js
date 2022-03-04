@@ -24,6 +24,7 @@ export default function Tracking(props) {
   const [filterCheck2, setFilterCheck2] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [trackLength, setTrackLength] = useState();
+  let page = 20;
   useEffect(() => {
     const fetchTrack = async () => {
       const result = await fetch(
@@ -33,8 +34,8 @@ export default function Tracking(props) {
         let len_tracking = result.data.length;
         setTrackLength(len_tracking);
         let temp = [];
-        let start = currentPage * 10;
-        for (let i = start; i < 10 * (currentPage + 1); i++) {
+        let start = currentPage * page;
+        for (let i = start; i < page * (currentPage + 1); i++) {
           if (i >= len_tracking) {
             break;
           }
@@ -264,7 +265,7 @@ export default function Tracking(props) {
         <tbody>
           {trackings.map((item, index) => (
             <tr key={index}>
-              <td className="align-middle">{index + 1 + currentPage * 10}</td>
+              <td className="align-middle">{index + 1 + currentPage * page}</td>
               <td className="align-middle">
                 {parseInt(item.date.split("-")[2])}{" "}
                 {month[parseInt(item.date.split("-")[1])]}{" "}
@@ -359,7 +360,7 @@ export default function Tracking(props) {
                   <Button
                     variant="danger"
                     onClick={() =>
-                      handleDelete(item.id, index + 1 + currentPage * 10)
+                      handleDelete(item.id, index + 1 + currentPage * page)
                     }
                   >
                     <i class="fas fa-times"></i>

@@ -7,7 +7,7 @@ export default function Profile() {
   const [p2, setP2] = useState("");
   const [p3, setP3] = useState("");
   useEffect(() => {
-    fetch("/api/regist", {
+    fetch("/api/user/customer", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -49,7 +49,7 @@ export default function Profile() {
       regist = register;
     }
     if (check) {
-      fetch("/api/regist", {
+      fetch("/api/user/customer", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

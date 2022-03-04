@@ -15,7 +15,6 @@ export default function Tracking() {
       .then((res) => res.json())
       .then((json) => {
         if (json.status) {
-          console.log(json.data);
           setTrackings(json.data);
           setLoading(false);
         } else {

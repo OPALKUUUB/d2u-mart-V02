@@ -149,7 +149,7 @@ function ModalRegister(props) {
 
     if (IsNotEmpty(register) && check) {
       if (ConfirmPassword(register)) {
-        fetch("/api/regist", {
+        fetch("/api/user/customer", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

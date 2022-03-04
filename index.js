@@ -50,7 +50,68 @@ function genDate() {
 
 const url_line_notification = "https://notify-api.line.me/api/notify";
 
-app.get("/api/regist", (req, res) => {
+// This API FOR Config Yen
+app.post("/api/yen", (req, res) => {
+  const sql = "UPDATE config SET yen=? WHERE id = ?";
+  conn.query(sql, [req.body.yen, 1], (err, result) => {
+    if (err) {
+      console.log(err.sqlMessage);
+      res.status(400).json({
+        status: false,
+        message: "Error: " + err.sqlMessage,
+      });
+    } else {
+      console.log(result);
+      res
+        .status(200)
+        .json({ status: true, message: "update yen successfully!" });
+    }
+  });
+});
+app.get("/api/yen", (req, res) => {
+  const sql = "SELECT * FROM config WHERE id = 1;";
+  conn.query(sql, (err, row) => {
+    if (err) {
+      console.log(err.sqlMessage);
+      res.status(400).json({
+        status: false,
+        message: "Error: " + err.sqlMessage,
+      });
+    } else {
+      console.log(row);
+      res.status(200).json({
+        status: true,
+        message: "Select * from config is successfully",
+        yen: row[0].yen,
+      });
+    }
+  });
+});
+
+// Find image Yahoo Auction
+app.post("/api/yahoo/image", (req, res) => {
+  // ref: https://stackoverflow.com/questions/31553682/regex-extract-img-src-javascript
+  request(req.body.link, function (error, response, body) {
+    if (error) {
+      res.status(400).json({
+        status: false,
+        message: "Error: " + error,
+      });
+    } else {
+      const sources = body
+        .match(/<img [^>]*src="[^"]*"[^>]*>/gm)
+        .map((x) => x.replace(/.*src="([^"]*)".*/, "$1"));
+      res.status(200).json({
+        status: true,
+        imgsrc: sources[2],
+      });
+    }
+  });
+});
+
+// This API FOR Profile.js
+// USER CUSTOMER
+app.get("/api/user/customer", (req, res) => {
   let decoded = jwt.verify(
     req.headers.token,
     process.env.SECRET_KEY,
@@ -89,8 +150,7 @@ app.get("/api/regist", (req, res) => {
     });
   }
 });
-
-app.patch("/api/regist", (req, res) => {
+app.patch("/api/user/customer", (req, res) => {
   var date = genDate();
   var regist = [
     req.body.username,
@@ -123,45 +183,8 @@ app.patch("/api/regist", (req, res) => {
     }
   });
 });
-
-app.post("/api/yen", (req, res) => {
-  const sql = "UPDATE config SET yen=? WHERE id = ?";
-  conn.query(sql, [req.body.yen, 1], (err, result) => {
-    if (err) {
-      console.log(err.sqlMessage);
-      res.status(400).json({
-        status: false,
-        message: "Error: " + err.sqlMessage,
-      });
-    } else {
-      console.log(result);
-      res
-        .status(200)
-        .json({ status: true, message: "update yen successfully!" });
-    }
-  });
-});
-
-app.get("/api/yen", (req, res) => {
-  const sql = "SELECT * FROM config WHERE id = 1;";
-  conn.query(sql, (err, row) => {
-    if (err) {
-      console.log(err.sqlMessage);
-      res.status(400).json({
-        status: false,
-        message: "Error: " + err.sqlMessage,
-      });
-    } else {
-      console.log(row);
-      res.status(200).json({
-        status: true,
-        message: "Select * from config is successfully",
-        yen: row[0].yen,
-      });
-    }
-  });
-});
-app.post("/api/regist", (req, res) => {
+app.post("/api/user/customer", (req, res) => {
+  // Use in register
   var date = genDate();
   var regist = [
     req.body.username,
@@ -208,7 +231,6 @@ app.post("/api/regist", (req, res) => {
     }
   });
 });
-
 app.post("/api/login", (req, res) => {
   const { username, password, mode } = req.body;
   let sql = "";
@@ -217,7 +239,6 @@ app.post("/api/login", (req, res) => {
   } else {
     sql = "SELECT password FROM user_customers WHERE username = ?;";
   }
-
   conn.query(sql, [username], (err, row) => {
     if (err) {
       console.log(err.sqlMessage);
@@ -250,28 +271,49 @@ app.post("/api/login", (req, res) => {
     }
   });
 });
+// End of manage user_customers
 
-app.post("/api/yahoo/image", (req, res) => {
-  // ref: https://stackoverflow.com/questions/31553682/regex-extract-img-src-javascript
-  request(req.body.link, function (error, response, body) {
-    if (error) {
-      res.status(400).json({
-        status: false,
-        message: "Error: " + error,
-      });
-    } else {
-      const sources = body
-        .match(/<img [^>]*src="[^"]*"[^>]*>/gm)
-        .map((x) => x.replace(/.*src="([^"]*)".*/, "$1"));
-      res.status(200).json({
-        status: true,
-        imgsrc: sources[2],
-      });
+// AUCTION YAHOO
+app.get("/api/yahoo/order", (req, res) => {
+  let decoded = jwt.verify(
+    req.headers.token,
+    process.env.SECRET_KEY,
+    (error, decoded) => {
+      if (error) {
+        console.log(error);
+        res.status(400).json({
+          status: false,
+          message: "Your login session is expired,\nPlease Sign In Again!",
+          error: "jwt",
+        });
+      } else {
+        console.log(decoded);
+        return decoded;
+      }
     }
-  });
+  );
+  if (decoded !== undefined) {
+    const sql = "SELECT * FROM orders WHERE username = ? and status = ?;";
+    conn.query(sql, [decoded.username, "Auction"], (err, row) => {
+      if (err) {
+        console.log(err);
+        res.status(400).json({
+          status: false,
+          message: "Error: " + err.sqlMessage,
+          error: "sql",
+        });
+      } else {
+        console.log(row);
+        res.status(200).json({
+          status: true,
+          message: "Select from orders is successfully",
+          data: row,
+        });
+      }
+    });
+  }
 });
-
-app.post("/api/yahoo/offer", (req, res) => {
+app.post("/api/yahoo/order", (req, res) => {
   let decoded = jwt.verify(
     req.headers.token,
     process.env.SECRET_KEY,
@@ -345,111 +387,6 @@ app.post("/api/yahoo/offer", (req, res) => {
     });
   }
 });
-
-app.get("/api/yahoo/orders", (req, res) => {
-  let decoded = jwt.verify(
-    req.headers.token,
-    process.env.SECRET_KEY,
-    (error, decoded) => {
-      if (error) {
-        console.log(error);
-        res.status(400).json({
-          status: false,
-          message: "Your login session is expired,\nPlease Sign In Again!",
-          error: "jwt",
-        });
-      } else {
-        console.log(decoded);
-        return decoded;
-      }
-    }
-  );
-  if (decoded !== undefined) {
-    const sql = "SELECT * FROM orders WHERE username = ? and status = ?;";
-    conn.query(sql, [decoded.username, "Auction"], (err, row) => {
-      if (err) {
-        console.log(err);
-        res.status(400).json({
-          status: false,
-          message: "Error: " + err.sqlMessage,
-          error: "sql",
-        });
-      } else {
-        console.log(row);
-        res.status(200).json({
-          status: true,
-          message: "Select from orders is successfully",
-          data: row,
-        });
-      }
-    });
-  }
-});
-app.delete("/api/admin/orders", (req, res) => {
-  const sql = "DELETE FROM orders WHERE id = ?;";
-  conn.query(sql, [req.body.id], (err, result) => {
-    if (err) {
-      console.log(err.sqlMessage);
-      res.status(400).json({
-        status: false,
-        message: err.sqlMessage,
-      });
-    } else {
-      res.status(200).json({
-        status: true,
-        message: "delete order successfully!",
-      });
-    }
-  });
-});
-
-// PAYMENT YAHOO
-
-app.get("/api/yahoo/payment", (req, res) => {
-  let decoded = jwt.verify(
-    req.headers.token,
-    process.env.SECRET_KEY,
-    (err, decoded) => {
-      if (err) {
-        res.status(400).json({
-          status: false,
-          message: err.sqlMessage,
-          error: "jwt",
-        });
-        console.log("Error: Your login session is expired!");
-      } else {
-        console.log(decoded);
-        return decoded;
-      }
-    }
-  );
-  if (decoded !== undefined) {
-    const sql =
-      "SELECT * FROM orders WHERE username = ? and (payment_status = ? OR payment_status = ? OR payment_status = ?);";
-    conn.query(
-      sql,
-      [decoded.username, "pending1", "pending2", "pending3"],
-      (error, row) => {
-        if (error) {
-          console.log(error);
-          res.status(400).json({
-            status: false,
-            message: "Error: " + error.sqlMessage,
-            error: "sql",
-          });
-        } else {
-          console.log(row);
-          res.status(200).json({
-            status: true,
-            message: "Select from orders is successfully",
-            data: row,
-          });
-        }
-      }
-    );
-  }
-});
-
 app.patch("/api/yahoo/order/addbid", (req, res) => {
   let decoded = jwt.verify(
     req.headers.token,
@@ -525,7 +462,70 @@ app.patch("/api/yahoo/order/addbid", (req, res) => {
   }
 });
 
-app.patch("/api/payment/confirm", (req, res) => {
+// PAYMENT YAHOO
+app.get("/api/yahoo/payment", (req, res) => {
+  let decoded = jwt.verify(
+    req.headers.token,
+    process.env.SECRET_KEY,
+    (err, decoded) => {
+      if (err) {
+        res.status(400).json({
+          status: false,
+          message: err.sqlMessage,
+          error: "jwt",
+        });
+        console.log("Error: Your login session is expired!");
+      } else {
+        console.log(decoded);
+        return decoded;
+      }
+    }
+  );
+  if (decoded !== undefined) {
+    const sql =
+      "SELECT * FROM orders WHERE username = ? and (payment_status = ? OR payment_status = ? OR payment_status = ?);";
+    conn.query(
+      sql,
+      [decoded.username, "pending1", "pending2", "pending3"],
+      (error, row) => {
+        if (error) {
+          console.log(error);
+          res.status(400).json({
+            status: false,
+            message: "Error: " + error.sqlMessage,
+            error: "sql",
+          });
+        } else {
+          console.log(row);
+          res.status(200).json({
+            status: true,
+            message: "Select from orders is successfully",
+            data: row,
+          });
+        }
+      }
+    );
+  }
+});
+app.get("/api/yahoo/payment/slip/:id", (req, res) => {
+  const sql = "SELECT slip_image_filename FROM payments WHERE id = ?;";
+  conn.query(sql, [req.params.id], (err, row) => {
+    if (err) {
+      console.log(err.sqlMessage);
+      res.status(400).json({
+        status: false,
+        message: "Error: " + err.sqlMessage,
+      });
+    } else {
+      res.status(200).json({
+        status: true,
+        message: "select slip filename where payment_id = " + req.params.id,
+        data: row[0].slip_image_filename,
+      });
+    }
+  });
+});
+app.patch("/api/yahoo/payment", (req, res) => {
   var decoded = jwt.verify(
     req.headers.token,
     process.env.SECRET_KEY,
@@ -591,64 +591,7 @@ app.patch("/api/payment/confirm", (req, res) => {
   }
 });
 
-app.patch("/api/admin/payment/confirm", (req, res) => {
-  let sql = "INSERT INTO payments (price, slip_image_filename) VALUES (?,?);";
-  conn.query(
-    sql,
-    [req.body.price, req.body.slip_image_filename],
-    (err, result) => {
-      if (err) {
-        console.log(err.sqlMessage);
-        res.status(400).json({
-          status: false,
-          message: "Error: " + err.sqlMessage,
-        });
-      } else {
-        sql =
-          "UPDATE orders SET payment_id = ?, payment_status = ? WHERE id = ?;";
-        conn.query(
-          sql,
-          [result.insertId, "paid", req.body.order_id],
-          (err1, result1) => {
-            if (err1) {
-              console.log(err1.sqlMessage);
-              res.status(400).json({
-                status: false,
-                message: "Error: " + err1.sqlMessage,
-              });
-            } else {
-              console.log(result1);
-              res.status(200).json({
-                status: true,
-                message: "created payment successfully!",
-              });
-            }
-          }
-        );
-      }
-    }
-  );
-});
-
-app.get("/api/payment/slip/:id", (req, res) => {
-  const sql = "SELECT slip_image_filename FROM payments WHERE id = ?;";
-  conn.query(sql, [req.params.id], (err, row) => {
-    if (err) {
-      console.log(err.sqlMessage);
-      res.status(400).json({
-        status: false,
-        message: "Error: " + err.sqlMessage,
-      });
-    } else {
-      res.status(200).json({
-        status: true,
-        message: "select slip filename where payment_id = " + req.params.id,
-        data: row[0].slip_image_filename,
-      });
-    }
-  });
-});
-
+// HISTORY YAHOO
 app.get("/api/yahoo/history", (req, res) => {
   var decoded = jwt.verify(
     req.headers.token,
@@ -693,6 +636,7 @@ app.get("/api/yahoo/history", (req, res) => {
 });
 
 // Admin
+// refactor user api++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 app.get("/api/admin/users", (req, res) => {
   const sql = "SELECT * FROM user_customers;";
   conn.query(sql, (err, row) => {
@@ -731,7 +675,8 @@ app.get("/api/admin/filter/users", (req, res) => {
   });
 });
 
-app.get("/api/admin/yahoo/auction", (req, res) => {
+// YAHOO ORDER
+app.get("/api/admin/yahoo/order", (req, res) => {
   const sql =
     "SELECT * FROM orders WHERE status = ? AND username LIKE ? AND created_at LIKE ?;";
   conn.query(
@@ -754,104 +699,21 @@ app.get("/api/admin/yahoo/auction", (req, res) => {
     }
   );
 });
-
-app.patch("/api/admin/check/inform/bill", (req, res) => {
-  const sql = "UPDATE orders SET inform_bill = ? WHERE id = ?;";
-  conn.query(sql, [req.body.check, req.body.id], (err, result) => {
-    if (err) {
-      console.log(err);
-      res.status(400).json({
-        status: false,
-        message: "Error: " + err.sqlMessage,
-      });
-    } else {
-      console.log(result);
-      res.status(200).json({
-        status: true,
-        message: "update check at id " + req.body.id,
-      });
-    }
-  });
-});
-app.get("/api/admin/yahoo/payment", (req, res) => {
+app.post("/api/admin/yahoo/order", (req, res) => {
+  let date = genDate();
+  let offer = [
+    req.body.username,
+    req.body.link,
+    req.body.imgsrc,
+    req.body.price,
+    "Auction",
+    req.body.remark,
+    date,
+    date,
+  ];
   const sql =
-    "SELECT * FROM orders WHERE (payment_status = ? OR payment_status = ? OR payment_status = ?) AND username LIKE ? AND created_at LIKE ? ORDER BY created_at DESC;";
-  conn.query(
-    sql,
-    [
-      "pending1",
-      "pending2",
-      "pending3",
-      req.query.username + "%",
-      req.query.date + "%",
-    ],
-    (err, result) => {
-      if (err) {
-        console.log(err.sqlMessage);
-        res.status(400).json({
-          status: false,
-          message: "Error: " + err.sqlMessage,
-        });
-      } else {
-        res.status(200).json({
-          status: true,
-          message: "Select data from order that status 'Auction'",
-          data: result,
-        });
-      }
-    }
-  );
-});
-
-app.get("/api/admin/yahoo/history/filter", (req, res) => {
-  let sql =
-    "SELECT * FROM orders WHERE created_at LIKE ? AND username LIKE ? AND track_id LIKE ? AND round_boat LIKE ? ";
-  if (req.query.status === "win") {
-    sql += "AND status = 'win'";
-  } else if (req.query.status === "lose") {
-    sql += "AND status = 'lose'";
-  } else {
-    sql += "AND status = 'win' OR status = 'lose'";
-  }
-  let orderBy = req.query.orderBy;
-  if (orderBy === "ASC1") {
-    sql += " ORDER BY created_at ASC;";
-  } else if (orderBy === "DESC1") {
-    sql += " ORDER BY created_at DESC;";
-  } else if (orderBy === "ASC2") {
-    sql += " ORDER BY round_boat ASC;";
-  } else if (orderBy === "DESC2") {
-    sql += " ORDER BY round_boat DESC;";
-  }
-  conn.query(
-    sql,
-    [
-      req.query.date + "%",
-      req.query.username + "%",
-      req.query.trackId + "%",
-      req.query.roundBoat + "%",
-    ],
-    (err, result) => {
-      if (err) {
-        console.log(err.sqlMessage);
-        res.status(400).json({
-          status: false,
-          message: "Error: " + err.sqlMessage,
-        });
-      } else {
-        console.log(result);
-        res.status(200).json({
-          status: true,
-          message: "Select data from order that status 'Auction'",
-          data: result,
-        });
-      }
-    }
-  );
-});
-app.get("/api/admin/yahoo/history/:id", (req, res) => {
-  const sql = "SELECT * FROM orders WHERE id = ?;";
-  conn.query(sql, [req.params.id], (err, result) => {
+    "INSERT INTO orders (username, link, imgsrc, maxbid, status, remark, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?);";
+  conn.query(sql, offer, (err, result) => {
     if (err) {
       console.log(err.sqlMessage);
       res.status(400).json({
@@ -859,53 +721,37 @@ app.get("/api/admin/yahoo/history/:id", (req, res) => {
         message: "Error: " + err.sqlMessage,
       });
     } else {
-      // console.log(result);
-      res.status(200).json({
-        status: true,
-        message: "Select data from order that status 'Auction'",
-        data: result[0],
-      });
-    }
-  });
-});
-
-app.patch("/api/admin/check1/tracking", (req, res) => {
-  const sql = "UPDATE trackings SET check1 = ? WHERE id = ?;";
-  conn.query(sql, [req.body.check, req.body.id], (err, result) => {
-    if (err) {
-      console.log(err);
-      res.status(400).json({
-        status: false,
-        message: "Error: " + err.sqlMessage,
-      });
-    } else {
       console.log(result);
       res.status(200).json({
         status: true,
-        message: "update trackings at check1 successfully",
+        message: "Offer " + req.body.link + "is successfully",
       });
+      request(
+        {
+          method: "POST",
+          uri: url_line_notification,
+          header: {
+            "Content-Type": "multipart/form-data",
+          },
+          auth: {
+            bearer: process.env.TOKEN,
+          },
+          form: {
+            message: `${req.body.username}\nOffer Link: ${req.body.link}\nBiding: ${req.body.price} ¥`,
+          },
+        },
+        (err, httpResponse, body) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log(body);
+          }
+        }
+      );
     }
   });
 });
-app.patch("/api/admin/check2/tracking", (req, res) => {
-  const sql = "UPDATE trackings SET check2 = ? WHERE id = ?;";
-  conn.query(sql, [req.body.check, req.body.id], (err, result) => {
-    if (err) {
-      console.log(err);
-      res.status(400).json({
-        status: false,
-        message: "Error: " + err.sqlMessage,
-      });
-    } else {
-      console.log(result);
-      res.status(200).json({
-        status: true,
-        message: "update trackings at check2 successfully",
-      });
-    }
-  });
-});
-app.patch("/api/admin/workby", (req, res) => {
+app.patch("/api/admin/yahoo/order/workby", (req, res) => {
   let decoded = jwt.verify(
     req.headers.token,
     process.env.SECRET_KEY,
@@ -959,8 +805,7 @@ app.patch("/api/admin/workby", (req, res) => {
     });
   }
 });
-
-app.patch("/api/admin/win", (req, res) => {
+app.patch("/api/admin/yahoo/order/win", (req, res) => {
   let decoded = jwt.verify(
     req.headers.token,
     process.env.SECRET_KEY,
@@ -1012,8 +857,7 @@ app.patch("/api/admin/win", (req, res) => {
     });
   }
 });
-
-app.patch("/api/admin/lose", (req, res) => {
+app.patch("/api/admin/yahoo/order/lose", (req, res) => {
   let decoded = jwt.verify(
     req.headers.token,
     process.env.SECRET_KEY,
@@ -1052,6 +896,202 @@ app.patch("/api/admin/lose", (req, res) => {
       }
     });
   }
+});
+app.patch("/api/admin/yahoo/order/inform/bill", (req, res) => {
+  const sql = "UPDATE orders SET inform_bill = ? WHERE id = ?;";
+  conn.query(sql, [req.body.check, req.body.id], (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({
+        status: false,
+        message: "Your login session is expired,\nPlease Sign In Again!",
+        error: "jwt",
+      });
+    } else {
+      console.log(result);
+      res.status(200).json({
+        status: true,
+        message: "update check at id " + req.body.id,
+      });
+    }
+  });
+});
+app.delete("/api/admin/yahoo/order", (req, res) => {
+  const sql = "DELETE FROM orders WHERE id = ?;";
+  conn.query(sql, [req.body.id], (err, result) => {
+    if (err) {
+      console.log(err.sqlMessage);
+      res.status(400).json({
+        status: false,
+        message: err.sqlMessage,
+      });
+    } else {
+      res.status(200).json({
+        status: true,
+        message: "delete order successfully!",
+      });
+    }
+  });
+});
+
+// YAHOO PAYMENT
+app.get("/api/admin/yahoo/payment", (req, res) => {
+  const sql =
+    "SELECT * FROM orders WHERE (payment_status = ? OR payment_status = ? OR payment_status = ?) AND username LIKE ? AND created_at LIKE ? ORDER BY created_at DESC;";
+  conn.query(
+    sql,
+    [
+      "pending1",
+      "pending2",
+      "pending3",
+      req.query.username + "%",
+      req.query.date + "%",
+    ],
+    (err, result) => {
+      if (err) {
+        console.log(err.sqlMessage);
+        res.status(400).json({
+          status: false,
+          message: "Error: " + err.sqlMessage,
+        });
+      } else {
+        res.status(200).json({
+          status: true,
+          message: "Select data from order that status 'Auction'",
+          data: result,
+        });
+      }
+    }
+  );
+});
+app.patch("/api/admin/yahoo/payment", (req, res) => {
+  let sql = "INSERT INTO payments (price, slip_image_filename) VALUES (?,?);";
+  conn.query(
+    sql,
+    [req.body.price, req.body.slip_image_filename],
+    (err, result) => {
+      if (err) {
+        console.log(err.sqlMessage);
+        res.status(400).json({
+          status: false,
+          message: "Error: " + err.sqlMessage,
+        });
+      } else {
+        sql =
+          "UPDATE orders SET payment_id = ?, payment_status = ? WHERE id = ?;";
+        conn.query(
+          sql,
+          [result.insertId, "paid", req.body.order_id],
+          (err1, result1) => {
+            if (err1) {
+              console.log(err1.sqlMessage);
+              res.status(400).json({
+                status: false,
+                message: "Error: " + err1.sqlMessage,
+              });
+            } else {
+              console.log(result1);
+              res.status(200).json({
+                status: true,
+                message: "created payment successfully!",
+              });
+            }
+          }
+        );
+      }
+    }
+  );
+});
+
+// YAHOO HISTORY
+app.get("/api/admin/yahoo/history", (req, res) => {
+  let sql =
+    "SELECT * FROM orders WHERE created_at LIKE ? AND username LIKE ? AND track_id LIKE ? AND round_boat LIKE ? ";
+  if (req.query.status === "win") {
+    sql += "AND status = 'win'";
+  } else if (req.query.status === "lose") {
+    sql += "AND status = 'lose'";
+  } else {
+    sql += "AND status = 'win' OR status = 'lose'";
+  }
+  if (req.query.trackId === "") {
+    sql += " OR track_id like NULL ";
+  }
+  if (req.query.roundBoat === "") {
+    sql += " OR round_boat like NULL ";
+  }
+  let orderBy = req.query.orderBy;
+  if (orderBy === "ASC1") {
+    sql += " ORDER BY created_at ASC;";
+  } else if (orderBy === "DESC1") {
+    sql += " ORDER BY created_at DESC;";
+  } else if (orderBy === "ASC2") {
+    sql += " ORDER BY round_boat ASC;";
+  } else if (orderBy === "DESC2") {
+    sql += " ORDER BY round_boat DESC;";
+  }
+  conn.query(
+    sql,
+    [
+      req.query.date + "%",
+      req.query.username + "%",
+      req.query.trackId + "%",
+      req.query.roundBoat + "%",
+    ],
+    (err, result) => {
+      if (err) {
+        console.log(err.sqlMessage);
+        res.status(400).json({
+          status: false,
+          message: "Error: " + err.sqlMessage,
+        });
+      } else {
+        console.log(result);
+        res.status(200).json({
+          status: true,
+          message: "Select data from order that status 'Auction'",
+          data: result,
+        });
+      }
+    }
+  );
+});
+
+app.patch("/api/admin/check1/tracking", (req, res) => {
+  const sql = "UPDATE trackings SET check1 = ? WHERE id = ?;";
+  conn.query(sql, [req.body.check, req.body.id], (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({
+        status: false,
+        message: "Error: " + err.sqlMessage,
+      });
+    } else {
+      console.log(result);
+      res.status(200).json({
+        status: true,
+        message: "update trackings at check1 successfully",
+      });
+    }
+  });
+});
+app.patch("/api/admin/check2/tracking", (req, res) => {
+  const sql = "UPDATE trackings SET check2 = ? WHERE id = ?;";
+  conn.query(sql, [req.body.check, req.body.id], (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({
+        status: false,
+        message: "Error: " + err.sqlMessage,
+      });
+    } else {
+      console.log(result);
+      res.status(200).json({
+        status: true,
+        message: "update trackings at check2 successfully",
+      });
+    }
+  });
 });
 
 app.patch("/api/admin/yahoo/tracking", (req, res) => {
@@ -1093,10 +1133,9 @@ app.get("/api/tracking", (req, res) => {
       if (err) {
         res.status(400).json({
           status: false,
-          message: "Error: " + err.sqlMessage,
-          erorr: "jwt",
+          message: "Your login session is expired,\nPlease Sign In Again!",
+          error: "jwt",
         });
-        console.log("Error: Your login session is expired!");
       } else {
         console.log(decoded);
         return decoded;
@@ -1296,59 +1335,6 @@ app.patch("/api/admin/tracking", (req, res) => {
         status: true,
         message: "Update trackings * where id = " + req.body.id,
       });
-    }
-  });
-});
-
-app.post("/api/admin/yahoo/offer", (req, res) => {
-  let date = genDate();
-  let offer = [
-    req.body.username,
-    req.body.link,
-    req.body.imgsrc,
-    req.body.price,
-    "Auction",
-    req.body.remark,
-    date,
-    date,
-  ];
-  const sql =
-    "INSERT INTO orders (username, link, imgsrc, maxbid, status, remark, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?);";
-  conn.query(sql, offer, (err, result) => {
-    if (err) {
-      console.log(err.sqlMessage);
-      res.status(400).json({
-        status: false,
-        message: "Error: " + err.sqlMessage,
-      });
-    } else {
-      console.log(result);
-      res.status(200).json({
-        status: true,
-        message: "Offer " + req.body.link + "is successfully",
-      });
-      request(
-        {
-          method: "POST",
-          uri: url_line_notification,
-          header: {
-            "Content-Type": "multipart/form-data",
-          },
-          auth: {
-            bearer: process.env.TOKEN,
-          },
-          form: {
-            message: `${req.body.username}\nOffer Link: ${req.body.link}\nBiding: ${req.body.price} ¥`,
-          },
-        },
-        (err, httpResponse, body) => {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log(body);
-          }
-        }
-      );
     }
   });
 });

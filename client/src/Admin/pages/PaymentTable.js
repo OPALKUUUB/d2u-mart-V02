@@ -8,7 +8,6 @@ import {
   Row,
   Table,
 } from "react-bootstrap";
-import ReactLoading from "react-loading";
 import Loading from "../components/Loading";
 
 export default function PaymentTable() {
@@ -55,7 +54,7 @@ export default function PaymentTable() {
   const handleDelete = (id) => {
     if (window.confirm("คุณต้องการที่จะลบรายการสั่งซื้อนี้ใช้หรือไม่ ?")) {
       setLoading(true);
-      fetch("/api/admin/orders", {
+      fetch("/api/admin/yahoo/order", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: id }),
@@ -75,7 +74,7 @@ export default function PaymentTable() {
   const handleCheckInformBill = (check, id) => {
     setLoading(true);
     setTrigger(!trigger);
-    fetch("/api/admin/check/inform/bill", {
+    fetch("/api/admin/yahoo/order/inform/bill", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ check: !check, id: id }),
@@ -250,7 +249,7 @@ function MydModalWithGrid(props) {
       paymentStatus: item.payment_status,
     };
     // console.log(win);
-    fetch("/api/admin/win", {
+    fetch("/api/admin/yahoo/order/win", {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -276,7 +275,7 @@ function MydModalWithGrid(props) {
       });
   };
   const handleShowSlip = (payment_id) => {
-    fetch("/api/payment/slip/" + payment_id, {
+    fetch("/api/yahoo/payment/slip/" + payment_id, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -479,7 +478,7 @@ function ModalUploadSlip(props) {
       })
         .then((resp) => resp.json())
         .then((data) => {
-          fetch("/api/admin/payment/confirm", {
+          fetch("/api/admin/yahoo/payment", {
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",

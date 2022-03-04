@@ -22,7 +22,7 @@ export default function AuctionTable() {
   useEffect(() => {
     const fetchOrders = async () => {
       const result = await fetch(
-        `/api/admin/yahoo/auction?username=${username}&date=${date}`
+        `/api/admin/yahoo/order?username=${username}&date=${date}`
       ).then((res) => res.json());
       if (result.status) {
         setOrders(result.data);
@@ -41,7 +41,7 @@ export default function AuctionTable() {
 
   const handleUpdateLose = (id) => {
     if (window.confirm("Confirm to change status to lose?")) {
-      fetch("/api/admin/lose", {
+      fetch("/api/admin/yahoo/order/lose", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -264,7 +264,7 @@ function WorkBy(props) {
   const handleWorkBy = () => {
     setLoading(true);
     setCheck(!check);
-    fetch("/api/admin/workby", {
+    fetch("/api/admin/yahoo/order/workby", {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -317,7 +317,7 @@ function ChangeWinModal(props) {
     };
 
     const FetchUpdateWin = async () => {
-      const result = await fetch("/api/admin/win", {
+      const result = await fetch("/api/admin/yahoo/order/win", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

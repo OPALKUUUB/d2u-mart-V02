@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
 import ReactLoading from "react-loading";
-import Loading from "../../../../Admin/components/Loading";
 
 export default function YahooHistory() {
   const [orders, setOrders] = useState([]);

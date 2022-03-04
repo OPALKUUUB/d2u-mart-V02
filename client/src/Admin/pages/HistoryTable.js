@@ -45,7 +45,7 @@ export default function HistoryTable() {
   useEffect(() => {
     const fetchOrders = async () => {
       const result = await fetch(
-        `/api/admin/yahoo/history/filter?status=${status}&username=${username}&date=${date}&trackId=${trackId}&orderBy=${orderBy}&roundBoat=${roundBoat}`
+        `/api/admin/yahoo/history?status=${status}&username=${username}&date=${date}&trackId=${trackId}&orderBy=${orderBy}&roundBoat=${roundBoat}`
       ).then((res) => res.json());
       if (result.status) {
         let len_tracking = result.data.length;

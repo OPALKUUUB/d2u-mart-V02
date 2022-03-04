@@ -66,7 +66,7 @@ export default function YahooAuction() {
     if (check === 1) {
       setLoading(true);
       let offer = { link: link, imgsrc: imgsrc, price: price, remark: remark };
-      fetch("/api/yahoo/offer", {
+      fetch("/api/yahoo/order", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

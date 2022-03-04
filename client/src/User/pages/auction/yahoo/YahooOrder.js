@@ -20,7 +20,7 @@ export default function YahooOrder() {
   const [trigger, setTrigger] = useState(false);
   useEffect(() => {
     const FetchOrder = async () => {
-      const json = await fetch("/api/yahoo/orders", {
+      const json = await fetch("/api/yahoo/order", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

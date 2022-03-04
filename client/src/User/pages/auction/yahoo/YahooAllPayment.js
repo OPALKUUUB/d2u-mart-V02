@@ -206,7 +206,7 @@ function ConfirmAddSlipModal(props) {
 
   const handleSubmit = () => {
     setLoading(true);
-    fetch("/api/payment/confirm", {
+    fetch("/api/yahoo/payment", {
       method: "PATCH",
       headers: {
         token: localStorage.getItem("token"),

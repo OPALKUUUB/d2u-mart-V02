@@ -93,7 +93,7 @@ export default function AuctionAdmin() {
         price: price,
         remark: remark,
       };
-      fetch("/api/admin/yahoo/offer", {
+      fetch("/api/admin/yahoo/order", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
