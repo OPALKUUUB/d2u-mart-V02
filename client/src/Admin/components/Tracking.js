@@ -5,12 +5,24 @@ import AddTrackingModal from "./AddTrackingModal";
 import Loading from "./Loading";
 import ShowImage from "./ShowImage";
 import UpdateTrackingModal from "./UpdateTrackingModal";
-
+let trackingModel = {
+  channel: "",
+  date: "",
+  username: "",
+  box_id: "",
+  url: "",
+  track_id: "",
+  weight: "",
+  round_boat: "",
+  pic1_filename: "",
+  pic2_filename: "",
+  remark: "",
+};
 export default function Tracking(props) {
   const [trackings, setTrackings] = useState([]);
   const [modalShowAdd, setModalShowAdd] = React.useState(false);
   const [modalShowUpdate, setModalShowUpdate] = React.useState(false);
-  const [item, setItem] = useState({});
+  const [temp, setTemp] = useState(trackingModel);
   const [date, setDate] = useState("");
   const [username, setUsername] = useState("");
   const [trackId, setTrackId] = useState("");
@@ -61,8 +73,9 @@ export default function Tracking(props) {
     filterCheck1,
     filterCheck2,
   ]);
-  const handleConfigs = (item) => {
-    setItem(item);
+  const handleConfigs = (t) => {
+    setTemp(t);
+    console.log("test");
     setModalShowUpdate(true);
   };
 
@@ -398,7 +411,7 @@ export default function Tracking(props) {
       <UpdateTrackingModal
         show={modalShowUpdate}
         onHide={() => setModalShowUpdate(false)}
-        item={item}
+        item={temp}
         mode={props.mode}
         header={props.header}
         trigger={trigger}

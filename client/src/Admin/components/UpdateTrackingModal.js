@@ -2,22 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 import AutoComplete from "./AutoComplete";
 import Loading from "./Loading";
-let trackingModel = {
-  channel: "",
-  date: "",
-  username: "",
-  box_id: "",
-  url: "",
-  track_id: "",
-  weight: "",
-  round_boat: "",
-  pic1_filename: "",
-  pic2_filename: "",
-  remark: "",
-};
 
 export default function UpdateTrackingModal(props) {
-  const [tracking, setTracking] = useState({});
+  const [tracking, setTracking] = useState(props.item);
   const [pic1File, setPic1File] = useState(null);
   const [pic2File, setPic2File] = useState(null);
   const [users, setUsers] = useState([]);
@@ -26,24 +13,21 @@ export default function UpdateTrackingModal(props) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setTracking(trackingModel);
-    fetch("/api/admin/users", {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.status) {
-          setUsers(json.data);
-        } else {
-          alert(json.message);
-        }
-      });
+    const FetchUser = async () => {
+      const json = await fetch("/api/admin/users").then((res) => res.json());
+      if (json.status) {
+        setUsers(json.data);
+      } else {
+        alert(json.message);
+        window.location.reload(false);
+      }
+    };
+    FetchUser();
   }, []);
   useEffect(() => {
     setImage1(null);
     setImage2(null);
-    setTracking({ ...props.item });
+    setTracking(props.item);
   }, [props]);
   const handleChangeTracking = (e) => {
     setTracking({ ...tracking, [e.target.name]: e.target.value });
@@ -100,7 +84,7 @@ export default function UpdateTrackingModal(props) {
       data.append("upload_preset", "d2u-service");
       data.append("cloud_name", "d2u-service");
       let urlname = await fetch(
-        "  https://api.cloudinary.com/v1_1/d2u-service/upload",
+        "https://api.cloudinary.com/v1_1/d2u-service/upload",
         {
           method: "POST",
           body: data,
@@ -149,12 +133,7 @@ export default function UpdateTrackingModal(props) {
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
           Update Tracking
-          <Form.Select
-            size="sm"
-            name="username"
-            onChange={handleChangeTracking}
-            name="channel"
-          >
+          <Form.Select size="sm" onChange={handleChangeTracking} name="channel">
             <option value={"shimizu"} selected={tracking.channel === "shimizu"}>
               Yahoo
             </option>
@@ -384,7 +363,7 @@ export default function UpdateTrackingModal(props) {
                   type="text"
                   onChange={handleChangeTracking}
                   name="remark"
-                  value={tracking.remark}
+                  value={tracking.remark === null ? "" : tracking.remark}
                 />
               </Form.Group>
             </Col>

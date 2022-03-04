@@ -638,7 +638,7 @@ app.get("/api/yahoo/history", (req, res) => {
 // Admin
 // refactor user api++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 app.get("/api/admin/users", (req, res) => {
-  const sql = "SELECT * FROM user_customers;";
+  const sql = "SELECT username FROM user_customers;";
   conn.query(sql, (err, row) => {
     if (err) {
       console.log(err.sqlMessage);
