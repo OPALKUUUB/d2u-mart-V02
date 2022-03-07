@@ -7,12 +7,11 @@ import {
   Navbar,
   NavDropdown,
 } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
 
 export default function NavBarAdmin() {
   const [modalShow, setModalShow] = useState(false);
   const [yen, setYen] = useState("");
-  const history = useHistory();
+  const [annoucementModal, setAnnoucementModal] = React.useState(true);
   const handleLogout = () => {
     localStorage.removeItem("AdminToken");
     window.location.reload(false);
@@ -81,6 +80,10 @@ export default function NavBarAdmin() {
         onHide={() => setModalShow(false)}
         yen={yen}
       />
+      <AnnoucementModal
+        show={annoucementModal}
+        onHide={() => setAnnoucementModal(false)}
+      />
     </Navbar>
   );
 }
@@ -128,6 +131,33 @@ function ChangeYen(props) {
         <Button onClick={props.onHide} variant="secondary">
           Close
         </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+}
+
+function AnnoucementModal(props) {
+  return (
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">ประกาศ 📢</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <h4>การอัพเดทเพิ่มเติม</h4>
+
+        <p>
+          - ในการค้นหาเลข tracking สามารถหาตัวเลขลงท้ายที่ต้องการได้เพียงเพิ่ม /
+          ตามด้วยเลขลงท้ายที่ต้องการค้นหา
+        </p>
+        <img src="/annoucement1.png" />
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={props.onHide}>Close</Button>
       </Modal.Footer>
     </Modal>
   );

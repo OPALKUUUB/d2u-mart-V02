@@ -29,6 +29,7 @@ export default function Tracking(props) {
   const [orderBy, setOrderBy] = useState("DESC1");
   const [roundBoat, setRoundBoat] = useState("");
   const [loading, setLoading] = useState(true);
+  const [loading2, setLoading2] = useState(true);
   const [image, setImage] = useState("");
   const [modalShowImage, setModalShowImage] = useState(false);
   const [trigger, setTrigger] = useState(false);
@@ -55,6 +56,7 @@ export default function Tracking(props) {
         }
         setTrackings(temp);
         setLoading(false);
+        setLoading2(false);
       } else {
         alert("fetch fail from tracking " + props.mode + "!");
         window.location.reload(false);
@@ -75,13 +77,12 @@ export default function Tracking(props) {
   ]);
   const handleConfigs = (t) => {
     setTemp(t);
-    console.log("test");
     setModalShowUpdate(true);
   };
 
   const handleDelete = (id, index) => {
     if (window.confirm("คุณต้องการที่จะลบข้อมูลที่ " + index + "?")) {
-      setLoading(true);
+      setLoading2(true);
       fetch("/api/admin/tracking", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
@@ -89,7 +90,9 @@ export default function Tracking(props) {
       })
         .then((res) => res.json())
         .then((json) => {
-          if (!json.status) {
+          if (json.status) {
+            setTrigger(!trigger);
+          } else {
             alert(json.message);
           }
         });
@@ -97,7 +100,7 @@ export default function Tracking(props) {
   };
 
   const handleCheck1 = (check, id) => {
-    setLoading(true);
+    setLoading2(true);
     fetch("/api/admin/check1/tracking", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -114,7 +117,7 @@ export default function Tracking(props) {
   };
 
   const handleCheck2 = (check, id) => {
-    setLoading(true);
+    setLoading2(true);
     fetch("/api/admin/check2/tracking", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -389,6 +392,8 @@ export default function Tracking(props) {
           />
         </tbody>
       </Table>
+      {!loading2 && loading && <Loading load={1} />}
+      {loading2 && <Loading />}
       <Row className="mb-3">
         <Col>
           <Button onClick={handlePrevious}>Previous</Button>
@@ -417,7 +422,6 @@ export default function Tracking(props) {
         trigger={trigger}
         setTrigger={setTrigger}
       />
-      {loading && <Loading />}
     </>
   );
 }

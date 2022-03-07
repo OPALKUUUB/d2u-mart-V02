@@ -22,6 +22,7 @@ export default function HistoryTable() {
   const [modalShow, setModalShow] = useState(false);
   const [temp, setTemp] = useState({});
   const [loading, setLoading] = useState(false);
+  const [loading2, setLoading2] = useState(false);
   const [trigger, setTrigger] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [trackLength, setTrackLength] = useState();
@@ -60,6 +61,7 @@ export default function HistoryTable() {
         alert("fetch fail from history yahoo!");
       }
       setLoading(false);
+      setLoading2(false);
     };
     setLoading(true);
     FetchOrders();
@@ -293,6 +295,8 @@ export default function HistoryTable() {
           ))}
         </tbody>
       </Table>
+      {!loading2 && loading && <Loading load={1} />}
+      {loading2 && <Loading />}
       <Row className="mb-3">
         <Col>
           <Button onClick={handlePrevious}>Previous</Button>
@@ -304,7 +308,7 @@ export default function HistoryTable() {
           <Button onClick={handleNext}>Next</Button>
         </Col>
       </Row>
-      {loading && <Loading />}
+
       <EditYahooHistory
         show={modalShow}
         onHide={() => setModalShow(false)}

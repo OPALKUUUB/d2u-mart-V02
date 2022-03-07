@@ -1024,10 +1024,20 @@ app.get("/api/admin/yahoo/history", (req, res) => {
     order.push(username);
   }
   if (req.query.trackId !== "") {
-    let trackId = req.query.trackId + "%";
-    sql += ` AND track_id LIKE ? `;
-    order.push(trackId);
+    let trackId = req.query.trackId;
+    if (trackId[0] === "/") {
+      if (trackId.length > 1) {
+        sql += ` AND track_id LIKE ? `;
+        trackId = "%" + trackId.slice(1);
+        order.push(trackId);
+      }
+    } else {
+      trackId += "%";
+      sql += ` AND track_id LIKE ? `;
+      order.push(trackId);
+    }
   }
+
   if (req.query.roundBoat !== "") {
     let roundBoat = req.query.roundBoat;
     sql += ` AND round_boat = ? `;
@@ -1210,9 +1220,18 @@ app.get("/api/admin/track/:mode", (req, res) => {
     track.push(username);
   }
   if (req.query.trackId !== "") {
-    let trackId = req.query.trackId + "%";
-    sql += ` AND track_id LIKE ? `;
-    track.push(trackId);
+    let trackId = req.query.trackId;
+    if (trackId[0] === "/") {
+      if (trackId.length > 1) {
+        sql += ` AND track_id LIKE ? `;
+        trackId = "%" + trackId.slice(1);
+        track.push(trackId);
+      }
+    } else {
+      trackId += "%";
+      sql += ` AND track_id LIKE ? `;
+      track.push(trackId);
+    }
   }
   if (req.query.roundBoat !== "") {
     sql += ` AND round_boat = ? `;
