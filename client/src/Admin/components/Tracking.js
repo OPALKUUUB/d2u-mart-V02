@@ -36,7 +36,7 @@ export default function Tracking(props) {
   const [filterCheck2, setFilterCheck2] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [trackLength, setTrackLength] = useState();
-  let page = 20;
+  let page = 50;
   useEffect(() => {
     const fetchTrack = async () => {
       const result = await fetch(

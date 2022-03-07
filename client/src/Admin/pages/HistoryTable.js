@@ -25,6 +25,7 @@ export default function HistoryTable() {
   const [trigger, setTrigger] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [trackLength, setTrackLength] = useState();
+  let page = 50;
   useEffect(() => {
     const FetchYen = async () => {
       const json = await fetch("/api/yen").then((res) => res.json());
@@ -47,8 +48,8 @@ export default function HistoryTable() {
         setTrackLength(len_tracking);
         console.log(result.data);
         let temp = [];
-        let start = currentPage * 10;
-        for (let i = start; i < 10 * (currentPage + 1); i++) {
+        let start = currentPage * page;
+        for (let i = start; i < page * (currentPage + 1); i++) {
           if (i >= len_tracking) {
             break;
           }
@@ -195,7 +196,7 @@ export default function HistoryTable() {
         <tbody style={{ textAlign: "center" }}>
           {orders.map((item, index) => (
             <tr key={index}>
-              <td className="align-middle">{index + 1 + currentPage * 10}</td>
+              <td className="align-middle">{index + 1 + currentPage * page}</td>
               <td className="align-middle">
                 {item.created_at === null || item.created_at === "" ? (
                   ""

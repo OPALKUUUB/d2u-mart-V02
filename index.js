@@ -1043,7 +1043,7 @@ app.get("/api/admin/yahoo/history", (req, res) => {
   } else if (orderBy === "DESC2") {
     sql += ` ORDER BY round_boat DESC;`;
   }
-  console.log(order);
+  // console.log(order);
   conn.query(sql, order, (err, result) => {
     if (err) {
       // console.log(err.sqlMessage);
