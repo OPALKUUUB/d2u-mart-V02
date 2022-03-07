@@ -355,12 +355,12 @@ app.post("/api/yahoo/order", (req, res) => {
     process.env.SECRET_KEY,
     (error, decoded) => {
       if (error) {
+        console.log(error);
         res.status(400).json({
           status: false,
-          message: "Error: " + error.sqlMessage,
+          message: "Your login session is expired,\nPlease Sign In Again!",
           error: "jwt",
         });
-        console.log("Error: Your login session is expired!");
       } else {
         console.log(decoded);
         return decoded;
@@ -432,10 +432,9 @@ app.patch("/api/yahoo/order/addbid", (req, res) => {
         console.log(error);
         res.status(400).json({
           status: false,
-          message: error,
+          message: "Your login session is expired,\nPlease Sign In Again!",
           error: "jwt",
         });
-        console.log("Error: Your login session is expired!");
       } else {
         console.log(decoded);
         return decoded;
@@ -503,14 +502,14 @@ app.get("/api/yahoo/payment", (req, res) => {
   let decoded = jwt.verify(
     req.headers.token,
     process.env.SECRET_KEY,
-    (err, decoded) => {
-      if (err) {
+    (error, decoded) => {
+      if (error) {
+        console.log(error);
         res.status(400).json({
           status: false,
-          message: err.sqlMessage,
+          message: "Your login session is expired,\nPlease Sign In Again!",
           error: "jwt",
         });
-        console.log("Error: Your login session is expired!");
       } else {
         console.log(decoded);
         return decoded;
@@ -562,17 +561,17 @@ app.get("/api/yahoo/payment/slip/:id", (req, res) => {
   });
 });
 app.patch("/api/yahoo/payment", (req, res) => {
-  var decoded = jwt.verify(
+  let decoded = jwt.verify(
     req.headers.token,
     process.env.SECRET_KEY,
     (error, decoded) => {
       if (error) {
+        console.log(error);
         res.status(400).json({
           status: false,
-          message: error,
+          message: "Your login session is expired,\nPlease Sign In Again!",
           error: "jwt",
         });
-        console.log("Error: " + err);
       } else {
         console.log(decoded);
         return decoded;
@@ -629,17 +628,17 @@ app.patch("/api/yahoo/payment", (req, res) => {
 
 // HISTORY YAHOO
 app.get("/api/yahoo/history", (req, res) => {
-  var decoded = jwt.verify(
+  let decoded = jwt.verify(
     req.headers.token,
     process.env.SECRET_KEY,
     (error, decoded) => {
       if (error) {
+        console.log(error);
         res.status(400).json({
           status: false,
-          message: error,
+          message: "Your login session is expired,\nPlease Sign In Again!",
           error: "jwt",
         });
-        console.log("Error: " + error);
       } else {
         console.log(decoded);
         return decoded;
@@ -791,14 +790,14 @@ app.patch("/api/admin/yahoo/order/workby", (req, res) => {
   let decoded = jwt.verify(
     req.headers.token,
     process.env.SECRET_KEY,
-    (err, decoded) => {
-      if (err) {
+    (error, decoded) => {
+      if (error) {
+        console.log(error);
         res.status(400).json({
           status: false,
-          message: err,
-          error: 1,
+          message: "Your login session is expired,\nPlease Sign In Again!",
+          error: "jwt",
         });
-        console.log("Error: Your login session is expired!");
       } else {
         console.log(decoded);
         return decoded;
@@ -847,12 +846,12 @@ app.patch("/api/admin/yahoo/order/win", (req, res) => {
     process.env.SECRET_KEY,
     (error, decoded) => {
       if (error) {
+        console.log(error);
         res.status(400).json({
           status: false,
-          message: "Error: " + error.sqlMessage,
+          message: "Your login session is expired,\nPlease Sign In Again!",
           error: "jwt",
         });
-        console.log("Error: Your login session is expired!");
       } else {
         console.log(decoded);
         return decoded;
@@ -897,13 +896,14 @@ app.patch("/api/admin/yahoo/order/lose", (req, res) => {
   let decoded = jwt.verify(
     req.headers.token,
     process.env.SECRET_KEY,
-    (err, decoded) => {
-      if (err) {
+    (error, decoded) => {
+      if (error) {
+        console.log(error);
         res.status(400).json({
           status: false,
-          message: err.sqlMessage,
+          message: "Your login session is expired,\nPlease Sign In Again!",
+          error: "jwt",
         });
-        console.log("Error: Your login session is expired!");
       } else {
         console.log(decoded);
         return decoded;

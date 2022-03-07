@@ -9,7 +9,6 @@ import {
   Table,
 } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
-import ReactLoading from "react-loading";
 import Loading from "../components/Loading";
 
 export default function AuctionTable() {
@@ -19,6 +18,8 @@ export default function AuctionTable() {
   const [modalShow, setModalShow] = useState(false);
   const [id, setId] = useState("");
   const [loading, setLoading] = useState(true);
+  const [loading2, setLoading2] = useState(true);
+  const [trigger, setTrigger] = useState(false);
   useEffect(() => {
     const fetchOrders = async () => {
       const result = await fetch(
@@ -29,10 +30,12 @@ export default function AuctionTable() {
       } else {
         alert("fetch fail from history yahoo!");
       }
+      setLoading(false);
+      setLoading2(false);
     };
+    setLoading(true);
     fetchOrders();
-    setLoading(false);
-  }, [username, date, loading]);
+  }, [username, date, trigger]);
 
   const handleUpdateWin = (id) => {
     setModalShow(true);
@@ -52,10 +55,12 @@ export default function AuctionTable() {
         .then((res) => res.json())
         .then((json) => {
           if (json.status) {
-            alert(json.message);
+            setTrigger(!trigger);
           } else {
             alert(json.message);
-            localStorage.removeItem("AdminToken");
+            if (json.error === "jwt") {
+              localStorage.removeItem("AdminToken");
+            }
             window.location.reload(false);
           }
         });
@@ -109,106 +114,104 @@ export default function AuctionTable() {
           </tr>
         </thead>
         <tbody style={{ textAlign: "center" }}>
-          {orders.map((item, index) => (
-            <tr key={index}>
-              <td className="align-middle">{index + 1}</td>
-              <td className="align-middle">
-                {parseInt(item.created_at.split("T")[0].split("-")[2])}{" "}
-                {month[parseInt(item.created_at.split("T")[0].split("-")[1])]}{" "}
-                {parseInt(item.created_at.split("T")[0].split("-")[0])}
-              </td>
-              <td className="align-middle">
-                <img src={item.imgsrc} width={100} />
-              </td>
-              <td className="align-middle">{item.username}</td>
-              <td className="align-middle">
-                <a href={item.link} target="_blank">
-                  {item.link.split("/")[5]}
-                </a>
-              </td>
-              <td className="align-middle">
-                <div>
-                  <span>{item.maxbid} (¥)</span>
-                  <br />
-                  <span>
-                    <WorkBy
-                      item={item}
-                      by={item.maxbid_work_by}
-                      mode={1}
-                      setLoading={setLoading}
-                    />
-                  </span>
-                </div>
-              </td>
-              <td className="align-middle">
-                {item.addbid1 === null ? (
-                  "-"
-                ) : (
-                  <div>
-                    <span>{item.addbid1} (¥)</span>
-                    <br />
-                    <span>
-                      <WorkBy
-                        item={item}
-                        by={item.addbid1_work_by}
-                        mode={2}
-                        setLoading={setLoading}
-                      />
-                    </span>
-                  </div>
-                )}
-              </td>
-              <td className="align-middle">
-                {item.addbid2 === null ? (
-                  "-"
-                ) : (
-                  <div>
-                    <span>{item.addbid2} (¥)</span>
-                    <br />
-                    <span>
-                      <WorkBy
-                        item={item}
-                        by={item.addbid2_work_by}
-                        mode={3}
-                        setLoading={setLoading}
-                      />
-                    </span>
-                  </div>
-                )}
-              </td>
-              <td className="align-middle" width={100}>
-                {item.remark === null ? "-" : <>{item.remark}</>}
-              </td>
-              <td className="align-middle">
-                <Button
-                  variant="success"
-                  onClick={() => handleUpdateWin(item.id)}
-                >
-                  win
-                </Button>{" "}
-                <Button
-                  variant="danger"
-                  onClick={() => handleUpdateLose(item.id)}
-                >
-                  lose
-                </Button>
-              </td>
-            </tr>
-          ))}
+          {!loading && (
+            <>
+              {orders.map((item, index) => (
+                <tr key={index}>
+                  <td className="align-middle">{index + 1}</td>
+                  <td className="align-middle">
+                    {parseInt(item.created_at.split("T")[0].split("-")[2])}{" "}
+                    {
+                      month[
+                        parseInt(item.created_at.split("T")[0].split("-")[1])
+                      ]
+                    }{" "}
+                    {parseInt(item.created_at.split("T")[0].split("-")[0])}
+                  </td>
+                  <td className="align-middle">
+                    <img src={item.imgsrc} width={100} />
+                  </td>
+                  <td className="align-middle">{item.username}</td>
+                  <td className="align-middle">
+                    <a href={item.link} target="_blank">
+                      {item.link.split("/")[5]}
+                    </a>
+                  </td>
+                  <td className="align-middle">
+                    <div>
+                      <span>{item.maxbid} (¥)</span>
+                      <br />
+                      <span>
+                        <WorkBy
+                          item={item}
+                          by={item.maxbid_work_by}
+                          mode={1}
+                          setLoading={setLoading}
+                        />
+                      </span>
+                    </div>
+                  </td>
+                  <td className="align-middle">
+                    {item.addbid1 === null ? (
+                      "-"
+                    ) : (
+                      <div>
+                        <span>{item.addbid1} (¥)</span>
+                        <br />
+                        <span>
+                          <WorkBy
+                            item={item}
+                            by={item.addbid1_work_by}
+                            mode={2}
+                            setLoading={setLoading}
+                          />
+                        </span>
+                      </div>
+                    )}
+                  </td>
+                  <td className="align-middle">
+                    {item.addbid2 === null ? (
+                      "-"
+                    ) : (
+                      <div>
+                        <span>{item.addbid2} (¥)</span>
+                        <br />
+                        <span>
+                          <WorkBy
+                            item={item}
+                            by={item.addbid2_work_by}
+                            mode={3}
+                            setLoading={setLoading}
+                          />
+                        </span>
+                      </div>
+                    )}
+                  </td>
+                  <td className="align-middle" width={100}>
+                    {item.remark === null ? "-" : <>{item.remark}</>}
+                  </td>
+                  <td className="align-middle">
+                    <Button
+                      variant="success"
+                      onClick={() => handleUpdateWin(item.id)}
+                    >
+                      win
+                    </Button>{" "}
+                    <Button
+                      variant="danger"
+                      onClick={() => handleUpdateLose(item.id)}
+                    >
+                      lose
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </>
+          )}
         </tbody>
       </Table>
-      {loading && (
-        <>
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <ReactLoading
-              type={"bubbles"}
-              color={"rgba(0,0,0,0.2)"}
-              height={400}
-              width={300}
-            />
-          </div>
-        </>
-      )}
+      {!loading2 && loading && <Loading load={1} />}
+      {loading2 && <Loading />}
       <ChangeWinModal
         show={modalShow}
         onHide={() => setModalShow(false)}
