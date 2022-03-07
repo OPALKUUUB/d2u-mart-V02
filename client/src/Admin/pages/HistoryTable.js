@@ -26,30 +26,26 @@ export default function HistoryTable() {
   const [currentPage, setCurrentPage] = useState(0);
   const [trackLength, setTrackLength] = useState();
   useEffect(() => {
-    fetch("/api/yen", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.status) {
-          setYen(json.yen);
-        } else {
-          alert(json.message);
-        }
-      });
+    const FetchYen = async () => {
+      const json = await fetch("/api/yen").then((res) => res.json());
+      if (json.status) {
+        setYen(json.yen);
+      } else {
+        alert(json.message);
+      }
+    };
+    FetchYen();
   }, [yen]);
 
   useEffect(() => {
-    const fetchOrders = async () => {
+    const FetchOrders = async () => {
       const result = await fetch(
         `/api/admin/yahoo/history?status=${status}&username=${username}&date=${date}&trackId=${trackId}&orderBy=${orderBy}&roundBoat=${roundBoat}`
       ).then((res) => res.json());
       if (result.status) {
         let len_tracking = result.data.length;
         setTrackLength(len_tracking);
+        console.log(result.data);
         let temp = [];
         let start = currentPage * 10;
         for (let i = start; i < 10 * (currentPage + 1); i++) {
@@ -65,7 +61,7 @@ export default function HistoryTable() {
       setLoading(false);
     };
     setLoading(true);
-    fetchOrders();
+    FetchOrders();
   }, [
     currentPage,
     status,

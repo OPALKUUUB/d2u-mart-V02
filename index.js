@@ -1005,56 +1005,61 @@ app.patch("/api/admin/yahoo/payment", (req, res) => {
 
 // YAHOO HISTORY
 app.get("/api/admin/yahoo/history", (req, res) => {
-  let sql =
-    "SELECT * FROM orders WHERE created_at LIKE ? AND username LIKE ? AND track_id LIKE ? AND round_boat LIKE ? ";
+  let sql = `SELECT * FROM orders WHERE `;
+  let order = [];
   if (req.query.status === "win") {
-    sql += "AND status = 'win'";
+    sql += ` status = 'win' `;
   } else if (req.query.status === "lose") {
-    sql += "AND status = 'lose'";
+    sql += ` status = 'lose' `;
   } else {
-    sql += "AND status = 'win' OR status = 'lose'";
+    sql += ` (status = 'win' OR status = 'lose') `;
   }
-  if (req.query.trackId === "") {
-    sql += " OR track_id like NULL ";
+  if (req.query.date !== "") {
+    sql += ` AND created_at = ? `;
+    order.push(req.query.date);
   }
-  if (req.query.roundBoat === "") {
-    sql += " OR round_boat like NULL ";
+  if (req.query.username !== "") {
+    let username = req.query.username + "%";
+    sql += ` AND username LIKE ? `;
+    order.push(username);
+  }
+  if (req.query.trackId !== "") {
+    let trackId = req.query.trackId + "%";
+    sql += ` AND track_id LIKE ? `;
+    order.push(trackId);
+  }
+  if (req.query.roundBoat !== "") {
+    let roundBoat = req.query.roundBoat;
+    sql += ` AND round_boat = ? `;
+    order.push(roundBoat);
   }
   let orderBy = req.query.orderBy;
   if (orderBy === "ASC1") {
-    sql += " ORDER BY created_at ASC;";
+    sql += ` ORDER BY created_at ASC;`;
   } else if (orderBy === "DESC1") {
-    sql += " ORDER BY created_at DESC;";
+    sql += ` ORDER BY created_at DESC;`;
   } else if (orderBy === "ASC2") {
-    sql += " ORDER BY round_boat ASC;";
+    sql += ` ORDER BY round_boat ASC;`;
   } else if (orderBy === "DESC2") {
-    sql += " ORDER BY round_boat DESC;";
+    sql += ` ORDER BY round_boat DESC;`;
   }
-  conn.query(
-    sql,
-    [
-      req.query.date + "%",
-      req.query.username + "%",
-      req.query.trackId + "%",
-      req.query.roundBoat + "%",
-    ],
-    (err, result) => {
-      if (err) {
-        console.log(err.sqlMessage);
-        res.status(400).json({
-          status: false,
-          message: "Error: " + err.sqlMessage,
-        });
-      } else {
-        console.log(result);
-        res.status(200).json({
-          status: true,
-          message: "Select data from order that status 'Auction'",
-          data: result,
-        });
-      }
+  console.log(order);
+  conn.query(sql, order, (err, result) => {
+    if (err) {
+      // console.log(err.sqlMessage);
+      res.status(400).json({
+        status: false,
+        message: "Error: " + err.sqlMessage,
+      });
+    } else {
+      // console.log(result);
+      res.status(200).json({
+        status: true,
+        message: "Select data from order that status 'Auction'",
+        data: result,
+      });
     }
-  );
+  });
 });
 
 app.patch("/api/admin/check1/tracking", (req, res) => {
