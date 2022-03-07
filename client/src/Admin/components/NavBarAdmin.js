@@ -137,6 +137,9 @@ function ChangeYen(props) {
 }
 
 function AnnoucementModal(props) {
+  // useEffect(() => {
+
+  // });
   return (
     <Modal
       {...props}
@@ -148,17 +151,22 @@ function AnnoucementModal(props) {
         <Modal.Title id="contained-modal-title-vcenter">ประกาศ 📢</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <h4>การอัพเดทเพิ่มเติม</h4>
+        <div style={{ height: "300px", overflowY: "scroll" }}>
+          <h4>
+            การอัพเดทเพิ่มเติม
+            <span className="text-muted fs-6 ms-2">7/3/2565 20:16</span>
+          </h4>
 
-        <p>
-          - ในการค้นหาเลข tracking สามารถหาตัวเลขลงท้ายที่ต้องการได้เพียงเพิ่ม /
-          ตามด้วยเลขลงท้ายที่ต้องการค้นหา
-        </p>
-        <img src="/annoucement1.png" />
+          <p>
+            - ในการค้นหาเลข tracking สามารถหาตัวเลขลงท้ายที่ต้องการได้เพียงเพิ่ม
+            / ตามด้วยเลขลงท้ายที่ต้องการค้นหา
+          </p>
+          <img src="/annoucement1.png" />
+        </div>
       </Modal.Body>
-      <Modal.Footer>
+      {/* <Modal.Footer>
         <Button onClick={props.onHide}>Close</Button>
-      </Modal.Footer>
+      </Modal.Footer> */}
     </Modal>
   );
 }
