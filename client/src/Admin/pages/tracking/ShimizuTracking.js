@@ -484,7 +484,6 @@ function UpdateTrackModal(props) {
             size="sm"
             name="username"
             onChange={handleChangeTracking}
-            name="channel"
           >
             <option value={"shimizu"} selected={tracking.channel === "shimizu"}>
               Yahoo
