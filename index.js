@@ -1015,8 +1015,8 @@ app.get("/api/admin/yahoo/history", (req, res) => {
     sql += ` (status = 'win' OR status = 'lose') `;
   }
   if (req.query.date !== "") {
-    sql += ` AND created_at = ? `;
-    order.push(req.query.date);
+    sql += ` AND created_at LIKE ? `;
+    order.push(req.query.date + "%");
   }
   if (req.query.username !== "") {
     let username = req.query.username + "%";
@@ -1185,37 +1185,40 @@ app.get("/api/tracking", (req, res) => {
   }
 });
 
-app.get("/api/admin/tracking/:mode", (req, res) => {
-  const sql = "SELECT * FROM trackings WHERE channel = ?;";
-  conn.query(sql, [req.params.mode], (err, row) => {
-    if (err) {
-      console.log(err.sqlMessage);
-      res.status(400).json({
-        status: false,
-        message: "Error: " + err.sqlMessage,
-      });
-    } else {
-      console.log(row);
-      res.status(200).json({
-        status: true,
-        data: row,
-      });
-    }
-  });
-});
 app.get("/api/admin/track/:mode", (req, res) => {
-  let sql =
-    "SELECT * FROM trackings WHERE channel = ? AND username LIKE ? AND track_id LIKE ? AND date LIKE ? AND round_boat LIKE ? ";
+  let track = [req.params.mode];
+  let sql = `SELECT * FROM trackings 
+    WHERE channel = ? `;
+  console.log(req.query);
   if (req.query.check1 === "true") {
-    sql += " AND check1 = 1 ";
+    sql += ` AND check1 = 1 `;
   } else if (req.query.check1 === "false") {
-    sql += " AND (check1 = 0 OR check1 IS NULL)";
+    sql += ` AND (check1 = 0 OR check1 IS NULL) `;
   }
   if (req.query.check2 === "true") {
-    sql += " AND check2 = 1 ";
+    sql += ` AND check2 = 1 `;
   } else if (req.query.check2 === "false") {
-    sql += " AND (check2 = 0 OR check2 IS NULL)";
+    sql += ` AND (check2 = 0 OR check2 IS NULL) `;
   }
+  if (req.query.date !== "") {
+    sql += ` AND created_at LIKE ? `;
+    track.push(req.query.date + "%");
+  }
+  if (req.query.username !== "") {
+    let username = req.query.username + "%";
+    sql += ` AND username LIKE ? `;
+    track.push(username);
+  }
+  if (req.query.trackId !== "") {
+    let trackId = req.query.trackId + "%";
+    sql += ` AND track_id LIKE ? `;
+    track.push(trackId);
+  }
+  if (req.query.roundBoat !== "") {
+    sql += ` AND round_boat = ? `;
+    track.push(req.query.roundBoat);
+  }
+
   let orderBy = req.query.orderBy;
   if (orderBy === "ASC1") {
     sql += " ORDER BY created_at ASC;";
@@ -1227,33 +1230,21 @@ app.get("/api/admin/track/:mode", (req, res) => {
     sql += " ORDER BY round_boat DESC;";
   }
 
-  conn.query(
-    sql,
-    [
-      req.params.mode,
-      req.query.username + "%",
-      req.query.trackId + "%",
-      req.query.date + "%",
-      req.query.roundBoat + "%",
-    ],
-    (err, row) => {
-      if (err) {
-        console.log(err.sqlMessage);
-        res.status(400).json({
-          status: false,
-          message: "Error: " + err.sqlMessage,
-        });
-      } else {
-        console.log(row);
-        res.status(200).json({
-          status: true,
-          data: row,
-        });
-        console.log(sql);
-      }
+  conn.query(sql, track, (err, row) => {
+    if (err) {
+      res.status(400).json({
+        status: false,
+        message: "Error: " + err.sqlMessage,
+      });
+    } else {
+      res.status(200).json({
+        status: true,
+        data: row,
+      });
     }
-  );
+  });
 });
+
 app.delete("/api/admin/tracking", (req, res) => {
   const sql = "DELETE FROM trackings WHERE id = ?;";
   conn.query(sql, [req.body.id], (err, result) => {
