@@ -86,6 +86,41 @@ app.get("/api/admin/annoucement", (req, res) => {
     });
   }
 });
+app.patch("/api/admin/annoucement", (req, res) => {
+  let decoded = jwt.verify(
+    req.headers.token,
+    process.env.SECRET_KEY,
+    (error, decoded) => {
+      if (error) {
+        res.status(400).json({
+          status: false,
+          message: "Your login session is expired,\nPlease Sign In Again!",
+          error: "jwt",
+        });
+      } else {
+        console.log(decoded);
+        return decoded;
+      }
+    }
+  );
+  if (decoded !== undefined) {
+    const sql = "UPDATE user_admins SET annoucement = ? WHERE username = ?;";
+    conn.query(sql, [0, decoded.username], (err, result) => {
+      if (err) {
+        res.status(400).json({
+          status: false,
+          message: "update annoucement fail",
+          error: "sql",
+        });
+      } else {
+        res.status(200).json({
+          status: true,
+          message: "update successful",
+        });
+      }
+    });
+  }
+});
 // This API FOR Config Yen
 app.post("/api/yen", (req, res) => {
   const sql = "UPDATE config SET yen=? WHERE id = ?";

@@ -33,6 +33,10 @@ export default function NavBarAdmin() {
         }
       } else {
         alert(json.message);
+        if (json.error === "jwt") {
+          localStorage.removeItem("AdminToken");
+        }
+        window.location.reload(false);
       }
     };
     FetchAnnoucement();
@@ -158,6 +162,27 @@ function ChangeYen(props) {
 }
 
 function AnnoucementModal(props) {
+  const handleClick = () => {
+    const FetchAnnoucement = async () => {
+      const json = await fetch("/api/admin/annoucement", {
+        method: "PATCH",
+        headers: {
+          token: localStorage.getItem("AdminToken"),
+          "Content-Type": "application/json",
+        },
+      }).then((res) => res.json());
+      if (json.status) {
+        props.onHide();
+      } else {
+        alert(json.message);
+        if (json.error === "jwt") {
+          localStorage.removeItem("AdminToken");
+        }
+        window.location.reload(false);
+      }
+    };
+    FetchAnnoucement();
+  };
   return (
     <Modal
       {...props}
@@ -182,9 +207,9 @@ function AnnoucementModal(props) {
           <img src="/annoucement1.png" />
         </div>
       </Modal.Body>
-      {/* <Modal.Footer>
-        <Button onClick={props.onHide}>Close</Button>
-      </Modal.Footer> */}
+      <Modal.Footer>
+        <Button onClick={handleClick}>ไม่ต้องแสดงอีก</Button>
+      </Modal.Footer>
     </Modal>
   );
 }
