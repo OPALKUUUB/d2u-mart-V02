@@ -50,6 +50,42 @@ function genDate() {
 
 const url_line_notification = "https://notify-api.line.me/api/notify";
 
+// This API FOR ANNOUCEMENT ADMIN
+app.get("/api/admin/annoucement", (req, res) => {
+  let decoded = jwt.verify(
+    req.headers.token,
+    process.env.SECRET_KEY,
+    (error, decoded) => {
+      if (error) {
+        res.status(400).json({
+          status: false,
+          message: "Your login session is expired,\nPlease Sign In Again!",
+          error: "jwt",
+        });
+      } else {
+        console.log(decoded);
+        return decoded;
+      }
+    }
+  );
+  if (decoded !== undefined) {
+    const sql = `SELECT annoucement FROM user_admins WHERE username = ?;`;
+    conn.query(sql, [decoded.username], (err, result) => {
+      if (err) {
+        res.status(400).json({
+          status: false,
+          message: "fail to get that user want to show annoucement or not",
+        });
+      } else {
+        res.status(200).json({
+          status: true,
+          message: "Success to get that user want to show annoucement or not",
+          annoucement: result[0].annoucement,
+        });
+      }
+    });
+  }
+});
 // This API FOR Config Yen
 app.post("/api/yen", (req, res) => {
   const sql = "UPDATE config SET yen=? WHERE id = ?";
@@ -119,7 +155,7 @@ app.get("/api/user/customer", (req, res) => {
       if (err) {
         res.status(400).json({
           status: false,
-          message: err.sqlMessage,
+          message: err,
         });
         console.log("Error: Your login session is expired!");
       } else {

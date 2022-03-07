@@ -11,11 +11,32 @@ import {
 export default function NavBarAdmin() {
   const [modalShow, setModalShow] = useState(false);
   const [yen, setYen] = useState("");
-  const [annoucementModal, setAnnoucementModal] = React.useState(true);
+  const [annoucementModal, setAnnoucementModal] = React.useState(false);
   const handleLogout = () => {
     localStorage.removeItem("AdminToken");
     window.location.reload(false);
   };
+  useEffect(() => {
+    const FetchAnnoucement = async () => {
+      const json = await fetch("/api/admin/annoucement", {
+        method: "GET",
+        headers: {
+          token: localStorage.getItem("AdminToken"),
+          "Content-Type": "application/json",
+        },
+      }).then((res) => res.json());
+      if (json.status) {
+        if (json.annoucement) {
+          setAnnoucementModal(true);
+        } else {
+          setAnnoucementModal(false);
+        }
+      } else {
+        alert(json.message);
+      }
+    };
+    FetchAnnoucement();
+  }, []);
   useEffect(() => {
     fetch("/api/yen", {
       method: "GET",
@@ -137,9 +158,6 @@ function ChangeYen(props) {
 }
 
 function AnnoucementModal(props) {
-  // useEffect(() => {
-
-  // });
   return (
     <Modal
       {...props}
