@@ -63,7 +63,7 @@ export default function HistoryTable() {
       setLoading(false);
       setLoading2(false);
     };
-    setLoading(true);
+    setLoading2(true);
     FetchOrders();
   }, [
     currentPage,
@@ -196,103 +196,115 @@ export default function HistoryTable() {
           </tr>
         </thead>
         <tbody style={{ textAlign: "center" }}>
-          {orders.map((item, index) => (
-            <tr key={index}>
-              <td className="align-middle">{index + 1 + currentPage * page}</td>
-              <td className="align-middle">
-                {item.created_at === null || item.created_at === "" ? (
-                  ""
-                ) : (
-                  <>
-                    {parseInt(item.created_at.split("T")[0].split("-")[2])}{" "}
-                    {
-                      month[
-                        parseInt(item.created_at.split("T")[0].split("-")[1])
-                      ]
-                    }{" "}
-                    {parseInt(item.created_at.split("T")[0].split("-")[0])}
-                  </>
-                )}
-              </td>
-              <td className="align-middle">
-                <img src={item.imgsrc} width={100} />
-              </td>
-              <td className="align-middle">{item.username}</td>
-              <td className="align-middle">{item.status}</td>
-              <td className="align-middle">
-                {item.link === null || item.link === "" ? (
-                  ""
-                ) : (
-                  <>
-                    <a href={item.link} target="_blank">
-                      {item.link.split("/")[5]}
-                    </a>
-                  </>
-                )}
-                <span
-                  style={{
-                    backgroundColor: "yellow",
-                    width: "fit-content",
-                    marginLeft: "10px",
-                  }}
-                >
-                  ({item.bid_by})
-                </span>
-                {item.status === "win" && (
-                  <>
-                    <br />
-                    {item.bid === null || item.bid === "" ? "-" : item.bid} (¥)/
-                    {item.tranfer_fee_injapan === null ||
-                    item.tranfer_fee_injapan === ""
-                      ? "-"
-                      : item.tranfer_fee_injapan}{" "}
-                    (฿)/
-                    {item.delivery_in_thai === null ||
-                    item.delivery_in_thai === ""
-                      ? "-"
-                      : item.delivery_in_thai}{" "}
-                    (¥)
-                    <br />
-                    sum:{" "}
-                    {item.bid === null ||
-                    item.bid === "" ||
-                    item.tranfer_fee_injapan === null ||
-                    item.tranfer_fee_injapan === "" ||
-                    item.delivery_in_thai === null ||
-                    item.delivery_in_thai === "" ? (
+          {!loading && (
+            <>
+              {orders.map((item, index) => (
+                <tr key={index}>
+                  <td className="align-middle">
+                    {index + 1 + currentPage * page}
+                  </td>
+                  <td className="align-middle">
+                    {item.created_at === null || item.created_at === "" ? (
                       ""
                     ) : (
                       <>
-                        {Math.round((item.bid + item.delivery_in_thai) * yen) +
-                          item.tranfer_fee_injapan}{" "}
+                        {parseInt(item.created_at.split("T")[0].split("-")[2])}{" "}
+                        {
+                          month[
+                            parseInt(
+                              item.created_at.split("T")[0].split("-")[1]
+                            )
+                          ]
+                        }{" "}
+                        {parseInt(item.created_at.split("T")[0].split("-")[0])}
                       </>
                     )}
-                    (฿)
-                  </>
-                )}
-              </td>
-              <td className="align-middle">{item.track_id}</td>
-              <td className="align-middle">{item.box_id}</td>
-              <td className="align-middle">{item.weight}</td>
-              <td className="align-middle">
-                {item.round_boat === null || item.round_boat === "" ? (
-                  ""
-                ) : (
-                  <>
-                    {parseInt(item.round_boat.split("-")[2])}{" "}
-                    {month[parseInt(item.round_boat.split("-")[1])]}
-                  </>
-                )}
-                {/* {parseInt(item.round_boat.split("-")[2])}{" "}
+                  </td>
+                  <td className="align-middle">
+                    <img src={item.imgsrc} width={100} />
+                  </td>
+                  <td className="align-middle">{item.username}</td>
+                  <td className="align-middle">{item.status}</td>
+                  <td className="align-middle">
+                    {item.link === null || item.link === "" ? (
+                      ""
+                    ) : (
+                      <>
+                        <a href={item.link} target="_blank">
+                          {item.link.split("/")[5]}
+                        </a>
+                      </>
+                    )}
+                    <span
+                      style={{
+                        backgroundColor: "yellow",
+                        width: "fit-content",
+                        marginLeft: "10px",
+                      }}
+                    >
+                      ({item.bid_by})
+                    </span>
+                    {item.status === "win" && (
+                      <>
+                        <br />
+                        {item.bid === null || item.bid === ""
+                          ? "-"
+                          : item.bid}{" "}
+                        (¥)/
+                        {item.tranfer_fee_injapan === null ||
+                        item.tranfer_fee_injapan === ""
+                          ? "-"
+                          : item.tranfer_fee_injapan}{" "}
+                        (฿)/
+                        {item.delivery_in_thai === null ||
+                        item.delivery_in_thai === ""
+                          ? "-"
+                          : item.delivery_in_thai}{" "}
+                        (¥)
+                        <br />
+                        sum:{" "}
+                        {item.bid === null ||
+                        item.bid === "" ||
+                        item.tranfer_fee_injapan === null ||
+                        item.tranfer_fee_injapan === "" ||
+                        item.delivery_in_thai === null ||
+                        item.delivery_in_thai === "" ? (
+                          ""
+                        ) : (
+                          <>
+                            {Math.round(
+                              (item.bid + item.delivery_in_thai) * yen
+                            ) + item.tranfer_fee_injapan}{" "}
+                          </>
+                        )}
+                        (฿)
+                      </>
+                    )}
+                  </td>
+                  <td className="align-middle">{item.track_id}</td>
+                  <td className="align-middle">{item.box_id}</td>
+                  <td className="align-middle">{item.weight}</td>
+                  <td className="align-middle">
+                    {item.round_boat === null || item.round_boat === "" ? (
+                      ""
+                    ) : (
+                      <>
+                        {parseInt(item.round_boat.split("-")[2])}{" "}
+                        {month[parseInt(item.round_boat.split("-")[1])]}
+                      </>
+                    )}
+                    {/* {parseInt(item.round_boat.split("-")[2])}{" "}
               {month[parseInt(item.round_boat.split("-")[1])]} */}
-              </td>
-              <td className="align-middle">
-                <Button variant="primary" onClick={() => handleEdit(item)}>
-                  Edit
-                </Button>
-              </td>
-            </tr>
-          ))}
+                  </td>
+                  <td className="align-middle">
+                    <Button variant="primary" onClick={() => handleEdit(item)}>
+                      Edit
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </>
+          )}
         </tbody>
       </Table>
       {!loading2 && loading && <Loading load={1} />}

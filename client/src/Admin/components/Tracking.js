@@ -75,6 +75,7 @@ export default function Tracking(props) {
     filterCheck1,
     filterCheck2,
   ]);
+
   const handleConfigs = (t) => {
     setTemp(t);
     setModalShowUpdate(true);
@@ -140,6 +141,7 @@ export default function Tracking(props) {
       setCurrentPage(currentPage - 1);
     }
   };
+
   const handleNext = () => {
     if ((currentPage + 1) * 10 >= trackLength) {
       alert("This is a last page!");
@@ -188,7 +190,7 @@ export default function Tracking(props) {
           <Form.Group className="mb-3">
             <Form.Label>Track Id</Form.Label>
             <Form.Control
-              ttype="text"
+              type="text"
               name="track_id"
               onChange={(e) => setTrackId(e.target.value)}
               placeholder="Enter Track Id"
@@ -279,112 +281,115 @@ export default function Tracking(props) {
           </tr>
         </thead>
         <tbody>
-          {trackings.map((item, index) => (
-            <tr key={index}>
-              <td className="align-middle">{index + 1 + currentPage * page}</td>
-              <td className="align-middle">
-                {parseInt(item.date.split("-")[2])}{" "}
-                {month[parseInt(item.date.split("-")[1])]}{" "}
-                {parseInt(item.date.split("-")[0])}
-              </td>
-              <td className="align-middle">{item.username}</td>
-              <td className="align-middle">
-                <a href={item.url} target="_blank">
-                  link
-                </a>
-              </td>
-              <td className="align-middle">
-                {item.track_id === null ? "-" : <>{item.track_id}</>}
-              </td>
-              <td className="align-middle">
-                {item.box_id === null ? "-" : <>{item.box_id}</>}
-              </td>
-              <td className="align-middle">
-                {item.weight === null || item.weight === "" ? (
-                  "-"
-                ) : (
-                  <>{item.weight} (Kg.)</>
-                )}
-              </td>
-              <td className="align-middle">
-                {item.round_boat === "" ? (
-                  "-"
-                ) : (
-                  <>
-                    {parseInt(item.round_boat.split("-")[2])}{" "}
-                    {month[parseInt(item.round_boat.split("-")[1])]}
-                  </>
-                )}
-              </td>
-              <td className="align-middle">
-                {item.pic1_filename !== null && item.pic1_filename !== "" ? (
-                  <img
-                    onClick={() => {
-                      setImage(item.pic1_filename);
-                      setModalShowImage(true);
-                    }}
-                    src={item.pic1_filename}
-                    alt="image for pic1"
-                    width={100}
+          {!loading &&
+            trackings.map((item, index) => (
+              <tr key={index}>
+                <td className="align-middle">
+                  {index + 1 + currentPage * page}
+                </td>
+                <td className="align-middle">
+                  {parseInt(item.date.split("-")[2])}{" "}
+                  {month[parseInt(item.date.split("-")[1])]}{" "}
+                  {parseInt(item.date.split("-")[0])}
+                </td>
+                <td className="align-middle">{item.username}</td>
+                <td className="align-middle">
+                  <a href={item.url} target="_blank">
+                    link
+                  </a>
+                </td>
+                <td className="align-middle">
+                  {item.track_id === null ? "-" : <>{item.track_id}</>}
+                </td>
+                <td className="align-middle">
+                  {item.box_id === null ? "-" : <>{item.box_id}</>}
+                </td>
+                <td className="align-middle">
+                  {item.weight === null || item.weight === "" ? (
+                    "-"
+                  ) : (
+                    <>{item.weight} (Kg.)</>
+                  )}
+                </td>
+                <td className="align-middle">
+                  {item.round_boat === "" ? (
+                    "-"
+                  ) : (
+                    <>
+                      {parseInt(item.round_boat.split("-")[2])}{" "}
+                      {month[parseInt(item.round_boat.split("-")[1])]}
+                    </>
+                  )}
+                </td>
+                <td className="align-middle">
+                  {item.pic1_filename !== null && item.pic1_filename !== "" ? (
+                    <img
+                      onClick={() => {
+                        setImage(item.pic1_filename);
+                        setModalShowImage(true);
+                      }}
+                      src={item.pic1_filename}
+                      alt="image for pic1"
+                      width={100}
+                    />
+                  ) : (
+                    "-"
+                  )}
+                </td>
+                <td className="align-middle">
+                  {item.pic2_filename !== null && item.pic2_filename !== "" ? (
+                    <img
+                      onClick={() => {
+                        setImage(item.pic2_filename);
+                        setModalShowImage(true);
+                      }}
+                      src={item.pic2_filename}
+                      alt="image for pic2"
+                      width={100}
+                    />
+                  ) : (
+                    "-"
+                  )}
+                </td>
+                <td className="align-middle text-center">
+                  <input
+                    type="checkbox"
+                    checked={item.check1}
+                    onChange={() => handleCheck1(item.check1, item.id)}
                   />
-                ) : (
-                  "-"
-                )}
-              </td>
-              <td className="align-middle">
-                {item.pic2_filename !== null && item.pic2_filename !== "" ? (
-                  <img
-                    onClick={() => {
-                      setImage(item.pic2_filename);
-                      setModalShowImage(true);
-                    }}
-                    src={item.pic2_filename}
-                    alt="image for pic2"
-                    width={100}
+                </td>
+                <td className="align-middle text-center">
+                  <input
+                    type="checkbox"
+                    checked={item.check2}
+                    onChange={() => handleCheck2(item.check2, item.id)}
                   />
-                ) : (
-                  "-"
-                )}
-              </td>
-              <td className="align-middle text-center">
-                <input
-                  type="checkbox"
-                  checked={item.check1}
-                  onChange={() => handleCheck1(item.check1, item.id)}
-                />
-              </td>
-              <td className="align-middle text-center">
-                <input
-                  type="checkbox"
-                  checked={item.check2}
-                  onChange={() => handleCheck2(item.check2, item.id)}
-                />
-              </td>
-              <td className="align-middle" width={150}>
-                {item.remark}
-              </td>
-              <td className="align-middle">
-                <div style={{ display: "flex" }}>
-                  <Button
-                    size="sm"
-                    onClick={() => handleConfigs(item)}
-                    variant="success"
-                  >
-                    <i class="fas fa-pencil-alt"></i>
-                  </Button>
-                  &nbsp;
-                  <Button
-                    variant="danger"
-                    onClick={() =>
-                      handleDelete(item.id, index + 1 + currentPage * page)
-                    }
-                  >
-                    <i class="fas fa-times"></i>
-                  </Button>
-                </div>
-              </td>
-            </tr>
-          ))}
+                </td>
+                <td className="align-middle" width={150}>
+                  {item.remark}
+                </td>
+                <td className="align-middle">
+                  <div style={{ display: "flex" }}>
+                    <Button
+                      size="sm"
+                      onClick={() => handleConfigs(item)}
+                      variant="success"
+                    >
+                      <i class="fas fa-pencil-alt"></i>
+                    </Button>
+                    &nbsp;
+                    <Button
+                      variant="danger"
+                      onClick={() =>
+                        handleDelete(item.id, index + 1 + currentPage * page)
+                      }
+                    >
+                      <i class="fas fa-times"></i>
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            ))}
           <ShowImage
             show={modalShowImage}
             onHide={() => setModalShowImage(false)}
