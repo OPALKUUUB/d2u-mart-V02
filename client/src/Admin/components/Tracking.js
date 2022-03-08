@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form, Row, Table, Col } from "react-bootstrap";
 import AddTrackingModal from "./AddTrackingModal";
-
 import Loading from "./Loading";
 import ShowImage from "./ShowImage";
 import UpdateTrackingModal from "./UpdateTrackingModal";
+
 let trackingModel = {
   channel: "",
   date: "",
@@ -18,6 +18,7 @@ let trackingModel = {
   pic2_filename: "",
   remark: "",
 };
+
 export default function Tracking(props) {
   const [trackings, setTrackings] = useState([]);
   const [modalShowAdd, setModalShowAdd] = React.useState(false);

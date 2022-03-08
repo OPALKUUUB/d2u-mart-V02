@@ -105,8 +105,8 @@ export default function UpdateTrackingModal(props) {
       .then((res) => res.json())
       .then((json) => {
         if (json.status) {
-          props.onHide();
           props.setTrigger(!props.trigger);
+          props.onHide();
           setLoading(false);
         } else {
           alert(json.message);

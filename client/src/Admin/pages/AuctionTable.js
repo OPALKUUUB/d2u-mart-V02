@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import Loading from "../components/Loading";
 import {
   Button,
   Col,
@@ -8,8 +10,6 @@ import {
   Row,
   Table,
 } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
-import Loading from "../components/Loading";
 
 export default function AuctionTable() {
   const [date, setDate] = useState("");
@@ -146,7 +146,8 @@ export default function AuctionTable() {
                           item={item}
                           by={item.maxbid_work_by}
                           mode={1}
-                          setLoading={setLoading}
+                          setTrigger={setTrigger}
+                          trigger={trigger}
                         />
                       </span>
                     </div>
@@ -163,7 +164,8 @@ export default function AuctionTable() {
                             item={item}
                             by={item.addbid1_work_by}
                             mode={2}
-                            setLoading={setLoading}
+                            setTrigger={setTrigger}
+                            trigger={trigger}
                           />
                         </span>
                       </div>
@@ -181,7 +183,8 @@ export default function AuctionTable() {
                             item={item}
                             by={item.addbid2_work_by}
                             mode={3}
-                            setLoading={setLoading}
+                            setTrigger={setTrigger}
+                            trigger={trigger}
                           />
                         </span>
                       </div>
@@ -222,83 +225,34 @@ export default function AuctionTable() {
 }
 
 function WorkBy(props) {
-  const [workBy, setWorkBy] = useState("");
-  const [check, setCheck] = useState();
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    if (props.mode === 1) {
-      if (
-        props.item.maxbid_work_by !== "" &&
-        props.item.maxbid_work_by !== null
-      ) {
-        setWorkBy(props.item.maxbid_work_by);
-        setCheck(true);
-      } else {
-        setWorkBy("none");
-        setCheck(false);
-      }
-    }
-    if (props.mode === 2) {
-      if (
-        props.item.addbid1_work_by !== "" &&
-        props.item.addbid1_work_by !== null
-      ) {
-        setWorkBy(props.item.addbid1_work_by);
-        setCheck(true);
-      } else {
-        setWorkBy("none");
-        setCheck(false);
-      }
-    }
-    if (props.mode === 3) {
-      if (
-        props.item.addbid2_work_by !== "" &&
-        props.item.addbid2_work_by !== null
-      ) {
-        setWorkBy(props.item.addbid2_work_by);
-        setCheck(true);
-      } else {
-        setWorkBy("none");
-        setCheck(false);
-      }
-    }
-  }, [props, check]);
-
+  const [check, setCheck] = useState(props.by !== "" && props.by !== null);
   const handleWorkBy = () => {
-    setLoading(true);
+    const FetchWorkby = async () => {
+      const json = await fetch("/api/admin/yahoo/order/workby", {
+        method: "PATCH",
+        headers: {
+          token: localStorage.getItem("AdminToken"),
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          mode: props.mode,
+          id: props.item.id,
+          value: props.by !== "" && props.by !== null,
+        }),
+      }).then((res) => res.json());
+      if (json.status) {
+        props.setTrigger(!props.trigger);
+      } else {
+        alert(json.message);
+      }
+    };
     setCheck(!check);
-    fetch("/api/admin/yahoo/order/workby", {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        token: localStorage.getItem("AdminToken"),
-      },
-      body: JSON.stringify({
-        mode: props.mode,
-        id: props.item.id,
-        value: check,
-      }),
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if (!json.status) {
-          if (json.error === 1) {
-            alert("Your token is expired please log in again!");
-            localStorage.removeItem("AdminToken");
-          } else if (json.error === 2) {
-            alert(json.message);
-          }
-        } else {
-          setWorkBy(json.value !== null ? json.value : "none");
-        }
-        props.setLoading(true);
-        setLoading(false);
-      });
+    FetchWorkby();
   };
   return (
     <>
-      <input type="checkbox" checked={check} onChange={handleWorkBy} /> {workBy}
-      {loading && <Loading />}
+      <input type="checkbox" checked={check} onChange={handleWorkBy} />{" "}
+      {props.by}
     </>
   );
 }
