@@ -233,7 +233,7 @@ export default function PaymentTable() {
       </Table>
       {!loading2 && loading && <Loading load={1} />}
       {loading2 && <Loading />}
-      <MydModalWithGrid
+      <UpdateWin
         show={modalShow}
         onHide={() => setModalShow(false)}
         item={temp}
@@ -244,7 +244,7 @@ export default function PaymentTable() {
   );
 }
 
-function MydModalWithGrid(props) {
+function UpdateWin(props) {
   const [item, setItem] = useState(props.item);
   const [slip, setSlip] = useState("");
   const [modalShowSlip, setModalShowSlip] = useState(false);
@@ -277,7 +277,7 @@ function MydModalWithGrid(props) {
       .then((res) => res.json())
       .then((json) => {
         if (json.status) {
-          alert(json.message);
+          props.setTrigger(!props.trigger);
           props.onHide();
         } else {
           if (json.error === "jwt") {
