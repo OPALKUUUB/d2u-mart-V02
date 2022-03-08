@@ -28,7 +28,8 @@ export default function UpdateTrackingModal(props) {
     setImage1(null);
     setImage2(null);
     setTracking(props.item);
-  }, [props]);
+  }, [props.item]);
+
   const handleChangeTracking = (e) => {
     setTracking({ ...tracking, [e.target.name]: e.target.value });
   };

@@ -132,6 +132,7 @@ export default function PaymentTable() {
             <th>รวม(฿)</th>
             <th>แจ้งชำระ</th>
             <th>สถานะ</th>
+            <th>Noted</th>
             <th>Edit</th>
           </tr>
         </thead>
@@ -207,6 +208,11 @@ export default function PaymentTable() {
                     {item.payment_status === "pending2" && "รอการชำระ"}
                     {item.payment_status === "pending3" && "รอการตรวจสอบ"}
                     {item.payment_status === "paid" && "ชำระเงินเรียบร้อยแล้ว"}
+                  </td>
+                  <td className="align-middle">
+                    {item.noted !== null && item.noted !== ""
+                      ? item.noted
+                      : "-"}
                   </td>
                   <td className="align-middle">
                     <Button

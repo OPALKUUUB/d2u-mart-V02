@@ -192,6 +192,7 @@ export default function HistoryTable() {
             <th>หมายเลขกล่อง</th>
             <th>น้ำหนัก(kg.)</th>
             <th>รอบเรือ</th>
+            <th>Noted</th>
             <th>Edit Tracking</th>
           </tr>
         </thead>
@@ -295,6 +296,11 @@ export default function HistoryTable() {
                     )}
                     {/* {parseInt(item.round_boat.split("-")[2])}{" "}
               {month[parseInt(item.round_boat.split("-")[1])]} */}
+                  </td>
+                  <td className="align-middle">
+                    {item.noted !== null && item.noted !== ""
+                      ? item.noted
+                      : "-"}
                   </td>
                   <td className="align-middle">
                     <Button variant="primary" onClick={() => handleEdit(item)}>

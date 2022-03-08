@@ -25,6 +25,10 @@ router.patch(
   yahooController.patchAdminOrderWorkby
 );
 
+router.patch(
+  "/api/admin/yahoo/order/noted",
+  yahooController.patchAdminOrderNoted
+);
 router.patch("/api/admin/yahoo/order/win", yahooController.patchAdminOrderWin);
 
 router.patch(

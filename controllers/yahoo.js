@@ -309,6 +309,23 @@ exports.getOrderHistory = (req, res) => {
     });
   }
 };
+
+exports.patchAdminOrderNoted = (req, res) => {
+  const sql = `UPDATE orders SET noted = ? WHERE id = ?;`;
+  conn.query(sql, [req.body.noted, req.body.id], (err, result) => {
+    if (err) {
+      res.status(400).json({
+        status: false,
+        message: "Error: " + err.sqlMessage,
+      });
+    } else {
+      res.status(200).json({
+        status: true,
+        message: "update noted at orders successfully!'",
+      });
+    }
+  });
+};
 exports.filterAdminOrder = (req, res) => {
   const sql =
     "SELECT * FROM orders WHERE status = ? AND username LIKE ? AND created_at LIKE ? ORDER BY created_at DESC;";
