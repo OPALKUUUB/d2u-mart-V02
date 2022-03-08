@@ -152,7 +152,7 @@ export default function Tracking(props) {
   };
 
   return (
-    <>
+    <div style={{ height: "5000px" }}>
       <div className="mb-3 d-flex justify-content-between align-items-center">
         <h3 className="bg-warning p-2">{props.header} Tracking</h3>
         <Button variant="primary" onClick={() => setModalShowAdd(true)}>
@@ -284,7 +284,7 @@ export default function Tracking(props) {
         <tbody>
           {!loading &&
             trackings.map((item, index) => (
-              <tr key={index}>
+              <tr key={index} id={"item" + item.id}>
                 <td className="align-middle">
                   {index + 1 + currentPage * page}
                 </td>
@@ -428,7 +428,7 @@ export default function Tracking(props) {
         trigger={trigger}
         setTrigger={setTrigger}
       />
-    </>
+    </div>
   );
 }
 

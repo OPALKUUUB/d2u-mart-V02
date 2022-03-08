@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
+import { useHistory } from "react-router-dom";
 import AutoComplete from "./AutoComplete";
 import Loading from "./Loading";
 
 export default function UpdateTrackingModal(props) {
+  const history = useHistory();
   const [tracking, setTracking] = useState(props.item);
   const [pic1File, setPic1File] = useState(null);
   const [pic2File, setPic2File] = useState(null);
