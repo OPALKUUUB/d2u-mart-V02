@@ -39,7 +39,6 @@ app.get("/database/test", (req, res) => {
     user: "delivery_root",
     password: "Opal_ku79",
     database: "delivery_2u",
-    port: "3306",
   });
   conn2.connect((err) => {
     if (err) {
