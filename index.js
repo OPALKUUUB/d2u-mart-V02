@@ -42,9 +42,11 @@ app.get("/database/test", (req, res) => {
     port: "3306",
   });
   conn2.connect((err) => {
-    if (err) throw err;
-    console.log("Connect conn2 successfully!");
-    res.status(200).json({ message: "test successfully" });
+    if (err) {
+      res.status(400).json({ status: false, message: err });
+    } else {
+      res.status(200).json({ status: true, message: "Connecting" });
+    }
   });
 });
 
