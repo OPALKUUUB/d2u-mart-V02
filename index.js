@@ -33,22 +33,6 @@ function genDate() {
   return `${today.getFullYear()}-${month}-${date}T${hour}:${minute}`;
 }
 
-app.get("/database/test", (req, res) => {
-  const conn2 = mysql.createConnection({
-    host: "d2u.co.th",
-    user: "delivery_root",
-    password: "Opal_ku79",
-    database: "delivery_2u",
-  });
-  conn2.connect((err) => {
-    if (err) {
-      res.status(400).json({ status: false, message: err });
-    } else {
-      res.status(200).json({ status: true, message: "Connecting" });
-    }
-  });
-});
-
 app.use(adminRoutes);
 
 app.use(otherRoutes);
