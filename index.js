@@ -3,6 +3,7 @@ dotenv.config();
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
+const mysql = require("mysql2");
 const jwt = require("jsonwebtoken");
 const app = express();
 const multer = require("multer");
@@ -31,6 +32,21 @@ function genDate() {
     today.getMinutes() >= 10 ? today.getMinutes() : `0${today.getMinutes()}`;
   return `${today.getFullYear()}-${month}-${date}T${hour}:${minute}`;
 }
+
+app.get("/database/test", (req, res) => {
+  const conn2 = mysql.createConnection({
+    host: "localhost",
+    user: "delivery_root",
+    password: "Opal_ku79",
+    database: "delivery_2u",
+    port: "3306",
+  });
+  conn2.connect((err) => {
+    if (err) throw err;
+    console.log("Connect conn2 successfully!");
+    res.status(200).json({ message: "test successfully" });
+  });
+});
 
 app.use(adminRoutes);
 

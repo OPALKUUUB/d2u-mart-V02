@@ -32,8 +32,15 @@ export default function UserTable() {
     setPointManagementModalShow(true);
     setTemp(item);
   };
+
+  const handleTestDatabase = () => {
+    fetch("/database/test")
+      .then((res) => res.json())
+      .then((json) => console.log(json));
+  };
   return (
     <>
+      <Button onClick={handleTestDatabase}>test database</Button>
       <h3 className="mb-3">User Customer Table</h3>
       <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
         <Form.Label>Username</Form.Label>

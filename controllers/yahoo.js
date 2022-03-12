@@ -543,8 +543,9 @@ exports.deleteAdminOrder = (req, res) => {
 };
 
 exports.filterAdminOrderPayment = (req, res) => {
-  const sql =
-    "SELECT * FROM orders WHERE (payment_status = ? OR payment_status = ? OR payment_status = ?) AND username LIKE ? AND created_at LIKE ? ORDER BY created_at DESC;";
+  const sql = `SELECT * FROM orders 
+    WHERE (payment_status = ? OR payment_status = ? OR payment_status = ?)
+    AND username LIKE ? AND created_at LIKE ? ORDER BY created_at DESC;`;
   conn.query(
     sql,
     [
