@@ -172,7 +172,7 @@ exports.patchOrderAddbid = (req, res) => {
                 bearer: process.env.TOKEN,
               },
               form: {
-                message: `${decoded.username}  Add bid`,
+                message: `\nUsername: ${decoded.username}\nAddbid#${req.body.mode}: ${req.body.addbid} ¥`,
               },
             },
             (err1, httpResponse, body) => {
