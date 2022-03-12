@@ -35,7 +35,7 @@ function genDate() {
 
 app.get("/database/test", (req, res) => {
   const conn2 = mysql.createConnection({
-    host: "localhost",
+    host: "d2u.co.th",
     user: "delivery_root",
     password: "Opal_ku79",
     database: "delivery_2u",
