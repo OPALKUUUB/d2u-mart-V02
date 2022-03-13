@@ -6,28 +6,29 @@ export default function YahooHistory() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    fetch("/api/yahoo/history", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        token: localStorage.getItem("token"),
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.status) {
-          setOrders(json.data);
-          setLoading(false);
+    const FetchOrder = async () => {
+      const json = await fetch("/api/yahoo/history", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          token: localStorage.getItem("token"),
+        },
+      }).then((res) => res.json());
+      if (json.status) {
+        setOrders(json.data);
+      } else {
+        if (json.error === "jwt") {
+          alert("Your Login Session Is Expired,\nPlease Sign In Again!");
+          localStorage.removeItem("token");
         } else {
-          if (json.error === "jwt") {
-            alert("Your Login Session Is Expired,\nPlease Sign In Again!");
-            localStorage.removeItem("token");
-          } else {
-            alert(json.message);
-          }
-          window.location.reload(false);
+          alert(json.message);
         }
-      });
+        window.location.reload(false);
+      }
+      setLoading(false);
+    };
+    setLoading(true);
+    FetchOrder();
   }, []);
 
   return (
@@ -52,7 +53,7 @@ export default function YahooHistory() {
           </tr>
         </thead>
         <tbody style={{ textAlign: "center" }}>
-          {loading && (
+          {!loading && (
             <>
               {orders.map((item, index) => (
                 <tr key={index}>
