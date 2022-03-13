@@ -613,7 +613,7 @@ exports.patchAdminOrderPayment = (req, res) => {
 };
 
 exports.filterAdminOrderHistory = (req, res) => {
-  let sql = `SELECT * FROM orders WHERE `;
+  let sql = `SELECT * FROM orders WHERE payment_status = "paid" AND `;
   let order = [];
   if (req.query.status === "win") {
     sql += ` status = 'win' `;
