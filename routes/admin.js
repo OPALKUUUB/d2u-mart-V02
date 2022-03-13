@@ -16,6 +16,8 @@ router.get("/api/admin/users", userProfileController.getUsername);
 
 router.get("/api/admin/filter/users", userProfileController.filterUsername);
 
+router.patch("/api/admin/user", userProfileController.updateUser);
+
 router.get("/api/admin/yahoo/order", yahooController.filterAdminOrder);
 
 router.post("/api/admin/yahoo/order", yahooController.postAdminOrder);

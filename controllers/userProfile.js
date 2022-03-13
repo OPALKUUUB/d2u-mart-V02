@@ -151,7 +151,7 @@ exports.getUsername = (req, res) => {
 
 exports.filterUsername = (req, res) => {
   const sql = `
-  SELECT created_at, username, name, phone, address, point_old, point_new FROM user_customers
+  SELECT id, created_at, username, name, phone, address, point_old, point_new, contact FROM user_customers
   WHERE username LIKE ?;`;
   conn.query(sql, [req.query.username + "%"], (err, row) => {
     if (err) {
@@ -164,6 +164,32 @@ exports.filterUsername = (req, res) => {
         status: true,
         message: "select * from user_customers",
         data: row,
+      });
+    }
+  });
+};
+exports.updateUser = (req, res) => {
+  const user = [
+    req.body.username,
+    req.body.name,
+    req.body.phone,
+    req.body.address,
+    req.body.contact,
+    req.body.id,
+  ];
+  console.log(user);
+  const sql = `
+  UPDATE user_customers SET username = ?, name = ?, phone = ?, address = ?, contact = ? WHERE id = ?;`;
+  conn.query(sql, user, (err, row) => {
+    if (err) {
+      res.status(400).json({
+        status: false,
+        message: "Error: " + err.sqlMessage,
+      });
+    } else {
+      res.status(200).json({
+        status: true,
+        message: "update user_customers",
       });
     }
   });

@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Form, Table, Button, Modal, Row, Col } from "react-bootstrap";
+import {
+  Form,
+  Table,
+  Button,
+  Modal,
+  Row,
+  Col,
+  Dropdown,
+  Container,
+} from "react-bootstrap";
 import Loading from "../components/Loading";
 import ReactLoading from "react-loading";
 
@@ -9,6 +18,7 @@ export default function UserTable() {
   const [temp, setTemp] = useState({});
   const [pointManagementModalShow, setPointManagementModalShow] =
     useState(false);
+  const [editModalShow, setEditModalShow] = useState(false);
   const [trigger, setTrigger] = useState(false);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -29,8 +39,13 @@ export default function UserTable() {
   }, [username, trigger]);
 
   const handleShowPointManagementModal = (item) => {
-    setPointManagementModalShow(true);
     setTemp(item);
+    setPointManagementModalShow(true);
+  };
+
+  const handleEditModal = (item) => {
+    setTemp(item);
+    setEditModalShow(true);
   };
   return (
     <>
@@ -54,8 +69,9 @@ export default function UserTable() {
             <th>Name</th>
             <th>Phone</th>
             <th>Address</th>
+            <th>Contact</th>
             <th>คะแนน</th>
-            <th>จัดการคะแนน</th>
+            <th></th>
           </tr>
         </thead>
         <tbody style={{ textAlign: "center" }}>
@@ -72,17 +88,34 @@ export default function UserTable() {
                   <td className="align-middle">{item.phone}</td>
                   <td className="align-middle">{item.address}</td>
                   <td className="align-middle">
+                    {item.contact === null ? "-" : item.contact}
+                  </td>
+                  <td className="align-middle">
                     {item.point_new === null || item.point_new === ""
                       ? "-"
                       : item.point_new}
                   </td>
                   <td className="align-middle">
-                    <Button
-                      variant="success"
-                      onClick={() => handleShowPointManagementModal(item)}
-                    >
-                      Edit
-                    </Button>
+                    <Dropdown>
+                      <Dropdown.Toggle
+                        variant="success"
+                        id="dropdown-basic"
+                        size="sm"
+                      >
+                        manage
+                      </Dropdown.Toggle>
+
+                      <Dropdown.Menu>
+                        <Dropdown.Item onClick={() => handleEditModal(item)}>
+                          แก้ไข
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                          onClick={() => handleShowPointManagementModal(item)}
+                        >
+                          คะแนน
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
                   </td>
                 </tr>
               ))}
@@ -117,7 +150,128 @@ export default function UserTable() {
         setTrigger={setTrigger}
         trigger={trigger}
       />
+      <EditUserModal
+        show={editModalShow}
+        onHide={() => setEditModalShow(false)}
+        item={temp}
+        setTrigger={setTrigger}
+        trigger={trigger}
+      />
     </>
+  );
+}
+
+function EditUserModal(props) {
+  const [user, setUser] = useState(props.item);
+
+  useEffect(() => {
+    setUser({
+      username: props.item.username === null ? "" : props.item.username,
+      name: props.item.name === null ? "" : props.item.name,
+      phone: props.item.phone === null ? "" : props.item.phone,
+      address: props.item.address === null ? "" : props.item.address,
+      contact: props.item.contact === null ? "" : props.item.contact,
+      id: props.item.id === null ? "" : props.item.id,
+    });
+  }, [props.item]);
+  const handleChange = (e) => {
+    setUser({ ...user, [e.target.name]: e.target.value });
+  };
+  const handleUpdateUser = () => {
+    const UpdateUser = async () => {
+      const json = await fetch("/api/admin/user", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      }).then((res) => res.json());
+      if (json.status) {
+        setUser({});
+        props.setTrigger(!props.trigger);
+        props.onHide();
+      } else {
+        alert(json.message);
+      }
+    };
+    UpdateUser();
+  };
+
+  return (
+    <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">Edit User</Modal.Title>
+      </Modal.Header>
+      <Modal.Body className="show-grid">
+        <Container>
+          <Row>
+            <Col lg={6}>
+              <Form.Group className="mb-3" controlId="username">
+                <Form.Label>Username</Form.Label>
+                <Form.Control
+                  name="username"
+                  type="text"
+                  value={user.username}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+            <Col lg={6}>
+              <Form.Group className="mb-3" controlId="name">
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={user.name}
+                  name="name"
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+            <Col lg={6}>
+              <Form.Group className="mb-3" controlId="phone">
+                <Form.Label>Phone</Form.Label>
+                <Form.Control
+                  type="tel"
+                  value={user.phone}
+                  name="phone"
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+            <Col lg={6}>
+              <Form.Group className="mb-3" controlId="contact">
+                <Form.Label>Contact</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={user.contact}
+                  name="contact"
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+            <Col lg={12}>
+              <Form.Group className="mb-3" controlId="address">
+                <Form.Label>Address</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={user.address}
+                  name="address"
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+        </Container>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={handleUpdateUser} variant="success">
+          Update
+        </Button>
+        <Button onClick={props.onHide} variant="secondary">
+          Close
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 }
 
