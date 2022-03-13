@@ -29,7 +29,20 @@ export default function UpdateTrackingModal(props) {
   useEffect(() => {
     setImage1(null);
     setImage2(null);
-    setTracking(props.item);
+    let item = props.item;
+    setTracking({
+      channel: item.channel === null ? "" : item.channel,
+      date: item.date === null ? "" : item.date,
+      username: item.username === null ? "" : item.username,
+      box_id: item.box_id === null ? "" : item.box_id,
+      url: item.url === null ? "" : item.url,
+      track_id: item.track_id === null ? "" : item.track_id,
+      weight: item.weight === null ? "" : item.weight,
+      round_boat: item.round_boat === null ? "" : item.round_boat,
+      pic1_filename: item.pic1_filename === null ? "" : item.pic1_filename,
+      pic2_filename: item.pic2_filename === null ? "" : item.pic2_filename,
+      remark: item.remark === null ? "" : item.remark,
+    });
   }, [props.item]);
 
   const handleChangeTracking = (e) => {
