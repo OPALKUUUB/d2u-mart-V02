@@ -115,7 +115,7 @@ export default function UpdateTrackingModal(props) {
       t.pic1_filename = PostPic(pic1File);
     }
     if (pic2File !== "" && pic2File !== null) {
-      t.pic2_filename = PostPic(pic1File);
+      t.pic2_filename = PostPic(pic2File);
     }
     UpdateTracking(t);
   };
