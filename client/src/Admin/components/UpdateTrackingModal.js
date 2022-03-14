@@ -78,23 +78,6 @@ export default function UpdateTrackingModal(props) {
   const handleUpdateTracking = async () => {
     setLoading(true);
     let t = tracking;
-    const PostPic = async (pic) => {
-      const data = new FormData();
-      data.append("file", pic);
-      data.append("upload_preset", "d2u-service");
-      data.append("cloud_name", "d2u-service");
-      const urlname = await fetch(
-        "https://api.cloudinary.com/v1_1/d2u-service/upload",
-        {
-          method: "POST",
-          body: data,
-        }
-      )
-        .then((resp) => resp.json())
-        .then((data) => data.url)
-        .catch((err) => console.log(err));
-      return urlname;
-    };
     const UpdateTracking = async (t) => {
       const json = await fetch("/api/admin/tracking", {
         method: "PATCH",
@@ -112,10 +95,34 @@ export default function UpdateTrackingModal(props) {
       }
     };
     if (pic1File !== "" && pic1File !== null) {
-      t.pic1_filename = PostPic(pic1File);
+      const data = new FormData();
+      data.append("file", pic1File);
+      data.append("upload_preset", "d2u-service");
+      data.append("cloud_name", "d2u-service");
+      await fetch("https://api.cloudinary.com/v1_1/d2u-service/upload", {
+        method: "POST",
+        body: data,
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          t.pic1_filename = data.url;
+        })
+        .catch((err) => console.log(err));
     }
     if (pic2File !== "" && pic2File !== null) {
-      t.pic2_filename = PostPic(pic2File);
+      const data = new FormData();
+      data.append("file", pic2File);
+      data.append("upload_preset", "d2u-service");
+      data.append("cloud_name", "d2u-service");
+      await fetch("https://api.cloudinary.com/v1_1/d2u-service/upload", {
+        method: "POST",
+        body: data,
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          t.pic2_filename = data.url;
+        })
+        .catch((err) => console.log(err));
     }
     UpdateTracking(t);
   };
@@ -242,7 +249,7 @@ export default function UpdateTrackingModal(props) {
                 <div style={{ position: "relative" }}>
                   <span
                     onClick={() =>
-                      setTracking({ ...tracking, pic1_filename: "" })
+                      setTracking({ ...tracking, pic1_filename: null })
                     }
                     style={{
                       position: "absolute",
@@ -305,7 +312,7 @@ export default function UpdateTrackingModal(props) {
                 <div style={{ position: "relative" }}>
                   <span
                     onClick={() =>
-                      setTracking({ ...tracking, pic2_filename: "" })
+                      setTracking({ ...tracking, pic2_filename: null })
                     }
                     style={{
                       position: "absolute",
