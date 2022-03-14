@@ -251,6 +251,7 @@ app.delete("/api/admin/tracking", (req, res) => {
 
 app.post("/api/admin/tracking/:mode", (req, res) => {
   let date = genDate();
+
   let tracking = [
     req.body.url,
     req.body.box_id,
@@ -266,6 +267,7 @@ app.post("/api/admin/tracking/:mode", (req, res) => {
     date,
     date,
   ];
+
   let sql =
     "INSERT INTO trackings (url,box_id,channel,date,username,track_id,weight,round_boat,remark,pic1_filename,pic2_filename, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);";
   conn.query(sql, tracking, (err, result) => {
@@ -302,6 +304,7 @@ app.patch("/api/admin/tracking", (req, res) => {
     date,
     req.body.id,
   ];
+  console.log(tracking);
   const sql =
     "UPDATE trackings SET url = ?, box_id = ?,channel =?,date = ?, username = ?, track_id = ?, weight = ?, round_boat = ?, pic1_filename = ?, pic2_filename = ?, remark = ?, updated_at = ? WHERE id = ?;";
   conn.query(sql, tracking, (err, result) => {
