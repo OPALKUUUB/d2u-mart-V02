@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
 import ReactLoading from "react-loading";
+import ShowImage from "../../Admin/components/ShowImage";
 export default function Tracking() {
   const [trackings, setTrackings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [image, setImage] = useState("");
+  const [modalShowImage, setModalShowImage] = useState(false);
   useEffect(() => {
     fetch("/api/tracking", {
       method: "GET",
@@ -99,22 +102,32 @@ export default function Tracking() {
                         )}
                       </td>
                       <td className="align-middle">
-                        {item.pic1_filename === null ? (
+                        {item.pic1_filename === null ||
+                        item.pic1_filename === "" ? (
                           "-"
                         ) : (
                           <img
                             src={item.pic1_filename}
+                            onClick={() => {
+                              setImage(item.pic1_filename);
+                              setModalShowImage(true);
+                            }}
                             alt="image for pic1"
                             width={100}
                           />
                         )}
                       </td>
                       <td className="align-middle">
-                        {item.pic2_filename === null ? (
+                        {item.pic2_filename === null ||
+                        item.pic2_filename === "" ? (
                           "-"
                         ) : (
                           <img
                             src={item.pic2_filename}
+                            onClick={() => {
+                              setImage(item.pic2_filename);
+                              setModalShowImage(true);
+                            }}
                             alt="image for pic2"
                             width={100}
                           />
@@ -149,6 +162,11 @@ export default function Tracking() {
           <h4>ไม่พบรายการติดตามสินค้า!</h4>
         </div>
       )}
+      <ShowImage
+        show={modalShowImage}
+        onHide={() => setModalShowImage(false)}
+        src={image}
+      />
     </>
   );
 }
