@@ -63,59 +63,63 @@ export default function AddTrackingModal(props) {
   };
 
   const handleAddTracking = async () => {
-    setLoading(true);
-    let t = tracking;
-    if (pic1File !== null) {
-      const data = new FormData();
-      data.append("file", pic1File);
-      data.append("upload_preset", "d2u-service");
-      data.append("cloud_name", "d2u-service");
-      let urlname = await fetch(
-        "  https://api.cloudinary.com/v1_1/d2u-service/upload",
-        {
-          method: "POST",
-          body: data,
-        }
-      )
-        .then((resp) => resp.json())
-        .then((data) => data.url)
-        .catch((err) => console.log(err));
-      t.pic1_filename = urlname;
+    if (tracking.username === "" || tracking.username === null) {
+      alert("กรุณาเลือก username!");
+    } else {
+      setLoading(true);
+      let t = tracking;
+      if (pic1File !== null) {
+        const data = new FormData();
+        data.append("file", pic1File);
+        data.append("upload_preset", "d2u-service");
+        data.append("cloud_name", "d2u-service");
+        let urlname = await fetch(
+          "  https://api.cloudinary.com/v1_1/d2u-service/upload",
+          {
+            method: "POST",
+            body: data,
+          }
+        )
+          .then((resp) => resp.json())
+          .then((data) => data.url)
+          .catch((err) => console.log(err));
+        t.pic1_filename = urlname;
+      }
+      if (pic2File !== null) {
+        const data = new FormData();
+        data.append("file", pic2File);
+        data.append("upload_preset", "d2u-service");
+        data.append("cloud_name", "d2u-service");
+        let urlname = await fetch(
+          "https://api.cloudinary.com/v1_1/d2u-service/upload",
+          {
+            method: "POST",
+            body: data,
+          }
+        )
+          .then((resp) => resp.json())
+          .then((data) => data.url)
+          .catch((err) => console.log(err));
+        t.pic2_filename = urlname;
+      }
+      fetch("/api/admin/tracking/" + props.mode, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(t),
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          if (json.status) {
+            props.setTrigger(!props.trigger);
+            props.onHide();
+          } else {
+            alert(json.message);
+          }
+          setLoading(false);
+        });
     }
-    if (pic2File !== null) {
-      const data = new FormData();
-      data.append("file", pic2File);
-      data.append("upload_preset", "d2u-service");
-      data.append("cloud_name", "d2u-service");
-      let urlname = await fetch(
-        "https://api.cloudinary.com/v1_1/d2u-service/upload",
-        {
-          method: "POST",
-          body: data,
-        }
-      )
-        .then((resp) => resp.json())
-        .then((data) => data.url)
-        .catch((err) => console.log(err));
-      t.pic2_filename = urlname;
-    }
-    fetch("/api/admin/tracking/" + props.mode, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(t),
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.status) {
-          props.setTrigger(!props.trigger);
-          props.onHide();
-        } else {
-          alert(json.message);
-        }
-        setLoading(false);
-      });
   };
   const handleChangeUsername = (data) => {
     if (data.length !== 0) {

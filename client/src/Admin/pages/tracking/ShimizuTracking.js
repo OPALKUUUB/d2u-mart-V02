@@ -261,7 +261,6 @@ function AddTrackModal(props) {
   const [tracking, setTracking] = useState(trackingModel);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
-  useEffect(() => {}, [props]);
   useEffect(() => {
     fetch("/api/admin/users", {
       method: "GET",
@@ -288,25 +287,28 @@ function AddTrackModal(props) {
   };
 
   const handleAddTracking = async () => {
-    setLoading(true);
-    let t = tracking;
-    fetch("/api/admin/tracking/shimizu", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(t),
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.status) {
-          props.setTrigger(!props.trigger);
-          props.onHide();
-        } else {
-          alert(json.message);
-        }
-        setLoading(false);
-      });
+    if (tracking.username === "" || tracking.username === null) {
+      alert("กรุณาเลือก username!");
+    } else {
+      setLoading(true);
+      fetch("/api/admin/tracking/shimizu", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(tracking),
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          if (json.status) {
+            props.setTrigger(!props.trigger);
+            props.onHide();
+          } else {
+            alert(json.message);
+          }
+          setLoading(false);
+        });
+    }
   };
 
   return (

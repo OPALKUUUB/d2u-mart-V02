@@ -15,6 +15,7 @@ export default function AutoComplete(props) {
     setSelected(selected);
     props.handleChange(selected);
   };
+
   return (
     <Fragment>
       <Form.Group>
