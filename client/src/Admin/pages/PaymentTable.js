@@ -7,6 +7,7 @@ import {
   Modal,
   Row,
   Table,
+  FloatingLabel,
 } from "react-bootstrap";
 import Loading from "../components/Loading";
 
@@ -16,6 +17,8 @@ export default function PaymentTable() {
   const [orders, setOrders] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [temp, setTemp] = useState({});
+  const [tempNoted, setTempNoted] = useState({});
+  const [notedModal, setNotedModal] = useState(false);
   const [yen, setYen] = useState("");
   const [loading, setLoading] = useState(true);
   const [loading2, setLoading2] = useState(true);
@@ -92,6 +95,11 @@ export default function PaymentTable() {
       });
   };
 
+  const handleAddNoted = (id, noted) => {
+    setTempNoted({ id: id, noted: noted });
+    setNotedModal(true);
+  };
+
   return (
     <>
       <h3 className="mb-3">Yahoo Payment Table</h3>
@@ -134,6 +142,7 @@ export default function PaymentTable() {
             <th>สถานะ</th>
             <th>Noted</th>
             <th>Edit</th>
+            <th></th>
           </tr>
         </thead>
         <tbody style={{ textAlign: "center" }}>
@@ -231,6 +240,11 @@ export default function PaymentTable() {
                       <i class="fas fa-times"></i>
                     </Button>
                   </td>
+                  <td className="align-middle">
+                    <Button onClick={() => handleAddNoted(item.id, item.noted)}>
+                      Noted
+                    </Button>
+                  </td>
                 </tr>
               ))}
             </>
@@ -246,7 +260,67 @@ export default function PaymentTable() {
         trigger={trigger}
         setTrigger={setTrigger}
       />
+      <NotedModal
+        show={notedModal}
+        onHide={() => setNotedModal(false)}
+        item={tempNoted}
+        trigger={trigger}
+        setTrigger={setTrigger}
+      />
     </>
+  );
+}
+function NotedModal(props) {
+  const [noted, setNoted] = useState(props.item.noted);
+  useEffect(() => {
+    console.log(props.item);
+    if (props.item.noted !== noted) {
+      setNoted(props.item.noted === null ? "" : props.item.noted);
+    }
+  }, [props.item]);
+  const handleAddNoted = () => {
+    const PatchNoted = async () => {
+      const json = await fetch("/api/admin/yahoo/order/noted", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ noted: noted, id: props.item.id }),
+      }).then((res) => res.json());
+
+      if (json.status) {
+        props.setTrigger(!props.trigger);
+
+        props.onHide();
+      } else {
+        alert(json.message);
+      }
+    };
+    PatchNoted();
+  };
+  return (
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">Add Noted</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <FloatingLabel controlId="floatingTextarea2" label="Noted">
+          <Form.Control
+            as="textarea"
+            placeholder="Leave a comment here"
+            style={{ height: "100px" }}
+            value={noted}
+            onChange={(e) => setNoted(e.target.value)}
+          />
+        </FloatingLabel>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={handleAddNoted}>Add</Button>
+      </Modal.Footer>
+    </Modal>
   );
 }
 
