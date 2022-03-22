@@ -40,13 +40,21 @@ exports.getAuctionImage = (req, res, next) => {
         message: "Error: " + error,
       });
     } else {
-      const sources = body
-        .match(/<img [^>]*src="[^"]*"[^>]*>/gm)
-        .map((x) => x.replace(/.*src="([^"]*)".*/, "$1"));
-      res.status(200).json({
-        status: true,
-        imgsrc: sources[2],
-      });
+      if (body === null) {
+        res.status(400).json({
+          status: false,
+          message:
+            "Cann't get image from this link! Please show message to admin!",
+        });
+      } else {
+        const sources = body
+          .match(/<img [^>]*src="[^"]*"[^>]*>/gm)
+          .map((x) => x.replace(/.*src="([^"]*)".*/, "$1"));
+        res.status(200).json({
+          status: true,
+          imgsrc: sources[2],
+        });
+      }
     }
   });
 };

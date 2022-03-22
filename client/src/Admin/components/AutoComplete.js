@@ -5,6 +5,21 @@ import "react-bootstrap-typeahead/css/Typeahead.css";
 
 export default function AutoComplete(props) {
   const [selected, setSelected] = useState([]);
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    const FetchUsers = async () => {
+      const response = await fetch("/api/admin/users");
+      const data = await response.json();
+      if (data.status) {
+        setUser(data.data);
+        console.log(data.data);
+      } else {
+        alert(data.message);
+      }
+    };
+    FetchUsers();
+  }, []);
   useEffect(() => {
     if (props.preset !== undefined) {
       let temp = props.arr.filter((item) => item.username === props.preset);
