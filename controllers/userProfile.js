@@ -152,7 +152,7 @@ exports.getUsername = (req, res) => {
 exports.filterUsername = (req, res) => {
   const sql = `
   SELECT id, created_at, username, name, phone, address, point_old, point_new, contact FROM user_customers
-  WHERE username LIKE ?;`;
+  WHERE username LIKE ? ORDER BY created_at DESC;`;
   conn.query(sql, [req.query.username + "%"], (err, row) => {
     if (err) {
       res.status(400).json({
