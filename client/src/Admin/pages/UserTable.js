@@ -412,5 +412,5 @@ function formatDate(raw_date) {
     return raw_date;
   }
   let f = arr[0].split("-");
-  return `${f[2]}/${f[1]}/${f[0]}`;
+  return `${f[2]}/${f[1]}/${f[0]} ${arr[1]}`;
 }
