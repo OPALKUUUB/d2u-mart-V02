@@ -107,6 +107,7 @@ function ModalRegister(props) {
   });
   const [alertUsername, setAlertUsername] = useState(null);
   const [alertPassword, setAlertPassword] = useState(null);
+
   const handleChange = (e) => {
     if (e.target.name === "case") {
       setRegister({
@@ -118,31 +119,33 @@ function ModalRegister(props) {
       setRegister({ ...register, [e.target.name]: e.target.value });
     }
     if (e.target.name === "username") {
-      var re = new RegExp("^\\w[\\w.]{2,18}\\w$");
-      if (e.target.value.match(re) === null) {
+      var re_un = new RegExp("^[a-z]{4,18}$");
+      if (e.target.value.match(re_un) === null) {
         setAlertUsername(true);
       } else {
         setAlertUsername(false);
       }
     }
     if (e.target.name === "password") {
-      var re = new RegExp("^\\w[\\w.]{2,18}\\w$");
-      if (e.target.value.match(re) === null) {
+      var re_ps = new RegExp("^\\w[\\w.]{4,18}\\w$");
+      if (e.target.value.match(re_ps) === null) {
         setAlertPassword(true);
       } else {
         setAlertPassword(false);
       }
     }
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     let check = true;
-    var re = new RegExp("^\\w[\\w.]{2,18}\\w$");
-    if (register.password.match(re) === null) {
+    var re_ps = new RegExp("^\\w[\\w.]{4,18}\\w$");
+    var re_un = new RegExp("^[a-z]{4,18}$");
+    if (register.password.match(re_ps) === null) {
       check = false;
       alert("Please match format password that we required!");
     }
-    if (register.username.match(re) === null) {
+    if (register.username.match(re_un) === null) {
       check = false;
       alert("Please match format Username that we required!");
     }
@@ -220,8 +223,7 @@ function ModalRegister(props) {
               />
               {alertUsername && (
                 <Form.Text id="passwordHelpBlock" style={{ color: "red" }}>
-                  Your username must be 4-18characters long, container only a-z,
-                  A-Z, 0-9
+                  Your username must be 4-18 characters long, container only a-z
                 </Form.Text>
               )}
             </Col>
@@ -256,8 +258,8 @@ function ModalRegister(props) {
               />
               {alertPassword && (
                 <Form.Text id="passwordHelpBlock" style={{ color: "red" }}>
-                  Your password must be 4-18characters long, container only a-z,
-                  A-Z, 0-9
+                  Your password must be 4-18 characters long, container only
+                  a-z, A-Z, 0-9
                 </Form.Text>
               )}
             </Col>
