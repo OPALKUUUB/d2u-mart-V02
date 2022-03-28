@@ -44,7 +44,6 @@ export default function Tracking() {
             <th>รอบเรือ</th>
             <th>Pic1</th>
             <th>Pic2</th>
-            <th>Remark</th>
           </tr>
         </thead>
         <tbody>
@@ -133,7 +132,6 @@ export default function Tracking() {
                           />
                         )}
                       </td>
-                      <td className="align-middle">{item.remark}</td>
                     </>
                   )}
                 </tr>
