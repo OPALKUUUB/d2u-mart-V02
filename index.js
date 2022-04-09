@@ -182,7 +182,7 @@ app.get("/api/admin/track/:mode", (req, res) => {
     track.push(req.query.date + "%");
   }
   if (req.query.username !== "") {
-    let username = req.query.username + "%";
+    let username = "%" + req.query.username + "%";
     sql += ` AND username LIKE ? `;
     track.push(username);
   }
