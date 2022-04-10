@@ -73,7 +73,7 @@ export default function YahooOrder() {
                   </td>
                   <td className="align-middle">
                     <a href={item.link} target="_blank">
-                      {item.link.split("/")[5]}
+                      link
                     </a>
                   </td>
                   <td className="align-middle">
