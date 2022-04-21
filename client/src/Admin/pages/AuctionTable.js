@@ -361,9 +361,9 @@ function WorkBy(props) {
 
 function ChangeWinModal(props) {
   const history = useHistory();
-  const [bid, setBid] = useState("");
-  const [tranferFee, setTranferFee] = useState("");
-  const [deliveryFee, setDeliveryFee] = useState("");
+  const [bid, setBid] = useState(0);
+  const [tranferFee, setTranferFee] = useState(0);
+  const [deliveryFee, setDeliveryFee] = useState(0);
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
   const handleUpdateWin = () => {
