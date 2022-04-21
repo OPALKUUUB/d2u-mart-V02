@@ -621,7 +621,7 @@ exports.patchAdminOrderPayment = (req, res) => {
 };
 
 exports.filterAdminOrderHistory = (req, res) => {
-  let sql = `SELECT * FROM orders WHERE payment_status = "paid" AND `;
+  let sql = `SELECT * FROM orders WHERE payment_status = 'paid' AND `;
   let order = [];
   if (req.query.status === "win") {
     sql += ` status = 'win' `;
@@ -672,7 +672,7 @@ exports.filterAdminOrderHistory = (req, res) => {
   // console.log(order);
   conn.query(sql, order, (err, result) => {
     if (err) {
-      // console.log(err.sqlMessage);
+      console.log(err);
       res.status(400).json({
         status: false,
         message: "Error: " + err.sqlMessage,
