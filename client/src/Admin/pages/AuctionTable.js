@@ -330,33 +330,37 @@ function NotedModal(props) {
 
 function WorkBy(props) {
   const [check, setCheck] = useState(props.by !== "" && props.by !== null);
+  const [admin, setAdmin] = useState(props.by !== null ? props.by : "-");
   const handleWorkBy = () => {
-    const FetchWorkby = async () => {
-      const json = await fetch("/api/admin/yahoo/order/workby", {
-        method: "PATCH",
-        headers: {
-          token: localStorage.getItem("AdminToken"),
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          mode: props.mode,
-          id: props.item.id,
-          value: props.by !== "" && props.by !== null,
-        }),
-      }).then((res) => res.json());
-      if (json.status) {
-        props.setTrigger(!props.trigger);
-      } else {
-        alert(json.message);
-      }
-    };
-    setCheck(!check);
-    FetchWorkby();
+    fetch("/api/admin/yahoo/order/workby", {
+      method: "PATCH",
+      headers: {
+        token: localStorage.getItem("AdminToken"),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        mode: props.mode,
+        id: props.item.id,
+        value: props.by !== "" && props.by !== null,
+      }),
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.status) {
+          setCheck(!check);
+          if (admin === "-") {
+            setAdmin(json.value);
+          } else {
+            setAdmin("-");
+          }
+        } else {
+          alert(json.message);
+        }
+      });
   };
   return (
     <>
-      <input type="checkbox" checked={check} onChange={handleWorkBy} />{" "}
-      {props.by}
+      <input type="checkbox" checked={check} onChange={handleWorkBy} /> {admin}
     </>
   );
 }
