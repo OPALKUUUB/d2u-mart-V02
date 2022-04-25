@@ -84,7 +84,15 @@ export default function Tracking(props) {
 
   const handleDelete = (id, index) => {
     if (window.confirm("คุณต้องการที่จะลบข้อมูลที่ " + index + "?")) {
-      setLoading2(true);
+      let idx = -1;
+      for (let i = 0; i < trackings.length; i++) {
+        if (trackings[i].id === id) {
+          idx = i;
+          break;
+        }
+      }
+
+      setTrackings([...trackings.slice(0, idx), ...trackings.slice(idx + 1)]);
       fetch("/api/admin/tracking", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
@@ -93,7 +101,8 @@ export default function Tracking(props) {
         .then((res) => res.json())
         .then((json) => {
           if (json.status) {
-            setTrigger(!trigger);
+            // setTrigger(!trigger);
+            console.log("delete done");
           } else {
             alert(json.message);
           }
