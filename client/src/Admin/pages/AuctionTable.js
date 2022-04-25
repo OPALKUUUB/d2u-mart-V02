@@ -41,8 +41,9 @@ export default function AuctionTable() {
     fetchOrders();
   }, [username, date, trigger]);
 
-  const handleUpdateLose = (id) => {
+  const handleUpdateLose = (index, id) => {
     if (window.confirm("Confirm to change status to lose?")) {
+      setOrders([...orders.slice(0, index), ...orders.slice(index + 1)]);
       fetch("/api/admin/yahoo/order/lose", {
         method: "PATCH",
         headers: {
@@ -54,7 +55,8 @@ export default function AuctionTable() {
         .then((res) => res.json())
         .then((json) => {
           if (json.status) {
-            setTrigger(!trigger);
+            // setTrigger(!trigger);
+            console.log("delete done!");
           } else {
             alert(json.message);
             if (json.error === "jwt") {
@@ -223,7 +225,7 @@ export default function AuctionTable() {
                           win
                         </Dropdown.Item>
                         <Dropdown.Item
-                          onClick={() => handleUpdateLose(item.id)}
+                          onClick={() => handleUpdateLose(index, item.id)}
                         >
                           lose
                         </Dropdown.Item>

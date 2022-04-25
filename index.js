@@ -39,6 +39,44 @@ app.use(otherRoutes);
 
 app.use(userRoutes);
 
+app.get("/cal/point", (req, res) => {
+  const sql = `
+  select 
+  orders.id as orderId,
+  orders.bid,
+  orders.weight,
+  orders.addPoint,
+  orders.point
+  from orders
+  inner join payments on orders.payment_id = payments.id
+  where weight is not null and addPoint = 0;
+  `;
+  conn.query(sql, (err, row) => {
+    if (err) console.log(err);
+    for (let i = 0; i < row.length; i++) {
+      let item = row[i];
+      let id = item.orderId;
+      let bid = item.bid;
+      let weight = parseFloat(item.weight);
+      let point_temp = bid / 2000 + weight;
+      let point = Math.round(point_temp * 100) / 100;
+      let sql2 = `
+      update orders
+      set point = ?
+      where id = ?;
+      `;
+      let data = [point, id];
+      conn.query(sql2, data, (err2, result) => {
+        if (err2) console.log(err2);
+        console.log(result.info);
+      });
+      if (i === row.length - 1) {
+        console.log("success");
+      }
+    }
+    res.send("success");
+  });
+});
 app.patch("/api/admin/check1/tracking", (req, res) => {
   const sql = "UPDATE trackings SET check1 = ? WHERE id = ?;";
   conn.query(sql, [req.body.check, req.body.id], (err, result) => {
