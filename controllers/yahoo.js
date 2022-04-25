@@ -193,7 +193,7 @@ exports.postOrder = (req, res) => {
               bearer: process.env.TOKEN,
             },
             form: {
-              message: `\nUsername: ${decoded.username}\nOffer Link: ${req.body.link}\nBiding: ${req.body.price} ¥`,
+              message: `บิดแรก:\nd2u service:\n1st Bid\nUsername: ${decoded.username}\nOffer Link: ${req.body.link}\nBiding: ${req.body.price} ¥`,
             },
           },
           (err, httpResponse, body) => {
@@ -249,7 +249,11 @@ exports.patchOrderAddbid = (req, res) => {
                 bearer: process.env.TOKEN,
               },
               form: {
-                message: `\nUsername: ${decoded.username}\nAddbid#${req.body.mode}: ${req.body.addbid} ¥`,
+                message: `เพิ่มบิด:\nd2u service:\n${
+                  req.body.mode === 1 ? "2nd" : "3rd"
+                } Bid\nUsername: ${decoded.username}\nAddbid#${
+                  req.body.mode
+                }: ${req.body.addbid} ¥`,
               },
             },
             (err1, httpResponse, body) => {
