@@ -170,6 +170,7 @@ export default function ShimizuTracking() {
             <th>Track Id</th>
             <th>หมายเลขกล่อง</th>
             <th>Weight(Kg.)</th>
+            <th>point</th>
             <th>รอบเรือ</th>
             <th>Remark</th>
             <th>Edit</th>
@@ -189,6 +190,7 @@ export default function ShimizuTracking() {
               <td className="align-middle">{item.track_id}</td>
               <td className="align-middle">{item.box_id}</td>
               <td className="align-middle">{item.weight}</td>
+              <td className="align-middle">{item.point}</td>
               <td className="align-middle">
                 {parseInt(item.round_boat.split("-")[2])}{" "}
                 {month[parseInt(item.round_boat.split("-")[1])]}

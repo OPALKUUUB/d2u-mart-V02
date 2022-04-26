@@ -408,27 +408,30 @@ exports.patchAdminOrderNoted = (req, res) => {
   });
 };
 exports.filterAdminOrder = (req, res) => {
-  const sql =
-    "SELECT * FROM orders WHERE status = ? AND username LIKE ? AND created_at LIKE ? ORDER BY created_at DESC;";
-  conn.query(
-    sql,
-    ["Auction", req.query.username + "%", req.query.date + "%"],
-    (err, result) => {
-      if (err) {
-        console.log(err.sqlMessage);
-        res.status(400).json({
-          status: false,
-          message: "Error: " + err.sqlMessage,
-        });
-      } else {
-        res.status(200).json({
-          status: true,
-          message: "Select data from order that status 'Auction'",
-          data: result,
-        });
+  const decoded = jwtVerify(req.headers.token);
+  if (decoded !== undefined) {
+    const sql =
+      "SELECT * FROM orders WHERE status = ? AND username LIKE ? AND created_at LIKE ? ORDER BY created_at DESC;";
+    conn.query(
+      sql,
+      ["Auction", req.query.username + "%", req.query.date + "%"],
+      (err, result) => {
+        if (err) {
+          console.log(err.sqlMessage);
+          res.status(400).json({
+            status: false,
+            message: "Error: " + err.sqlMessage,
+          });
+        } else {
+          res.status(200).json({
+            status: true,
+            message: "Select data from order that status 'Auction'",
+            data: result,
+          });
+        }
       }
-    }
-  );
+    );
+  }
 };
 
 exports.postAdminOrder = (req, res) => {
@@ -624,34 +627,37 @@ exports.deleteAdminOrder = (req, res) => {
 };
 
 exports.filterAdminOrderPayment = (req, res) => {
-  const sql = `SELECT * FROM orders 
+  const decoded = jwtVerify(req.headers.token);
+  if (decoded !== undefined) {
+    const sql = `SELECT * FROM orders 
     WHERE (payment_status = ? OR payment_status = ? OR payment_status = ?)
     AND username LIKE ? AND created_at LIKE ? ORDER BY created_at DESC;`;
-  conn.query(
-    sql,
-    [
-      "pending1",
-      "pending2",
-      "pending3",
-      req.query.username + "%",
-      req.query.date + "%",
-    ],
-    (err, result) => {
-      if (err) {
-        console.log(err.sqlMessage);
-        res.status(400).json({
-          status: false,
-          message: "Error: " + err.sqlMessage,
-        });
-      } else {
-        res.status(200).json({
-          status: true,
-          message: "Select data from order that status 'Auction'",
-          data: result,
-        });
+    conn.query(
+      sql,
+      [
+        "pending1",
+        "pending2",
+        "pending3",
+        req.query.username + "%",
+        req.query.date + "%",
+      ],
+      (err, result) => {
+        if (err) {
+          console.log(err.sqlMessage);
+          res.status(400).json({
+            status: false,
+            message: "Error: " + err.sqlMessage,
+          });
+        } else {
+          res.status(200).json({
+            status: true,
+            message: "Select data from order that status 'Auction'",
+            data: result,
+          });
+        }
       }
-    }
-  );
+    );
+  }
 };
 
 exports.patchAdminOrderPayment = (req, res) => {
@@ -694,69 +700,72 @@ exports.patchAdminOrderPayment = (req, res) => {
 };
 
 exports.filterAdminOrderHistory = (req, res) => {
-  let sql = `SELECT * FROM orders WHERE payment_status = 'paid' AND `;
-  let order = [];
-  if (req.query.status === "win") {
-    sql += ` status = 'win' `;
-  } else if (req.query.status === "lose") {
-    sql += ` status = 'lose' `;
-  } else {
-    sql += ` (status = 'win' OR status = 'lose') `;
-  }
-  if (req.query.date !== "") {
-    sql += ` AND created_at LIKE ? `;
-    order.push(req.query.date + "%");
-  }
-  if (req.query.username !== "") {
-    let username = req.query.username + "%";
-    sql += ` AND username LIKE ? `;
-    order.push(username);
-  }
-  if (req.query.trackId !== "") {
-    let trackId = req.query.trackId;
-    if (trackId[0] === "/") {
-      if (trackId.length > 1) {
+  const decoded = jwtVerify(req.headers.token);
+  if (decoded !== undefined) {
+    let sql = `SELECT * FROM orders WHERE payment_status = 'paid' AND `;
+    let order = [];
+    if (req.query.status === "win") {
+      sql += ` status = 'win' `;
+    } else if (req.query.status === "lose") {
+      sql += ` status = 'lose' `;
+    } else {
+      sql += ` (status = 'win' OR status = 'lose') `;
+    }
+    if (req.query.date !== "") {
+      sql += ` AND created_at LIKE ? `;
+      order.push(req.query.date + "%");
+    }
+    if (req.query.username !== "") {
+      let username = req.query.username + "%";
+      sql += ` AND username LIKE ? `;
+      order.push(username);
+    }
+    if (req.query.trackId !== "") {
+      let trackId = req.query.trackId;
+      if (trackId[0] === "/") {
+        if (trackId.length > 1) {
+          sql += ` AND track_id LIKE ? `;
+          trackId = "%" + trackId.slice(1);
+          order.push(trackId);
+        }
+      } else {
+        trackId += "%";
         sql += ` AND track_id LIKE ? `;
-        trackId = "%" + trackId.slice(1);
         order.push(trackId);
       }
-    } else {
-      trackId += "%";
-      sql += ` AND track_id LIKE ? `;
-      order.push(trackId);
     }
-  }
 
-  if (req.query.roundBoat !== "") {
-    let roundBoat = req.query.roundBoat;
-    sql += ` AND round_boat = ? `;
-    order.push(roundBoat);
-  }
-  let orderBy = req.query.orderBy;
-  if (orderBy === "ASC1") {
-    sql += ` ORDER BY created_at ASC;`;
-  } else if (orderBy === "DESC1") {
-    sql += ` ORDER BY created_at DESC;`;
-  } else if (orderBy === "ASC2") {
-    sql += ` ORDER BY round_boat ASC;`;
-  } else if (orderBy === "DESC2") {
-    sql += ` ORDER BY round_boat DESC;`;
-  }
-  // console.log(order);
-  conn.query(sql, order, (err, result) => {
-    if (err) {
-      console.log(err);
-      res.status(400).json({
-        status: false,
-        message: "Error: " + err.sqlMessage,
-      });
-    } else {
-      // console.log(result);
-      res.status(200).json({
-        status: true,
-        message: "Select data from order that status 'Auction'",
-        data: result,
-      });
+    if (req.query.roundBoat !== "") {
+      let roundBoat = req.query.roundBoat;
+      sql += ` AND round_boat = ? `;
+      order.push(roundBoat);
     }
-  });
+    let orderBy = req.query.orderBy;
+    if (orderBy === "ASC1") {
+      sql += ` ORDER BY created_at ASC;`;
+    } else if (orderBy === "DESC1") {
+      sql += ` ORDER BY created_at DESC;`;
+    } else if (orderBy === "ASC2") {
+      sql += ` ORDER BY round_boat ASC;`;
+    } else if (orderBy === "DESC2") {
+      sql += ` ORDER BY round_boat DESC;`;
+    }
+    // console.log(order);
+    conn.query(sql, order, (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(400).json({
+          status: false,
+          message: "Error: " + err.sqlMessage,
+        });
+      } else {
+        // console.log(result);
+        res.status(200).json({
+          status: true,
+          message: "Select data from order that status 'Auction'",
+          data: result,
+        });
+      }
+    });
+  }
 };

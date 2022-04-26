@@ -24,7 +24,12 @@ export default function UserTable() {
   useEffect(() => {
     const FetchUsers = async () => {
       const result = await fetch(
-        `/api/admin/filter/users?username=${username}`
+        `/api/admin/filter/users?username=${username}`,
+        {
+          headers: {
+            token: localStorage.getItem("AdminToken"),
+          },
+        }
       ).then((res) => res.json());
       if (result.status) {
         setUsers(result.data);
@@ -47,9 +52,27 @@ export default function UserTable() {
     setTemp(item);
     setEditModalShow(true);
   };
+
+  const handleCalP = () => {
+    if (window.confirm("คุณใช่ opal รึไม่ ?")) {
+      fetch("/cal/point");
+      fetch("/cal/point/tracking");
+      fetch("/cal/point/tracking/shimizu");
+    }
+  };
+
+  const handleUpdatePoint = () => {
+    alert("ใช่ได้ในเดือนหน้า");
+  };
   return (
     <>
-      <h3 className="mb-3">User Customer Table</h3>
+      <div className="d-flex justify-content-between align-items-center">
+        <h3 className="mb-3">User Customer Table</h3>
+        <div className="d-flex gap-1">
+          <Button onClick={handleCalP}>Cal P.</Button>
+          <Button onClick={handleUpdatePoint}>update point</Button>
+        </div>
+      </div>
       <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
         <Form.Label>Username</Form.Label>
         <Form.Control

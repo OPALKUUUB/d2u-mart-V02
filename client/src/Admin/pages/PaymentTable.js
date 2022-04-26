@@ -37,7 +37,12 @@ export default function PaymentTable() {
   useEffect(() => {
     const fetchOrder = async () => {
       const result = await fetch(
-        `/api/admin/yahoo/payment?username=${username}&date=${date}`
+        `/api/admin/yahoo/payment?username=${username}&date=${date}`,
+        {
+          headers: {
+            token: localStorage.getItem("AdminToken"),
+          },
+        }
       ).then((res) => res.json());
       if (result.status) {
         setOrders(result.data);

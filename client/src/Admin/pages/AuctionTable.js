@@ -27,7 +27,12 @@ export default function AuctionTable() {
   useEffect(() => {
     const fetchOrders = async () => {
       const result = await fetch(
-        `/api/admin/yahoo/order?username=${username}&date=${date}`
+        `/api/admin/yahoo/order?username=${username}&date=${date}`,
+        {
+          headers: {
+            token: localStorage.getItem("AdminToken"),
+          },
+        }
       ).then((res) => res.json());
       if (result.status) {
         setOrders(result.data);

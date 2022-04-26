@@ -249,6 +249,8 @@ export default function Tracking(props) {
             <th>Track Id</th>
             <th>Box no.</th>
             <th>น้ำหนัก</th>
+            <th>price</th>
+            <th>point</th>
             <th>รอบเรือ</th>
             <th>รูป 1</th>
             <th>รูป 2</th>
@@ -319,6 +321,20 @@ export default function Tracking(props) {
                     "-"
                   ) : (
                     <>{item.weight} (Kg.)</>
+                  )}
+                </td>
+                <td className="align-middle">
+                  {item.price === null || item.price === "" ? (
+                    "-"
+                  ) : (
+                    <>{item.price} (¥)</>
+                  )}
+                </td>
+                <td className="align-middle">
+                  {item.point === null || item.point === "" ? (
+                    "-"
+                  ) : (
+                    <>{item.point}</>
                   )}
                 </td>
                 <td className="align-middle">
