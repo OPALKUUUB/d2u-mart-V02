@@ -45,7 +45,12 @@ export default function HistoryTable() {
   useEffect(() => {
     const FetchOrders = async () => {
       const result = await fetch(
-        `/api/admin/yahoo/history?status=${status}&username=${username}&date=${date}&trackId=${trackId}&orderBy=${orderBy}&roundBoat=${roundBoat}`
+        `/api/admin/yahoo/history?status=${status}&username=${username}&date=${date}&trackId=${trackId}&orderBy=${orderBy}&roundBoat=${roundBoat}`,
+        {
+          headers: {
+            token: localStorage.getItem("AdminToken"),
+          },
+        }
       ).then((res) => res.json());
       if (result.status) {
         let len_tracking = result.data.length;
@@ -199,6 +204,7 @@ export default function HistoryTable() {
             <th>หมายเลขกล่อง</th>
             <th>น้ำหนัก(kg.)</th>
             <th>รอบเรือ</th>
+            <th>point</th>
             <th>Noted</th>
             <th>Edit Tracking</th>
             <th></th>
@@ -304,6 +310,12 @@ export default function HistoryTable() {
                     )}
                     {/* {parseInt(item.round_boat.split("-")[2])}{" "}
               {month[parseInt(item.round_boat.split("-")[1])]} */}
+                    {/* test */}
+                  </td>
+                  <td className="align-middle">
+                    {item.point !== null && item.point !== ""
+                      ? item.point
+                      : "-"}
                   </td>
                   <td className="align-middle">
                     {item.noted !== null && item.noted !== ""

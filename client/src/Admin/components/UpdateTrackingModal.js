@@ -38,6 +38,7 @@ export default function UpdateTrackingModal(props) {
       url: item.url === null ? "" : item.url,
       track_id: item.track_id === null ? "" : item.track_id,
       weight: item.weight === null ? "" : item.weight,
+      price: item.price === null ? "" : item.price,
       round_boat: item.round_boat === null ? "" : item.round_boat,
       pic1_filename: item.pic1_filename === null ? "" : item.pic1_filename,
       pic2_filename: item.pic2_filename === null ? "" : item.pic2_filename,
@@ -45,7 +46,6 @@ export default function UpdateTrackingModal(props) {
       id: item.id,
     });
   }, [props.item]);
-
   const handleChangeTracking = (e) => {
     setTracking({ ...tracking, [e.target.name]: e.target.value });
   };
@@ -199,7 +199,7 @@ export default function UpdateTrackingModal(props) {
                 />
               </Form.Group>
             </Col>
-            <Col sm={12} className="mb-3">
+            <Col sm={6} className="mb-3">
               <Form.Group>
                 <Form.Label>URL</Form.Label>
                 <Form.Control
@@ -207,6 +207,17 @@ export default function UpdateTrackingModal(props) {
                   onChange={handleChangeTracking}
                   name="url"
                   value={tracking.url}
+                />
+              </Form.Group>
+            </Col>
+            <Col sm={6} className="mb-3">
+              <Form.Group>
+                <Form.Label>price</Form.Label>
+                <Form.Control
+                  type="number"
+                  onChange={handleChangeTracking}
+                  name="price"
+                  value={tracking.price}
                 />
               </Form.Group>
             </Col>

@@ -77,6 +77,99 @@ app.get("/cal/point", (req, res) => {
     res.send("success");
   });
 });
+
+app.get("/cal/point/tracking", (req, res) => {
+  const sql = `
+  select 
+  id,
+  channel,
+  price,
+  weight,
+  created_at,
+  addPoint
+  from trackings
+  WHERE
+  channel not like 'shimizu'
+  and weight != ''
+  AND price != '' OR price IS NOT null
+  and addPoint = 0;
+  `;
+  conn.query(sql, (err, row) => {
+    if (err) {
+      console.log(err);
+      res.send("Error: " + err.sqlMessage);
+    } else {
+      for (let i = 0; i < row.length; i++) {
+        let point = 0;
+        let base_point = 1000.0;
+        if (row[i].channel === "123") {
+          base_point = 2000.0;
+        }
+        let point_price = row[i].price / base_point;
+        let point_weight = 0;
+        let weight = parseFloat(row[i].weight);
+        if (weight > 1) {
+          point_weight = weight - 1;
+        }
+        point = point_price + point_weight;
+        row[i].point = point;
+        let sql2 = `
+        update trackings
+        set point = ?
+        where id = ?;
+        `;
+        let data = [point, row[i].id];
+        conn.query(sql2, data, (err2, result) => {
+          if (err2) console.log(err2);
+          console.log(result.info);
+        });
+      }
+      res.json({
+        data: row,
+      });
+    }
+  });
+});
+app.get("/cal/point/tracking/shimizu", (req, res) => {
+  const sql = `
+  select 
+  id,
+  channel,
+  weight,
+  created_at,
+  addPoint
+  from trackings
+  WHERE
+  channel like 'shimizu'
+  and weight != ''
+  and addPoint = 0
+  ;`;
+  conn.query(sql, (err, row) => {
+    if (err) {
+      console.log(err);
+      res.send("Error: " + err.sqlMessage);
+    } else {
+      for (let i = 0; i < row.length; i++) {
+        let point = parseFloat(row[i].weight);
+        row[i].point = point;
+        let sql2 = `
+        update trackings
+        set point = ?
+        where id = ?;
+        `;
+        let data = [point, row[i].id];
+        conn.query(sql2, data, (err2, result) => {
+          if (err2) console.log(err2);
+          console.log(result.info);
+        });
+      }
+      res.json({
+        data: row,
+      });
+    }
+  });
+});
+
 app.patch("/api/admin/check1/tracking", (req, res) => {
   const sql = "UPDATE trackings SET check1 = ? WHERE id = ?;";
   conn.query(sql, [req.body.check, req.body.id], (err, result) => {
@@ -298,6 +391,7 @@ app.post("/api/admin/tracking/:mode", (req, res) => {
     req.body.username,
     req.body.track_id,
     req.body.weight,
+
     req.body.round_boat,
     req.body.remark,
     req.body.pic1_filename,
@@ -335,6 +429,11 @@ app.patch("/api/admin/tracking", (req, res) => {
     req.body.username,
     req.body.track_id,
     req.body.weight,
+    req.body.channel === "shimizu"
+      ? 0
+      : req.body.price === ""
+      ? 0
+      : req.body.price,
     req.body.round_boat,
     req.body.pic1_filename,
     req.body.pic2_filename,
@@ -344,7 +443,7 @@ app.patch("/api/admin/tracking", (req, res) => {
   ];
   console.log(tracking);
   const sql =
-    "UPDATE trackings SET url = ?, box_id = ?,channel =?,date = ?, username = ?, track_id = ?, weight = ?, round_boat = ?, pic1_filename = ?, pic2_filename = ?, remark = ?, updated_at = ? WHERE id = ?;";
+    "UPDATE trackings SET url = ?, box_id = ?,channel =?,date = ?, username = ?, track_id = ?, weight = ?, price = ?, round_boat = ?, pic1_filename = ?, pic2_filename = ?, remark = ?, updated_at = ? WHERE id = ?;";
   conn.query(sql, tracking, (err, result) => {
     if (err) {
       console.log(err);
