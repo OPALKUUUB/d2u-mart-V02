@@ -46,7 +46,6 @@ export default function UpdateTrackingModal(props) {
       id: item.id,
     });
   }, [props.item]);
-
   const handleChangeTracking = (e) => {
     setTracking({ ...tracking, [e.target.name]: e.target.value });
   };

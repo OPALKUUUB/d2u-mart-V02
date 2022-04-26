@@ -170,6 +170,7 @@ export default function ShimizuTracking() {
             <th>Track Id</th>
             <th>หมายเลขกล่อง</th>
             <th>Weight(Kg.)</th>
+            {/* test */}
             <th>point</th>
             <th>รอบเรือ</th>
             <th>Remark</th>

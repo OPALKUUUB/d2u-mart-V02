@@ -166,6 +166,7 @@ export default function UserTable() {
           <h4>No Data Yet!</h4>
         </div>
       )}
+      {/* test */}
       <PointManagementModal
         show={pointManagementModalShow}
         onHide={() => setPointManagementModalShow(false)}

@@ -323,6 +323,7 @@ export default function Tracking(props) {
                     <>{item.weight} (Kg.)</>
                   )}
                 </td>
+                {/* test */}
                 <td className="align-middle">
                   {item.price === null || item.price === "" ? (
                     "-"

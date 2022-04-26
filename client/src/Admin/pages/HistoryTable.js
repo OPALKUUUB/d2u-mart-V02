@@ -310,6 +310,7 @@ export default function HistoryTable() {
                     )}
                     {/* {parseInt(item.round_boat.split("-")[2])}{" "}
               {month[parseInt(item.round_boat.split("-")[1])]} */}
+                    {/* test */}
                   </td>
                   <td className="align-middle">
                     {item.point !== null && item.point !== ""
