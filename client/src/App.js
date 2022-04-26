@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import AppAdmin from "./Admin/AppAdmin";
 import AppUser from "./User/AppUser";
 function App() {
+  console.log("test");
   const history = useHistory();
   if (history.location.pathname.split("/")[1] === "admin") {
     return <AppAdmin />;
