@@ -39,6 +39,26 @@ app.use(otherRoutes);
 
 app.use(userRoutes);
 
+app.get("/check/session", (req, res) => {
+  const decoded = jwt.verify(
+    req.headers.token,
+    process.env.SECRET_KEY,
+    (error, decoded) => decoded
+  );
+  console.log(decoded);
+  if (decoded !== undefined) {
+    res.status(200).json({
+      status: true,
+    });
+  } else {
+    res.status(400).json({
+      status: false,
+      message: "Your login session is expired,\nPlease Sign In Again!",
+      error: "jwt",
+    });
+  }
+});
+
 app.get("/cal/point", (req, res) => {
   const sql = `
   select 

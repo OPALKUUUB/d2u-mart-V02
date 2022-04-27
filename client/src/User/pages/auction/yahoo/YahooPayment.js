@@ -20,7 +20,23 @@ export default function YahooPayment() {
     useState(false);
   const [slipModalShow, setSlipModalShow] = useState(false);
   const [loading, setLoading] = useState(true);
-
+  useEffect(() => {
+    const CheckSession = async () => {
+      await fetch("/check/session", {
+        headers: { token: localStorage.getItem("token") },
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          console.log(json);
+          if (!json.status) {
+            alert(json.message);
+            localStorage.removeItem("token");
+            window.location.reload(false);
+          }
+        });
+    };
+    CheckSession();
+  }, []);
   useEffect(() => {
     const FetchPayment = async () => {
       const result = await fetch("/api/yahoo/payment", {

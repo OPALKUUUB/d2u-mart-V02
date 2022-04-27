@@ -7,6 +7,19 @@ export default function Profile() {
   const [p2, setP2] = useState("");
   const [p3, setP3] = useState("");
   useEffect(() => {
+    fetch("/check/session", {
+      headers: { token: localStorage.getItem("token") },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (!json.status) {
+          alert(json.message);
+          localStorage.removeItem("token");
+          window.location.reload(false);
+        }
+      });
+  }, []);
+  useEffect(() => {
     fetch("/api/user/customer", {
       method: "GET",
       headers: {

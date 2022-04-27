@@ -8,6 +8,20 @@ export default function Tracking() {
   const [image, setImage] = useState("");
   const [modalShowImage, setModalShowImage] = useState(false);
   useEffect(() => {
+    fetch("/check/session", {
+      headers: { token: localStorage.getItem("token") },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(json);
+        if (!json.status) {
+          alert(json.message);
+          localStorage.removeItem("token");
+          window.location.reload(false);
+        }
+      });
+  }, []);
+  useEffect(() => {
     fetch("/api/tracking", {
       method: "GET",
       headers: {

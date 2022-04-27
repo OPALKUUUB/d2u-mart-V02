@@ -1,10 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Col, Container, Figure, Row } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 
 export default function Auction() {
   const history = useHistory();
-
+  useEffect(() => {
+    const CheckSession = async () => {
+      await fetch("/check/session", {
+        headers: { token: localStorage.getItem("token") },
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          console.log(json);
+          if (!json.status) {
+            alert(json.message);
+            localStorage.removeItem("token");
+            window.location.reload(false);
+          }
+        });
+    };
+    CheckSession();
+  }, []);
   return (
     <Container
       style={{

@@ -5,6 +5,23 @@ import ReactLoading from "react-loading";
 export default function YahooHistory() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+useEffect(() => {
+  const CheckSession = async () => {
+    await fetch("/check/session", {
+      headers: { token: localStorage.getItem("token") },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(json);
+        if (!json.status) {
+          alert(json.message);
+          localStorage.removeItem("token");
+          window.location.reload(false);
+        }
+      });
+  };
+  CheckSession();
+}, []);
   useEffect(() => {
     const FetchOrder = async () => {
       const json = await fetch("/api/yahoo/history", {

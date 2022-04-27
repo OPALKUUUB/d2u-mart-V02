@@ -31,7 +31,23 @@ export default function YahooAuction() {
     };
     FetchYen();
   }, []);
-
+  useEffect(() => {
+    const CheckSession = async () => {
+      await fetch("/check/session", {
+        headers: { token: localStorage.getItem("token") },
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          console.log(json);
+          if (!json.status) {
+            alert(json.message);
+            localStorage.removeItem("token");
+            window.location.reload(false);
+          }
+        });
+    };
+    CheckSession();
+  }, []);
   const handleSearchImgsrc = () => {
     fetch("/api/yahoo/image", {
       method: "POST",
