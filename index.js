@@ -59,6 +59,8 @@ app.get("/check/session", (req, res) => {
   }
 });
 
+
+
 app.get("/cal/point", (req, res) => {
   const sql = `
   select 

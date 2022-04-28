@@ -20,8 +20,8 @@ export default function AuctionTable() {
   const [modalShow, setModalShow] = useState(false);
   const [notedModal, setNotedModal] = useState(false);
   const [id, setId] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [loading2, setLoading2] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [loading2, setLoading2] = useState(false);
   const [trigger, setTrigger] = useState(false);
   const [temp, setTemp] = useState({});
   useEffect(() => {
@@ -38,11 +38,12 @@ export default function AuctionTable() {
         setOrders(result.data);
       } else {
         alert("fetch fail from history yahoo!");
+        window.localStorage.removeItem("AdminToken");
+        window.location.reload(false);
       }
       setLoading(false);
       setLoading2(false);
     };
-    setLoading(true);
     fetchOrders();
   }, [username, date, trigger]);
 

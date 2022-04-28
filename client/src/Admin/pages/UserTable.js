@@ -36,6 +36,7 @@ export default function UserTable() {
         setLoading(false);
       } else {
         alert(result.message);
+        window.localStorage.removeItem("AdminToken");
         window.location.reload(false);
       }
     };

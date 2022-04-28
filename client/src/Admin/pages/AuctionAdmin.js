@@ -48,6 +48,8 @@ export default function AuctionAdmin() {
           setLoading(false);
         } else {
           alert(json.message);
+          window.localStorage.removeItem("AdminToken");
+          window.location.reload(false);
         }
       });
   }, []);

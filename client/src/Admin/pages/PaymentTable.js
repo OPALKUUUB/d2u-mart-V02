@@ -49,6 +49,7 @@ export default function PaymentTable() {
         setLoading(false);
       } else {
         alert(result.message);
+        window.localStorage.removeItem("AdminToken");
         window.location.reload(false);
       }
       setLoading(false);

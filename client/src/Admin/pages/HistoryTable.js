@@ -67,6 +67,8 @@ export default function HistoryTable() {
         setOrders(temp);
       } else {
         alert("fetch fail from history yahoo!");
+        window.localStorage.removeItem("AdminToken");
+        window.location.reload(false);
       }
       setLoading(false);
       setLoading2(false);

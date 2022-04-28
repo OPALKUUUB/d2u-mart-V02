@@ -105,6 +105,8 @@ export default function Tracking(props) {
             console.log("delete done");
           } else {
             alert(json.message);
+            window.localStorage.removeItem("AdminToken");
+            window.location.reload(false);
           }
         });
     }

@@ -17,7 +17,7 @@ function genDate() {
   return `${today.getFullYear()}-${month}-${date}T${hour}:${minute}`;
 }
 
-function jwtVerify(token) {
+function jwtVerify(token, res) {
   let decoded = jwt.verify(token, process.env.SECRET_KEY, (error, decoded) => {
     if (error) {
       res.status(400).json({
@@ -128,7 +128,7 @@ exports.getAuctionImage = (req, res, next) => {
   });
 };
 exports.getOrder = (req, res) => {
-  const decoded = jwtVerify(req.headers.token);
+  const decoded = jwtVerify(req.headers.token, res);
   if (decoded !== undefined) {
     const sql = "SELECT * FROM orders WHERE username = ? and status = ?;";
     conn.query(sql, [decoded.username, "Auction"], (err, row) => {
@@ -151,7 +151,7 @@ exports.getOrder = (req, res) => {
   }
 };
 exports.postOrder = (req, res) => {
-  const decoded = jwtVerify(req.headers.token);
+  const decoded = jwtVerify(req.headers.token, res);
   if (decoded !== undefined) {
     let date = genDate();
     let offer = [
@@ -209,7 +209,7 @@ exports.postOrder = (req, res) => {
   }
 };
 exports.patchOrderAddbid = (req, res) => {
-  const decoded = jwtVerify(req.headers.token);
+  const decoded = jwtVerify(req.headers.token, res);
   if (decoded !== undefined) {
     let date = genDate();
     let sql = "";
@@ -270,7 +270,7 @@ exports.patchOrderAddbid = (req, res) => {
   }
 };
 exports.getOrderPayment = (req, res) => {
-  const decoded = jwtVerify(req.headers.token);
+  const decoded = jwtVerify(req.headers.token, res);
   if (decoded !== undefined) {
     const sql =
       "SELECT * FROM orders WHERE username = ? and (payment_status = ? OR payment_status = ? OR payment_status = ?);";
@@ -316,7 +316,7 @@ exports.getOrderPaymentSlip = (req, res) => {
   });
 };
 exports.patchOrderPostPayment = (req, res) => {
-  const decoded = jwtVerify(req.headers.token);
+  const decoded = jwtVerify(req.headers.token, res);
   if (decoded !== undefined) {
     let sql = "INSERT INTO payments (price, slip_image_filename) VALUES (?,?);";
     conn.query(
@@ -365,7 +365,7 @@ exports.patchOrderPostPayment = (req, res) => {
   }
 };
 exports.getOrderHistory = (req, res) => {
-  const decoded = jwtVerify(req.headers.token);
+  const decoded = jwtVerify(req.headers.token, res);
   if (decoded !== undefined) {
     const sql =
       "SELECT * FROM orders WHERE username = ? AND (payment_status = ? OR status = ?);";
@@ -408,7 +408,7 @@ exports.patchAdminOrderNoted = (req, res) => {
   });
 };
 exports.filterAdminOrder = (req, res) => {
-  const decoded = jwtVerify(req.headers.token);
+  const decoded = jwtVerify(req.headers.token, res);
   if (decoded !== undefined) {
     const sql =
       "SELECT * FROM orders WHERE status = ? AND username LIKE ? AND created_at LIKE ? ORDER BY created_at DESC;";
@@ -488,7 +488,7 @@ exports.postAdminOrder = (req, res) => {
 };
 
 exports.patchAdminOrderWorkby = (req, res) => {
-  const decoded = jwtVerify(req.headers.token);
+  const decoded = jwtVerify(req.headers.token, res);
   if (decoded !== undefined) {
     let date = genDate();
     let value = req.body.value ? null : decoded.username;
@@ -526,7 +526,7 @@ exports.patchAdminOrderWorkby = (req, res) => {
 };
 
 exports.patchAdminOrderWin = (req, res) => {
-  const decoded = jwtVerify(req.headers.token);
+  const decoded = jwtVerify(req.headers.token, res);
   if (decoded !== undefined) {
     let date = genDate();
     let win = [
@@ -563,7 +563,7 @@ exports.patchAdminOrderWin = (req, res) => {
 };
 
 exports.patchAdminOrderLose = (req, res) => {
-  const decoded = jwtVerify(req.headers.token);
+  const decoded = jwtVerify(req.headers.token, res);
   if (decoded !== undefined) {
     let date = genDate();
     let lose = [decoded.username, "lose", date, req.body.id];
@@ -627,7 +627,7 @@ exports.deleteAdminOrder = (req, res) => {
 };
 
 exports.filterAdminOrderPayment = (req, res) => {
-  const decoded = jwtVerify(req.headers.token);
+  const decoded = jwtVerify(req.headers.token, res);
   if (decoded !== undefined) {
     const sql = `SELECT * FROM orders 
     WHERE (payment_status = ? OR payment_status = ? OR payment_status = ?)
@@ -700,7 +700,7 @@ exports.patchAdminOrderPayment = (req, res) => {
 };
 
 exports.filterAdminOrderHistory = (req, res) => {
-  const decoded = jwtVerify(req.headers.token);
+  const decoded = jwtVerify(req.headers.token, res);
   if (decoded !== undefined) {
     let sql = `SELECT * FROM orders WHERE payment_status = 'paid' AND `;
     let order = [];
