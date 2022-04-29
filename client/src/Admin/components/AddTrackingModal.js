@@ -112,6 +112,7 @@ export default function AddTrackingModal(props) {
         .then((res) => res.json())
         .then((json) => {
           if (json.status) {
+            setTracking(trackingModel);
             props.setTrigger(!props.trigger);
             props.onHide();
           } else {

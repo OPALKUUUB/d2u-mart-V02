@@ -63,7 +63,12 @@ export default function UserTable() {
   };
 
   const handleUpdatePoint = () => {
-    alert("ใช่ได้ในเดือนหน้า");
+    // alert("ใช่ได้ในเดือนหน้า");
+    if (window.confirm("คุณใช่ opal รึไม่ ?")) {
+      fetch("/update/user/point", { method: "PATCH" });
+      fetch("/update/user/point/tracking", { method: "PATCH" });
+      fetch("/update/user/point/tracking/shimizu", { method: "PATCH" });
+    }
   };
   return (
     <>

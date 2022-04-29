@@ -59,6 +59,69 @@ app.get("/check/session", (req, res) => {
   }
 });
 
+app.patch("/update/user/point", (req, res) => {
+  const sql = `
+  select
+  orders.username,
+  orders.id as orderId,
+  orders.bid,
+  orders.weight,
+  orders.addPoint,
+  orders.point
+  from orders
+  inner join payments on orders.payment_id = payments.id
+  where weight is not null and addPoint = 0;
+  `;
+  conn.query(sql, (err, row) => {
+    if (err) console.log(err);
+    for (let i = 0; i < row.length; i++) {
+      let item = row[i];
+      let id = item.orderId;
+      let bid = item.bid;
+      let weight = parseFloat(item.weight);
+      let point_temp = bid / 2000 + weight;
+      let point = Math.round(point_temp * 100) / 100;
+      let sql2 = `
+      update orders
+      set point = ?, addPoint = 1
+      where id = ?;
+      `;
+      let data = [point, id];
+      conn.query(sql2, data, (err2, result) => {
+        if (err2) console.log(err2);
+        let sql3 = `
+        select id, username, point_new
+        from user_customers
+        where username = ?;
+        `;
+        conn.query(sql3, [row[i].username], (err3, row3) => {
+          if (err3) console.log(err3);
+          if (row3.length !== 0) {
+            let point_new = row3[0].point_new;
+            let sql4 = `
+            update user_customers
+            set point_new = ?
+            where id = ?;
+            `;
+            conn.query(
+              sql4,
+              [point_new + point, row3[0].id],
+              (err4, result4) => {
+                if (err4) {
+                  res.send(err4);
+                } else {
+                  console.log(result4);
+                }
+              }
+            );
+          }
+        });
+      });
+    }
+    res.send("success");
+  });
+});
+
 app.get("/cal/point", (req, res) => {
   const sql = `
   select 
@@ -95,6 +158,95 @@ app.get("/cal/point", (req, res) => {
       }
     }
     res.send("success");
+  });
+});
+
+app.patch("/update/user/point/tracking", (req, res) => {
+  const sql = `
+  select 
+  id,
+  channel,
+  price,
+  weight,
+  q,
+  created_at,
+  addPoint
+  from trackings
+  WHERE
+  channel not like 'shimizu'
+  and (weight != '' OR q != 0)
+  AND price != '' OR price IS NOT null
+  and addPoint = 0;
+  `;
+  conn.query(sql, (err, row) => {
+    if (err) {
+      console.log(err);
+      res.send("Error: " + err.sqlMessage);
+    } else {
+      for (let i = 0; i < row.length; i++) {
+        let point = 0;
+        let base_point = 1000.0;
+        if (row[i].channel === "123") {
+          base_point = 2000.0;
+        }
+        let point_price = row[i].price / base_point;
+        let point_weight = 0;
+        if (row[i].q === 0) {
+          let weight = parseFloat(row[i].weight);
+          if (weight > 1) {
+            point_weight = weight - 1;
+          }
+        } else {
+          let q = parseFloat(row[i].q);
+          point_weight = 100 * q;
+        }
+
+        point = point_price + point_weight;
+        row[i].point = point;
+        let sql2 = `
+        update trackings
+        set point = ?, addPoint = 1
+        where id = ?;
+        `;
+        let data = [point, row[i].id];
+        conn.query(sql2, data, (err2, result) => {
+          if (err2) {
+            console.log(err2);
+          } else {
+            let sql3 = `
+        select id, username, point_new
+        from user_customers
+        where username = ?;
+        `;
+            conn.query(sql3, [row[i].username], (err3, row3) => {
+              if (err3) console.log(err3);
+              if (row3.length !== 0) {
+                let point_new = row3[0].point_new;
+                let sql4 = `
+            update user_customers
+            set point_new = ?
+            where id = ?;
+            `;
+                conn.query(
+                  sql4,
+                  [point_new + point, row3[0].id],
+                  (err4, result4) => {
+                    if (err4) {
+                      res.send(err4);
+                    } else {
+                      console.log(result4);
+                    }
+                  }
+                );
+              }
+            });
+          }
+        });
+      }
+      res.json({
+        data: row,
+      });
+    }
   });
 });
 
@@ -149,6 +301,81 @@ app.get("/cal/point/tracking", (req, res) => {
         conn.query(sql2, data, (err2, result) => {
           if (err2) console.log(err2);
           console.log(result.info);
+        });
+      }
+      res.json({
+        data: row,
+      });
+    }
+  });
+});
+
+app.patch("/update/user/point/tracking/shimizu", (req, res) => {
+  const sql = `
+  select 
+  id,
+  channel,
+  weight,
+  q,
+  created_at,
+  addPoint
+  from trackings
+  WHERE
+  channel like 'shimizu'
+  and (weight != '' OR q != 0)
+  and addPoint = 0
+  ;`;
+  conn.query(sql, (err, row) => {
+    if (err) {
+      console.log(err);
+      res.send("Error: " + err.sqlMessage);
+    } else {
+      for (let i = 0; i < row.length; i++) {
+        let point = 0;
+        if (row[i].q === 0) {
+          point = parseFloat(row[i].weight);
+        } else {
+          point = parseFloat(row[i].q * 100);
+        }
+        row[i].point = point;
+        let sql2 = `
+        update trackings
+        set point = ?, addPoint = 1
+        where id = ?;
+        `;
+        let data = [point, row[i].id];
+        conn.query(sql2, data, (err2, result) => {
+          if (err2) {
+            console.log(err2);
+          } else {
+            let sql3 = `
+        select id, username, point_new
+        from user_customers
+        where username = ?;
+        `;
+            conn.query(sql3, [row[i].username], (err3, row3) => {
+              if (err3) console.log(err3);
+              if (row3.length !== 0) {
+                let point_new = row3[0].point_new;
+                let sql4 = `
+            update user_customers
+            set point_new = ?
+            where id = ?;
+            `;
+                conn.query(
+                  sql4,
+                  [point_new + point, row3[0].id],
+                  (err4, result4) => {
+                    if (err4) {
+                      res.send(err4);
+                    } else {
+                      console.log(result4);
+                    }
+                  }
+                );
+              }
+            });
+          }
         });
       }
       res.json({
