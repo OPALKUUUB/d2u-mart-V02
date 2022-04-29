@@ -59,8 +59,6 @@ app.get("/check/session", (req, res) => {
   }
 });
 
-
-
 app.get("/cal/point", (req, res) => {
   const sql = `
   select 
@@ -107,12 +105,13 @@ app.get("/cal/point/tracking", (req, res) => {
   channel,
   price,
   weight,
+  q,
   created_at,
   addPoint
   from trackings
   WHERE
   channel not like 'shimizu'
-  and weight != ''
+  and (weight != '' OR q != 0)
   AND price != '' OR price IS NOT null
   and addPoint = 0;
   `;
@@ -129,10 +128,16 @@ app.get("/cal/point/tracking", (req, res) => {
         }
         let point_price = row[i].price / base_point;
         let point_weight = 0;
-        let weight = parseFloat(row[i].weight);
-        if (weight > 1) {
-          point_weight = weight - 1;
+        if (row[i].q === 0) {
+          let weight = parseFloat(row[i].weight);
+          if (weight > 1) {
+            point_weight = weight - 1;
+          }
+        } else {
+          let q = parseFloat(row[i].q);
+          point_weight = 100 * q;
         }
+
         point = point_price + point_weight;
         row[i].point = point;
         let sql2 = `
@@ -158,12 +163,13 @@ app.get("/cal/point/tracking/shimizu", (req, res) => {
   id,
   channel,
   weight,
+  q,
   created_at,
   addPoint
   from trackings
   WHERE
   channel like 'shimizu'
-  and weight != ''
+  and (weight != '' OR q != 0)
   and addPoint = 0
   ;`;
   conn.query(sql, (err, row) => {
@@ -172,7 +178,12 @@ app.get("/cal/point/tracking/shimizu", (req, res) => {
       res.send("Error: " + err.sqlMessage);
     } else {
       for (let i = 0; i < row.length; i++) {
-        let point = parseFloat(row[i].weight);
+        let point = 0;
+        if (row[i].q === 0) {
+          point = parseFloat(row[i].weight);
+        } else {
+          point = parseFloat(row[i].q * 100);
+        }
         row[i].point = point;
         let sql2 = `
         update trackings
@@ -451,6 +462,7 @@ app.patch("/api/admin/tracking", (req, res) => {
     req.body.username,
     req.body.track_id,
     req.body.weight,
+    req.body.q,
     req.body.channel === "shimizu"
       ? 0
       : req.body.price === ""
@@ -465,7 +477,7 @@ app.patch("/api/admin/tracking", (req, res) => {
   ];
   console.log(tracking);
   const sql =
-    "UPDATE trackings SET url = ?, box_id = ?,channel =?,date = ?, username = ?, track_id = ?, weight = ?, price = ?, round_boat = ?, pic1_filename = ?, pic2_filename = ?, remark = ?, updated_at = ? WHERE id = ?;";
+    "UPDATE trackings SET url = ?, box_id = ?,channel =?,date = ?, username = ?, track_id = ?, weight = ?, q=?, price = ?, round_boat = ?, pic1_filename = ?, pic2_filename = ?, remark = ?, updated_at = ? WHERE id = ?;";
   conn.query(sql, tracking, (err, result) => {
     if (err) {
       console.log(err);

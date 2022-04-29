@@ -6,14 +6,18 @@ import Loading from "../../components/Loading";
 
 export default function ShimizuTracking() {
   const [trackings, setTrackings] = useState([]);
-  const [modalShowAdd, setModalShowAdd] = React.useState(false);
-  const [modalShowAddCsv, setModalShowAddCsv] = React.useState(false);
-  const [modalShowUpdate, setModalShowUpdate] = React.useState(false);
+  const [modalShowAdd, setModalShowAdd] = useState(false);
+  const [modalShowAddCsv, setModalShowAddCsv] = useState(false);
+  const [modalShowUpdate, setModalShowUpdate] = useState(false);
   const [item, setItem] = useState({});
+  // const [trackUpdate, setTrackUpdate] = useState({
+  //   track: {},
+  //   modal: false,
+  // });
   const [date, setDate] = useState("");
   const [username, setUsername] = useState("");
   const [trackId, setTrackId] = useState("");
-  const [orderBy, setOrderBy] = useState("ASC1");
+  const [orderBy, setOrderBy] = useState("DESC1");
   const [roundBoat, setRoundBoat] = useState("");
   const [loading, setLoading] = useState(false);
   const [trigger, setTrigger] = useState(false);
@@ -49,6 +53,10 @@ export default function ShimizuTracking() {
   const handleConfigs = (item) => {
     setItem(item);
     setModalShowUpdate(true);
+    // setTrackUpdate({
+    //   track: item,
+    //   modal: true,
+    // });
   };
 
   const handleDelete = (id, index) => {
@@ -170,7 +178,7 @@ export default function ShimizuTracking() {
             <th>Track Id</th>
             <th>หมายเลขกล่อง</th>
             <th>Weight(Kg.)</th>
-            {/* test */}
+            <th>Q</th>
             <th>point</th>
             <th>รอบเรือ</th>
             <th>Remark</th>
@@ -191,6 +199,7 @@ export default function ShimizuTracking() {
               <td className="align-middle">{item.track_id}</td>
               <td className="align-middle">{item.box_id}</td>
               <td className="align-middle">{item.weight}</td>
+              <td className="align-middle">{item.q}</td>
               <td className="align-middle">{item.point}</td>
               <td className="align-middle">
                 {parseInt(item.round_boat.split("-")[2])}{" "}
@@ -207,7 +216,7 @@ export default function ShimizuTracking() {
                     onClick={() => handleConfigs(item)}
                     variant="success"
                   >
-                    <i class="fas fa-pencil-alt"></i>
+                    <i className="fas fa-pencil-alt"></i>
                   </Button>
                   &nbsp;
                   <Button
@@ -216,7 +225,7 @@ export default function ShimizuTracking() {
                       handleDelete(item.id, index + 1 + currentPage * page)
                     }
                   >
-                    <i class="fas fa-times"></i>
+                    <i className="fas fa-times"></i>
                   </Button>
                 </div>
               </td>
@@ -246,6 +255,11 @@ export default function ShimizuTracking() {
         show={modalShowUpdate}
         onHide={() => setModalShowUpdate(false)}
         item={item}
+        // show={trackUpdate.modal}
+        // onHide={() =>
+        //   setTrackUpdate({ track: trackUpdate.track, modal: false })
+        // }
+        // item={trackUpdate.track}
         trigger={trigger}
         setTrigger={setTrigger}
       />
@@ -318,7 +332,6 @@ function AddTrackModal(props) {
     <Modal
       {...props}
       size="lg"
-      aria-labelledb
       sm={12}
       y="contained-modal-title-vcenter"
       centered
@@ -418,13 +431,14 @@ function AddTrackModal(props) {
 }
 
 function UpdateTrackModal(props) {
-  const [tracking, setTracking] = useState({ ...props.item });
+  const [tracking, setTracking] = useState({});
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setTracking({ ...props.item });
-  }, [props]);
+    setTracking(props.item);
+  }, [props.item]);
+
   useEffect(() => {
     fetch("/api/admin/users", {
       method: "GET",
@@ -439,6 +453,7 @@ function UpdateTrackModal(props) {
         }
       });
   }, []);
+
   const handleChangeTracking = (e) => {
     setTracking({ ...tracking, [e.target.name]: e.target.value });
   };
@@ -477,7 +492,6 @@ function UpdateTrackModal(props) {
     <Modal
       {...props}
       size="lg"
-      aria-labelledb
       sm={12}
       y="contained-modal-title-vcenter"
       centered
@@ -485,21 +499,6 @@ function UpdateTrackModal(props) {
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
           Update Tracking
-          <Form.Select
-            size="sm"
-            name="username"
-            onChange={handleChangeTracking}
-          >
-            <option value={"shimizu"} selected={tracking.channel === "shimizu"}>
-              Yahoo
-            </option>
-            <option value={"mercari"} selected={tracking.channel === "mercari"}>
-              Mercari
-            </option>
-            <option value={"123"} selected={tracking.channel === "web123"}>
-              123
-            </option>
-          </Form.Select>
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -550,7 +549,7 @@ function UpdateTrackModal(props) {
                 />
               </Form.Group>
             </Col>
-            <Col lg={4} sm={12} className="mb-3">
+            <Col lg={2} sm={12} className="mb-3">
               <Form.Group>
                 <Form.Label>Weight(kg.)</Form.Label>
                 <Form.Control
@@ -558,6 +557,17 @@ function UpdateTrackModal(props) {
                   onChange={handleChangeTracking}
                   name="weight"
                   value={tracking.weight}
+                />
+              </Form.Group>
+            </Col>
+            <Col lg={2} sm={12} className="mb-3">
+              <Form.Group>
+                <Form.Label>q</Form.Label>
+                <Form.Control
+                  type="number"
+                  onChange={handleChangeTracking}
+                  name="q"
+                  value={tracking.q}
                 />
               </Form.Group>
             </Col>
@@ -603,7 +613,6 @@ function UploadCsvModal(props) {
     <Modal
       {...props}
       size="lg"
-      aria-labelledb
       sm={12}
       y="contained-modal-title-vcenter"
       centered

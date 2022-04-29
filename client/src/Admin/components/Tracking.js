@@ -11,6 +11,9 @@ let trackingModel = {
   username: "",
   box_id: "",
   url: "",
+  price: "",
+  point: "",
+  q: "",
   track_id: "",
   weight: "",
   round_boat: "",
@@ -21,8 +24,8 @@ let trackingModel = {
 
 export default function Tracking(props) {
   const [trackings, setTrackings] = useState([]);
-  const [modalShowAdd, setModalShowAdd] = React.useState(false);
-  const [modalShowUpdate, setModalShowUpdate] = React.useState(false);
+  const [modalShowAdd, setModalShowAdd] = useState(false);
+  const [modalShowUpdate, setModalShowUpdate] = useState(false);
   const [temp, setTemp] = useState(trackingModel);
   const [date, setDate] = useState("");
   const [username, setUsername] = useState("");
@@ -251,6 +254,7 @@ export default function Tracking(props) {
             <th>Track Id</th>
             <th>Box no.</th>
             <th>น้ำหนัก</th>
+            <th>Q</th>
             <th>price</th>
             <th>point</th>
             <th>รอบเรือ</th>
@@ -325,6 +329,7 @@ export default function Tracking(props) {
                     <>{item.weight} (Kg.)</>
                   )}
                 </td>
+                <td className="align-middle">{item.q}</td>
                 {/* test */}
                 <td className="align-middle">
                   {item.price === null || item.price === "" ? (

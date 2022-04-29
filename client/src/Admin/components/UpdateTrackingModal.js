@@ -39,6 +39,7 @@ export default function UpdateTrackingModal(props) {
       track_id: item.track_id === null ? "" : item.track_id,
       weight: item.weight === null ? "" : item.weight,
       price: item.price === null ? "" : item.price,
+      q: item.q,
       round_boat: item.round_boat === null ? "" : item.round_boat,
       pic1_filename: item.pic1_filename === null ? "" : item.pic1_filename,
       pic2_filename: item.pic2_filename === null ? "" : item.pic2_filename,
@@ -232,7 +233,7 @@ export default function UpdateTrackingModal(props) {
                 />
               </Form.Group>
             </Col>
-            <Col lg={4} sm={12} className="mb-3">
+            <Col lg={2} sm={12} className="mb-3">
               <Form.Group>
                 <Form.Label>Weight(kg.)</Form.Label>
                 <Form.Control
@@ -240,6 +241,19 @@ export default function UpdateTrackingModal(props) {
                   onChange={handleChangeTracking}
                   name="weight"
                   value={tracking.weight}
+                />
+              </Form.Group>
+            </Col>
+            <Col lg={2} sm={12} className="mb-3">
+              <Form.Group>
+                <Form.Label>
+                  Q
+                </Form.Label>
+                <Form.Control
+                  type="number"
+                  onChange={handleChangeTracking}
+                  name="q"
+                  value={tracking.q}
                 />
               </Form.Group>
             </Col>
