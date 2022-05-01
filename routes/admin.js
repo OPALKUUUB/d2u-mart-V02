@@ -8,6 +8,8 @@ const userProfileController = require("../controllers/userProfile");
 
 const yahooController = require("../controllers/yahoo");
 
+const trackingController = require("../controllers/tracking");
+
 router.get("/api/admin/annoucement", annoucementController.getAnnoucement);
 
 router.patch("/api/admin/annoucement", annoucementController.patchAnnoucement);
@@ -54,4 +56,7 @@ router.patch(
 
 router.get("/api/admin/yahoo/history", yahooController.filterAdminOrderHistory);
 
+router.post("/api/admin/track/v2/:mode", trackingController.filterTracking);
+
+router.patch("/api/admin/track/v2/check/:ckmode", trackingController.setCheck);
 module.exports = router;
