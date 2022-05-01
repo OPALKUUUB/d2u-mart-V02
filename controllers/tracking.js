@@ -30,7 +30,7 @@ exports.filterTracking = (req, res) => {
     `;
   } else if (req.body.orderBy === "1") {
     sql += `
-    AND create_at != ''
+    AND created_at != ''
     ORDER BY created_at ASC
     LIMIT ?, ?;
     `;
