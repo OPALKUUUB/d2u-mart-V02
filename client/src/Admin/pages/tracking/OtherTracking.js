@@ -1,10 +1,11 @@
 import React from "react";
-import Tracking from "../../components/Tracking";
+// import Tracking from "../../components/Tracking";
+import TrackingV2 from "../../components/tracking/TrackingV2";
 
 export default function OtherTracking() {
   return (
     <>
-      <Tracking mode="123" header="Web 123" />
+      <TrackingV2 mode="123" header="Web 123" />
     </>
   );
 }

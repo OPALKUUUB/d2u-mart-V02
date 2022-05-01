@@ -4,6 +4,19 @@ import AutoComplete from "./AutoComplete";
 import Loading from "./Loading";
 
 export default function AddTrackingModal(props) {
+  let date = new Date();
+  let dfDate = date.toISOString().split("T")[0];
+  let trackingModel = {
+    date: dfDate,
+    username: "",
+    track_id: "",
+    weight: "",
+    noted: "",
+    round_boat: "",
+    pic1_filename: "",
+    pic2_filename: "",
+    box_id: "",
+  };
   const [tracking, setTracking] = useState(trackingModel);
   const [pic1File, setPic1File] = useState(null);
   const [pic2File, setPic2File] = useState(null);
@@ -74,7 +87,7 @@ export default function AddTrackingModal(props) {
         data.append("upload_preset", "d2u-service");
         data.append("cloud_name", "d2u-service");
         let urlname = await fetch(
-          "  https://api.cloudinary.com/v1_1/d2u-service/upload",
+          "https://api.cloudinary.com/v1_1/d2u-service/upload",
           {
             method: "POST",
             body: data,
@@ -154,6 +167,7 @@ export default function AddTrackingModal(props) {
                   type="date"
                   onChange={handleChangeTracking}
                   name="date"
+                  value={dfDate}
                 />
               </Form.Group>
             </Col>
@@ -311,15 +325,3 @@ export default function AddTrackingModal(props) {
     </Modal>
   );
 }
-
-let trackingModel = {
-  date: "",
-  username: "",
-  track_id: "",
-  weight: "",
-  noted: "",
-  round_boat: "",
-  pic1_filename: "",
-  pic2_filename: "",
-  box_id: "",
-};

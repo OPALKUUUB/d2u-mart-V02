@@ -8,10 +8,11 @@ import HistoryTable from "./pages/HistoryTable";
 import LoginAdmin from "./pages/login/LoginAdmin";
 import PaymentTable from "./pages/PaymentTable";
 import ShimizuTracking from "./pages/tracking/ShimizuTracking";
-import FrilTracking from "./pages/tracking/FrilTrackign";
+import FrilTracking from "./pages/tracking/FrilTracking";
 import MercariTracking from "./pages/tracking/MercariTracking";
 import OtherTracking from "./pages/tracking/OtherTracking";
 import UserTable from "./pages/UserTable";
+import ShimizuTrackingV2 from "./pages/tracking/ShimizuTrackingV2";
 export default function AppAdmin() {
   const [loginStatus, setLoginStatus] = useState(
     localStorage.getItem("AdminToken") !== null
@@ -43,8 +44,13 @@ export default function AppAdmin() {
             />
             <Route
               exact
-              path="/admin/table/tracking/shimizu"
+              path="/admin/table/tracking/shimizu/old"
               component={ShimizuTracking}
+            />
+            <Route
+              exact
+              path="/admin/table/tracking/shimizu"
+              component={ShimizuTrackingV2}
             />
             <Route
               exact

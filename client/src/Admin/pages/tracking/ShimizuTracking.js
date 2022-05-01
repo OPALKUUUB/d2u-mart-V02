@@ -10,10 +10,6 @@ export default function ShimizuTracking() {
   const [modalShowAddCsv, setModalShowAddCsv] = useState(false);
   const [modalShowUpdate, setModalShowUpdate] = useState(false);
   const [item, setItem] = useState({});
-  // const [trackUpdate, setTrackUpdate] = useState({
-  //   track: {},
-  //   modal: false,
-  // });
   const [date, setDate] = useState("");
   const [username, setUsername] = useState("");
   const [trackId, setTrackId] = useState("");
