@@ -67,6 +67,7 @@ export default function TrackingV2({ mode, header }) {
           header={header}
           trigger={trigger}
           setTrigger={setTrigger}
+          FetchTrackings={FetchTrackings}
         />
       </TrackTable>
       <AddTrackingModal

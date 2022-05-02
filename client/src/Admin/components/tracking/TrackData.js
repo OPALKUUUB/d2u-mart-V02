@@ -11,6 +11,7 @@ export default function TrackData({
   header,
   trigger,
   setTrigger,
+  FetchTrackings,
 }) {
   const [load, setLoad] = useState(false);
   const [image, setImage] = useState("");
@@ -29,13 +30,16 @@ export default function TrackData({
         check: check ? 1 : 0,
       }),
     })
-      .then((res) => setLoad(false))
+      .then((res) => {
+        setLoad(false);
+      })
       .catch((err) => alert(err));
   };
   const handleCheck = (e, id, ckmode) => {
     // console.log(e.target.checked, id, ckMode);
     setLoad(true);
     UpdateCheck(e.target.checked, id, ckmode);
+    FetchTrackings();
   };
   const handleDelete = (id, index) => {
     if (window.confirm("คุณต้องการที่จะลบข้อมูลที่ " + index + "?")) {
@@ -158,7 +162,7 @@ export default function TrackData({
                 </td>
               </>
             )}
-            <td className="align-middle text-center">
+            <td className="align-middle text-center" id={index}>
               <input
                 type="checkbox"
                 defaultChecked={item.check1}
