@@ -192,7 +192,7 @@ export default function AddTrackingModal(props) {
                 />
               </Form.Group>
             </Col>
-            <Col sm={12} className="mb-3">
+            <Col sm={props.mode === "shimizu" ? 12 : 6} className="mb-3">
               <Form.Group>
                 <Form.Label>URL</Form.Label>
                 <Form.Control
@@ -202,6 +202,18 @@ export default function AddTrackingModal(props) {
                 />
               </Form.Group>
             </Col>
+            {props.mode !== "shimizu" && (
+              <Col sm={6} className="mb-3">
+                <Form.Group>
+                  <Form.Label>price</Form.Label>
+                  <Form.Control
+                    type="number"
+                    onChange={handleChangeTracking}
+                    name="price"
+                  />
+                </Form.Group>
+              </Col>
+            )}
             <Col lg={4} sm={12} className="mb-3">
               <Form.Group>
                 <Form.Label>Track Id</Form.Label>

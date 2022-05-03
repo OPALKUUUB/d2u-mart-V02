@@ -5,11 +5,13 @@ import TrackTable from "./TrackTable";
 import TrackData from "./TrackData";
 import FilterControl from "./FilterControl";
 import AddTrackingModal from "../AddTrackingModal";
+import Loading from "../Loading";
 
 export default function TrackingV2({ mode, header }) {
   const [trackings, setTrackings] = useState([{}]);
   const [modalShowAdd, setModalShowAdd] = useState(false);
   const [trigger, setTrigger] = useState(false);
+  const [load, setLoad] = useState(false);
   const [paginate, setPaginate] = useState({
     offset: 0,
     item: 10,
@@ -23,6 +25,7 @@ export default function TrackingV2({ mode, header }) {
   });
 
   useEffect(() => {
+    setLoad(true);
     FetchTrackings();
   }, [trigger]);
 
@@ -38,7 +41,8 @@ export default function TrackingV2({ mode, header }) {
       .then((res) => res.json())
       .then((json) => {
         // console.log(json.data);
-        setTrackings(json.data);
+        setTrackings([...json.data]);
+        setLoad(false);
       });
   };
 
@@ -78,6 +82,7 @@ export default function TrackingV2({ mode, header }) {
         trigger={trigger}
         setTrigger={setTrigger}
       />
+      {load && <Loading />}
     </>
   );
 }

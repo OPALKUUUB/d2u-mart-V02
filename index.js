@@ -645,6 +645,7 @@ app.post("/api/admin/tracking/:mode", (req, res) => {
 
   let tracking = [
     req.body.url,
+    req.params.mode === "shimizu" ? 0 : req.body.price,
     req.body.box_id,
     req.params.mode,
     req.body.date,
@@ -661,7 +662,7 @@ app.post("/api/admin/tracking/:mode", (req, res) => {
   ];
 
   let sql =
-    "INSERT INTO trackings (url,box_id,channel,date,username,track_id,weight,round_boat,remark,pic1_filename,pic2_filename, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);";
+    "INSERT INTO trackings (url,price,box_id,channel,date,username,track_id,weight,round_boat,remark,pic1_filename,pic2_filename, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
   conn.query(sql, tracking, (err, result) => {
     if (err) {
       console.log(err);

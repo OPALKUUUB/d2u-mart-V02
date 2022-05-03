@@ -31,7 +31,7 @@ exports.filterTracking = (req, res) => {
   } else if (req.body.orderBy === "1") {
     sql += `
     AND created_at != ''
-    ORDER BY created_at ASC
+    ORDER BY id ASC
     LIMIT ?, ?;
     `;
   } else if (req.body.orderBy === "2") {
@@ -45,7 +45,7 @@ exports.filterTracking = (req, res) => {
     LIMIT ?, ?;
     `;
   } else {
-    sql += `ORDER BY created_at DESC
+    sql += `ORDER BY id DESC
     LIMIT ?, ?;
     `;
   }
