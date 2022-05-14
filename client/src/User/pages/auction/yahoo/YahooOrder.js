@@ -182,8 +182,18 @@ function AddbidModal(props) {
     } else {
       let addbid =
         mode === 1
-          ? { addbid: addbid1, id: props.item.id, mode: 1 }
-          : { addbid: addbid2, id: props.item.id, mode: 2 };
+          ? {
+              addbid: addbid1,
+              id: props.item.id,
+              link: props.item.link,
+              mode: 1,
+            }
+          : {
+              addbid: addbid2,
+              id: props.item.id,
+              link: props.item.link,
+              mode: 2,
+            };
       fetch("/api/yahoo/order/addbid", {
         method: "PATCH",
         headers: {

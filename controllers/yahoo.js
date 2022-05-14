@@ -249,11 +249,11 @@ exports.patchOrderAddbid = (req, res) => {
                 bearer: process.env.TOKEN,
               },
               form: {
-                message: `เพิ่มบิด:\nd2u service:\n${
+                message: `เพิ่มบิด:\n${
                   req.body.mode === 1 ? "2nd" : "3rd"
                 } Bid\nUsername: ${decoded.username}\nAddbid#${
                   req.body.mode
-                }: ${req.body.addbid} ¥`,
+                }: ${req.body.addbid} ¥\nlink: ${req.body.link}`,
               },
             },
             (err1, httpResponse, body) => {
