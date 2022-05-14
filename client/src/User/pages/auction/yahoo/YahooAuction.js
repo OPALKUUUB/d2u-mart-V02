@@ -66,43 +66,56 @@ export default function YahooAuction() {
 
   const handleSubmitOffer = (e) => {
     e.preventDefault();
-    let check = 1;
-    if (link === "" || link === undefined) {
-      alert("Please fill link");
-      check = 0;
-    } else if (imgsrc === null) {
-      alert("Please click search for upload image");
-      check = 0;
-    } else if (price === "" || price === undefined) {
-      alert("Please fill price");
-      check = 0;
-    } else if (remark === undefined) {
-      setRemark("");
-    }
-    if (check === 1) {
-      setLoading(true);
-      let offer = { link: link, imgsrc: imgsrc, price: price, remark: remark };
-      fetch("/api/yahoo/order", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          token: localStorage.getItem("token"),
-        },
-        body: JSON.stringify(offer),
-      })
-        .then((res) => res.json())
-        .then((json) => {
-          if (json.status) {
-            setLoading(false);
-            history.push("/auction/yahoo/order");
-          } else {
-            alert(json.message);
-            if (json.error === "jwt") {
-              localStorage.removeItem("token");
+    if (
+      window.confirm(`
+      ในบางช่วงเวลา อาจมีลูกใช้บริการเป็นจำนวนมาก คำแนะนำสำหรับคุณลูกค้า เพื่อไม่ให้เสียโอกาสในการประมูลคือ
+        -ควรใส่ราคาประมูลสูงสุดที่รับไหว
+        -ควรส่งก่อนหมดเวลาอย่างน้อย 15 นาที
+      ขอบคุณคุณลูกค้าทุกท่านที่ให้ความร่วมมือกับทางร้านค่ะ`)
+    ) {
+      let check = 1;
+      if (link === "" || link === undefined) {
+        alert("Please fill link");
+        check = 0;
+      } else if (imgsrc === null) {
+        alert("Please click search for upload image");
+        check = 0;
+      } else if (price === "" || price === undefined) {
+        alert("Please fill price");
+        check = 0;
+      } else if (remark === undefined) {
+        setRemark("");
+      }
+      if (check === 1) {
+        setLoading(true);
+        let offer = {
+          link: link,
+          imgsrc: imgsrc,
+          price: price,
+          remark: remark,
+        };
+        fetch("/api/yahoo/order", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            token: localStorage.getItem("token"),
+          },
+          body: JSON.stringify(offer),
+        })
+          .then((res) => res.json())
+          .then((json) => {
+            if (json.status) {
+              setLoading(false);
+              history.push("/auction/yahoo/order");
+            } else {
+              alert(json.message);
+              if (json.error === "jwt") {
+                localStorage.removeItem("token");
+              }
+              window.location.reload(false);
             }
-            window.location.reload(false);
-          }
-        });
+          });
+      }
     }
   };
   return (
