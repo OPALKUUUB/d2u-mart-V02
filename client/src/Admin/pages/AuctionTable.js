@@ -134,116 +134,121 @@ export default function AuctionTable() {
         <tbody style={{ textAlign: "center" }}>
           {!loading && (
             <>
-              {orders.map((item, index) => (
-                <tr key={index}>
-                  <td className="align-middle">{index + 1}</td>
-                  <td className="align-middle">
-                    {parseInt(item.created_at.split("T")[0].split("-")[2])}{" "}
-                    {
-                      month[
-                        parseInt(item.created_at.split("T")[0].split("-")[1])
-                      ]
-                    }{" "}
-                    {parseInt(item.created_at.split("T")[0].split("-")[0])}
-                  </td>
-                  <td className="align-middle">
-                    <img src={item.imgsrc} width={100} />
-                  </td>
-                  <td className="align-middle">{item.username}</td>
-                  <td className="align-middle">
-                    <a href={item.link} target="_blank">
-                      link
-                    </a>
-                  </td>
-                  <td className="align-middle">
-                    <div>
-                      <span>{item.maxbid} (¥)</span>
-                      <br />
-                      <span>
-                        <WorkBy
-                          item={item}
-                          by={item.maxbid_work_by}
-                          mode={1}
-                          setTrigger={setTrigger}
-                          trigger={trigger}
-                        />
-                      </span>
-                    </div>
-                  </td>
-                  <td className="align-middle">
-                    {item.addbid1 === null ? (
-                      "-"
-                    ) : (
+              {orders.map((item, index) => {
+                let t = item.link.split("/");
+                let link = t[t.length - 1];
+                return (
+                  <tr key={index}>
+                    <td className="align-middle">{index + 1}</td>
+                    <td className="align-middle">
+                      {parseInt(item.created_at.split("T")[0].split("-")[2])}{" "}
+                      {
+                        month[
+                          parseInt(item.created_at.split("T")[0].split("-")[1])
+                        ]
+                      }{" "}
+                      {parseInt(item.created_at.split("T")[0].split("-")[0])}
+                    </td>
+                    <td className="align-middle">
+                      <img src={item.imgsrc} width={100} alt={item.imgsrc} />
+                    </td>
+                    <td className="align-middle">{item.username}</td>
+                    <td className="align-middle">
+                      <a href={item.link} target="_blank" rel="noreferrer">
+                        {link}
+                      </a>
+                    </td>
+                    <td className="align-middle">
                       <div>
-                        <span>{item.addbid1} (¥)</span>
+                        <span>{item.maxbid} (¥)</span>
                         <br />
                         <span>
                           <WorkBy
                             item={item}
-                            by={item.addbid1_work_by}
-                            mode={2}
+                            by={item.maxbid_work_by}
+                            mode={1}
                             setTrigger={setTrigger}
                             trigger={trigger}
                           />
                         </span>
                       </div>
-                    )}
-                  </td>
-                  <td className="align-middle">
-                    {item.addbid2 === null ? (
-                      "-"
-                    ) : (
-                      <div>
-                        <span>{item.addbid2} (¥)</span>
-                        <br />
-                        <span>
-                          <WorkBy
-                            item={item}
-                            by={item.addbid2_work_by}
-                            mode={3}
-                            setTrigger={setTrigger}
-                            trigger={trigger}
-                          />
-                        </span>
-                      </div>
-                    )}
-                  </td>
-                  <td className="align-middle" width={100}>
-                    {item.remark === null ? "-" : <>{item.remark}</>}
-                  </td>
-                  <td className="align-middle">
-                    {item.noted !== null && item.noted !== ""
-                      ? item.noted
-                      : "-"}
-                  </td>
-                  <td className="align-middle">
-                    <Dropdown>
-                      <Dropdown.Toggle
-                        variant="success"
-                        id="dropdown-basic"
-                        size="sm"
-                      >
-                        manage
-                      </Dropdown.Toggle>
+                    </td>
+                    <td className="align-middle">
+                      {item.addbid1 === null ? (
+                        "-"
+                      ) : (
+                        <div>
+                          <span>{item.addbid1} (¥)</span>
+                          <br />
+                          <span>
+                            <WorkBy
+                              item={item}
+                              by={item.addbid1_work_by}
+                              mode={2}
+                              setTrigger={setTrigger}
+                              trigger={trigger}
+                            />
+                          </span>
+                        </div>
+                      )}
+                    </td>
+                    <td className="align-middle">
+                      {item.addbid2 === null ? (
+                        "-"
+                      ) : (
+                        <div>
+                          <span>{item.addbid2} (¥)</span>
+                          <br />
+                          <span>
+                            <WorkBy
+                              item={item}
+                              by={item.addbid2_work_by}
+                              mode={3}
+                              setTrigger={setTrigger}
+                              trigger={trigger}
+                            />
+                          </span>
+                        </div>
+                      )}
+                    </td>
+                    <td className="align-middle" width={100}>
+                      {item.remark === null ? "-" : <>{item.remark}</>}
+                    </td>
+                    <td className="align-middle">
+                      {item.noted !== null && item.noted !== ""
+                        ? item.noted
+                        : "-"}
+                    </td>
+                    <td className="align-middle">
+                      <Dropdown>
+                        <Dropdown.Toggle
+                          variant="success"
+                          id="dropdown-basic"
+                          size="sm"
+                        >
+                          manage
+                        </Dropdown.Toggle>
 
-                      <Dropdown.Menu>
-                        <Dropdown.Item onClick={() => handleUpdateWin(item.id)}>
-                          win
-                        </Dropdown.Item>
-                        <Dropdown.Item
-                          onClick={() => handleUpdateLose(index, item.id)}
-                        >
-                          lose
-                        </Dropdown.Item>
-                        <Dropdown.Divider />
-                        <Dropdown.Item
-                          onClick={() => handleAddNoted(item.id, item.noted)}
-                        >
-                          noted
-                        </Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
-                    {/* <Button
+                        <Dropdown.Menu>
+                          <Dropdown.Item
+                            onClick={() => handleUpdateWin(item.id)}
+                          >
+                            win
+                          </Dropdown.Item>
+                          <Dropdown.Item
+                            onClick={() => handleUpdateLose(index, item.id)}
+                          >
+                            lose
+                          </Dropdown.Item>
+                          <Dropdown.Divider />
+                          <Dropdown.Item
+                            onClick={() => handleAddNoted(item.id, item.noted)}
+                          >
+                            noted
+                          </Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                      {/* <Button
                       variant="success"
                       onClick={() => handleUpdateWin(item.id)}
                     >
@@ -255,9 +260,10 @@ export default function AuctionTable() {
                     >
                       lose
                     </Button> */}
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                  </tr>
+                );
+              })}
             </>
           )}
         </tbody>
@@ -283,10 +289,11 @@ export default function AuctionTable() {
 function NotedModal(props) {
   const [noted, setNoted] = useState(props.item.noted);
   useEffect(() => {
-    console.log(props.item);
+    // console.log(props.item);
     if (props.item.noted !== noted) {
       setNoted(props.item.noted === null ? "" : props.item.noted);
     }
+    // eslint-disable-next-line
   }, [props.item]);
   const handleAddNoted = () => {
     const PatchNoted = async () => {

@@ -155,104 +155,112 @@ export default function PaymentTable() {
           {!loading && (
             <>
               {" "}
-              {orders.map((item, index) => (
-                <tr key={index}>
-                  <td className="align-middle">{index + 1}</td>
-                  <td className="align-middle">
-                    {parseInt(item.created_at.split("T")[0].split("-")[2])}{" "}
-                    {
-                      month[
-                        parseInt(item.created_at.split("T")[0].split("-")[1])
-                      ]
-                    }{" "}
-                    {parseInt(item.created_at.split("T")[0].split("-")[0])}
-                  </td>
-                  <td className="align-middle">
-                    <img src={item.imgsrc} width={100} />
-                  </td>
-                  <td className="align-middle">{item.username}</td>
-                  <td className="align-middle">
-                    <a href={item.link} target="_blank">
-                      link
-                    </a>
-                  </td>
+              {orders.map((item, index) => {
+                let t = item.link.split("/");
+                let link = t[t.length - 1];
+                return (
+                  <tr key={index}>
+                    <td className="align-middle">{index + 1}</td>
+                    <td className="align-middle">
+                      {parseInt(item.created_at.split("T")[0].split("-")[2])}{" "}
+                      {
+                        month[
+                          parseInt(item.created_at.split("T")[0].split("-")[1])
+                        ]
+                      }{" "}
+                      {parseInt(item.created_at.split("T")[0].split("-")[0])}
+                    </td>
+                    <td className="align-middle">
+                      <img src={item.imgsrc} width={100} alt={item.imgsrc} />
+                    </td>
+                    <td className="align-middle">{item.username}</td>
+                    <td className="align-middle">
+                      <a href={item.link} target="_blank" rel="noreferrer">
+                        {link}
+                      </a>
+                    </td>
 
-                  <td className="align-middle">
-                    <div>{item.bid} (¥)</div>
-                    <div style={{ backgroundColor: "yellow" }}>
-                      {item.bid_by}
-                    </div>
-                  </td>
-                  <td className="align-middle">
-                    {item.tranfer_fee_injapan === null ? (
-                      "-"
-                    ) : (
-                      <>{item.tranfer_fee_injapan} (฿)</>
-                    )}
-                  </td>
-                  <td className="align-middle">
-                    {item.delivery_in_thai === null ? (
-                      "-"
-                    ) : (
-                      <>{item.delivery_in_thai} (¥)</>
-                    )}
-                  </td>
-                  <td className="align-middle">
-                    {item.tranfer_fee_injapan === null &&
-                    item.delivery_in_thai === null ? (
-                      "ข้อมูลยังไม่ครบ"
-                    ) : (
-                      <>
-                        {Math.round((item.bid + item.delivery_in_thai) * yen) +
-                          item.tranfer_fee_injapan}{" "}
-                        (฿)
-                      </>
-                    )}
-                  </td>
-                  <td className="align-middle">
-                    <input
-                      type="checkbox"
-                      checked={item.inform_bill}
-                      onChange={() =>
-                        handleCheckInformBill(item.inform_bill, item.id)
-                      }
-                    />
-                  </td>
-                  <td className="align-middle">
-                    {item.payment_status === "pending1" && "รอค่าส่ง"}
-                    {item.payment_status === "pending2" && "รอการชำระ"}
-                    {item.payment_status === "pending3" && "รอการตรวจสอบ"}
-                    {item.payment_status === "paid" && "ชำระเงินเรียบร้อยแล้ว"}
-                  </td>
-                  <td className="align-middle">
-                    {item.noted !== null && item.noted !== ""
-                      ? item.noted
-                      : "-"}
-                  </td>
-                  <td className="align-middle">
-                    <Button
-                      size="sm"
-                      variant="success"
-                      onClick={() => handleUpdateWin(item)}
-                    >
-                      <i class="fas fa-pencil-alt"></i>
-                    </Button>
-                    &nbsp;
-                    <Button
-                      variant="danger"
-                      onClick={() => handleDelete(item.id)}
-                      size="sm"
-                    >
-                      <i class="fas fa-times"></i>
-                    </Button>
-                  </td>
-                  <td className="align-middle">
-                    <Button onClick={() => handleAddNoted(item.id, item.noted)}>
-                      Noted
-                    </Button>
-                  </td>
-                </tr>
-              ))}
+                    <td className="align-middle">
+                      <div>{item.bid} (¥)</div>
+                      <div style={{ backgroundColor: "yellow" }}>
+                        {item.bid_by}
+                      </div>
+                    </td>
+                    <td className="align-middle">
+                      {item.tranfer_fee_injapan === null ? (
+                        "-"
+                      ) : (
+                        <>{item.tranfer_fee_injapan} (฿)</>
+                      )}
+                    </td>
+                    <td className="align-middle">
+                      {item.delivery_in_thai === null ? (
+                        "-"
+                      ) : (
+                        <>{item.delivery_in_thai} (¥)</>
+                      )}
+                    </td>
+                    <td className="align-middle">
+                      {item.tranfer_fee_injapan === null &&
+                      item.delivery_in_thai === null ? (
+                        "ข้อมูลยังไม่ครบ"
+                      ) : (
+                        <>
+                          {Math.round(
+                            (item.bid + item.delivery_in_thai) * yen
+                          ) + item.tranfer_fee_injapan}{" "}
+                          (฿)
+                        </>
+                      )}
+                    </td>
+                    <td className="align-middle">
+                      <input
+                        type="checkbox"
+                        checked={item.inform_bill}
+                        onChange={() =>
+                          handleCheckInformBill(item.inform_bill, item.id)
+                        }
+                      />
+                    </td>
+                    <td className="align-middle">
+                      {item.payment_status === "pending1" && "รอค่าส่ง"}
+                      {item.payment_status === "pending2" && "รอการชำระ"}
+                      {item.payment_status === "pending3" && "รอการตรวจสอบ"}
+                      {item.payment_status === "paid" &&
+                        "ชำระเงินเรียบร้อยแล้ว"}
+                    </td>
+                    <td className="align-middle">
+                      {item.noted !== null && item.noted !== ""
+                        ? item.noted
+                        : "-"}
+                    </td>
+                    <td className="align-middle">
+                      <Button
+                        size="sm"
+                        variant="success"
+                        onClick={() => handleUpdateWin(item)}
+                      >
+                        <i class="fas fa-pencil-alt"></i>
+                      </Button>
+                      &nbsp;
+                      <Button
+                        variant="danger"
+                        onClick={() => handleDelete(item.id)}
+                        size="sm"
+                      >
+                        <i class="fas fa-times"></i>
+                      </Button>
+                    </td>
+                    <td className="align-middle">
+                      <Button
+                        onClick={() => handleAddNoted(item.id, item.noted)}
+                      >
+                        Noted
+                      </Button>
+                    </td>
+                  </tr>
+                );
+              })}
             </>
           )}
         </tbody>
