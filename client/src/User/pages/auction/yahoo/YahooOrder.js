@@ -86,10 +86,10 @@ export default function YahooOrder() {
                 <tr key={index}>
                   <td className="align-middle">{index + 1}</td>
                   <td className="align-middle">
-                    <img src={item.imgsrc} width={100} />
+                    <img src={item.imgsrc} width={100} alt={item.imgsrc} />
                   </td>
                   <td className="align-middle">
-                    <a href={item.link} target="_blank">
+                    <a href={item.link} target="_blank" rel="noreferrer">
                       link
                     </a>
                   </td>
