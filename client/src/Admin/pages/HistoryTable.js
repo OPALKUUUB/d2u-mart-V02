@@ -238,7 +238,7 @@ export default function HistoryTable() {
                     )}
                   </td>
                   <td className="align-middle">
-                    <img src={item.imgsrc} width={100} />
+                    <img src={item.imgsrc} width={100} alt={item.imgsrc} />
                   </td>
                   <td className="align-middle">{item.username}</td>
                   <td className="align-middle">{item.status}</td>
@@ -248,7 +248,11 @@ export default function HistoryTable() {
                     ) : (
                       <>
                         <a href={item.link} target="_blank">
-                          {item.link.split("/")[5]}
+                          {
+                            item.link.split("/")[
+                              item.link.split("/").length - 1
+                            ]
+                          }
                         </a>
                       </>
                     )}
