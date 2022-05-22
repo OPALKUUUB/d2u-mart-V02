@@ -155,7 +155,11 @@ export default function AuctionTable() {
                     <td className="align-middle">{item.username}</td>
                     <td className="align-middle">
                       <a href={item.link} target="_blank" rel="noreferrer">
-                        {item.link.split("/")[item.link.split("/").length - 1]}
+                        {
+                          item.link
+                            .split("/")
+                            [item.link.split("/").length - 1].split("?")[0]
+                        }
                       </a>
                     </td>
                     <td className="align-middle">

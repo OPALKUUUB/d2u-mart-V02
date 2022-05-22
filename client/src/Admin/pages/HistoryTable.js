@@ -249,9 +249,9 @@ export default function HistoryTable() {
                       <>
                         <a href={item.link} target="_blank" rel="noreferrer">
                           {
-                            item.link.split("/")[
-                              item.link.split("/").length - 1
-                            ]
+                            item.link
+                              .split("/")
+                              [item.link.split("/").length - 1].split("?")[0]
                           }
                         </a>
                       </>
