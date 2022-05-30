@@ -150,6 +150,7 @@ exports.getOrder = (req, res) => {
     });
   }
 };
+
 exports.postOrder = (req, res) => {
   const decoded = jwtVerify(req.headers.token, res);
   if (decoded !== undefined) {
@@ -180,6 +181,7 @@ exports.postOrder = (req, res) => {
         res.status(200).json({
           status: true,
           message: "Offer " + req.body.link + "is successfully",
+          username: decoded.username,
         });
         // ref: https://somnuekmueanprasan.medium.com/line-notify-nodejs-1feb050c1016
         request(
@@ -237,6 +239,8 @@ exports.patchOrderAddbid = (req, res) => {
             status: true,
             message:
               "Update orders at username " + decoded.username + " successfully",
+            link: req.body.link,
+            username: decoded.username,
           });
           request(
             {

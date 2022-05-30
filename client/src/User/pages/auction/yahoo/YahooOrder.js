@@ -11,6 +11,7 @@ import {
   InputGroup,
   FormControl,
 } from "react-bootstrap";
+import MagicBellClient from "@magicbell/core";
 
 export default function YahooOrder() {
   const [orders, setOrders] = useState([]);
@@ -169,6 +170,20 @@ function AddbidModal(props) {
   const [addbid2, setAddbid2] = useState("");
   const [loading, setLoading] = useState(false);
   let link = props.item.link === undefined ? "" : props.item.link.split("/")[5];
+  const notify = async (link, username, price, mode) => {
+    const client = new MagicBellClient({
+      apiKey: "c2cb12a6926a8cf70819eaf74181d85c779d2ab0",
+      apiSecret: "Z53dqaY3vdRfqdNlV6lchjR6nOPpPDuZ1a7MSpUP",
+    });
+    let link_id = link.split("/")[link.split("/").length - 1].split("?")[0];
+    const notifications = client.getStore();
+    const notification = await notifications.create({
+      title: "AddBid " + mode + "st",
+      content: `${username}: linkId ${link_id} | Bid ${price} yen`,
+      actionUrl: link,
+      recipients: [{ email: "makara.atipat@gmail.com" }],
+    });
+  };
   const handleAddbid = (mode) => {
     setLoading(true);
     if (addbid1 === "" && props.item.addbid1 === null) {
@@ -205,6 +220,7 @@ function AddbidModal(props) {
         .then((res) => res.json())
         .then((json) => {
           if (json.status) {
+            notify(json.link, json.username, addbid.addbid, addbid.mode);
             props.setTrigger(!props.trigger);
             props.onHide();
             setLoading(false);

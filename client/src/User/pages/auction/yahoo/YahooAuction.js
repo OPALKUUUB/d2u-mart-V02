@@ -10,6 +10,10 @@ import {
   Row,
 } from "react-bootstrap";
 import Loading from "../../../../Admin/components/Loading";
+// NPM package at https://www.npmjs.com/package/@magicbell/core
+// yarn add @magicbell/core
+
+import MagicBellClient from "@magicbell/core";
 
 export default function YahooAuction() {
   const history = useHistory();
@@ -63,7 +67,23 @@ export default function YahooAuction() {
         }
       });
   };
-
+  const notify = async (obj, username) => {
+    const client = new MagicBellClient({
+      apiKey: "c2cb12a6926a8cf70819eaf74181d85c779d2ab0",
+      apiSecret: "Z53dqaY3vdRfqdNlV6lchjR6nOPpPDuZ1a7MSpUP",
+    });
+    let link_id = obj.link
+      .split("/")
+      [obj.link.split("/").length - 1].split("?")[0];
+    console.log(link_id);
+    const notifications = client.getStore();
+    const notification = await notifications.create({
+      title: "Yahoo Order",
+      content: `${username}: linkId ${link_id} | Maxbid ${obj.price} yen`,
+      actionUrl: obj.link,
+      recipients: [{ email: "makara.atipat@gmail.com" }],
+    });
+  };
   const handleSubmitOffer = (e) => {
     e.preventDefault();
     if (
@@ -105,6 +125,7 @@ export default function YahooAuction() {
           .then((res) => res.json())
           .then((json) => {
             if (json.status) {
+              notify(offer, json.username);
               setLoading(false);
               history.push("/auction/yahoo/order");
             } else {
