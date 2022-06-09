@@ -314,7 +314,10 @@ exports.getOrderPaymentSlip = (req, res) => {
       res.status(200).json({
         status: true,
         message: "select slip filename where payment_id = " + req.params.id,
-        data: row[0].slip_image_filename,
+        data:
+          row[0].slip_image_filename === undefined
+            ? ""
+            : row[0].slip_image_filename,
       });
     }
   });
