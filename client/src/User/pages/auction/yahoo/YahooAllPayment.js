@@ -127,7 +127,11 @@ export default function YahooAllPayment(props) {
                       <Container>
                         <Row>
                           <Col>
-                            <img src={item.imgsrc} width="120px" />
+                            <img
+                              src={item.imgsrc}
+                              width="120px"
+                              alt={item.imgsrc}
+                            />
                           </Col>
                           <Col>
                             <div>{item.link.split("/")[5]}</div>
@@ -173,9 +177,16 @@ export default function YahooAllPayment(props) {
                       color: "rgba(0,0,0,0.8)",
                     }}
                   >
-                    สามารถชำระเงินผ่านเลขที่บัญชี: <span>4670686364</span>
+                    สามารถชำระเงินผ่านเลขที่บัญชี: <span>1652798843</span>
                     <br />
-                    (ธ.กรุงไทย มนจิรา เดชะชาติ)
+                    (ธ.ไทยพาณิช เสาวนีย์ เสถียรทนุพงษ์)
+                    <div>
+                      <img
+                        src="/resource/qr_scb.jpeg"
+                        alt="deliverytoyou"
+                        width={150}
+                      />
+                    </div>
                   </p>
                   <Form.Group controlId="formFileSm" className="mb-3">
                     <Form.Label>Upload slip</Form.Label>
