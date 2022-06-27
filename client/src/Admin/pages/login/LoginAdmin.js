@@ -20,7 +20,8 @@ export default function LoginAdmin() {
       .then((res) => res.json())
       .then((json) => {
         if (json.status) {
-          alert(json.message);
+          // alert(json.message);
+          console.log(json);
           localStorage.setItem("AdminToken", json.token);
           window.location.reload(false);
         } else {
