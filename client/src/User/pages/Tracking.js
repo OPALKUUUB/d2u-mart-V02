@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
 import ReactLoading from "react-loading";
-import ShowImage from "../../Admin/components/ShowImage";
+import { ShowImage } from "../components/ShowImage";
 export default function Tracking() {
   const [trackings, setTrackings] = useState([]);
   const [loading, setLoading] = useState(true);

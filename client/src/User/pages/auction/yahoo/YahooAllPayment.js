@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import Loading from "../../../../Admin/components/Loading";
+import Loading from "../../../components/Loading";
 import {
   Button,
   Card,

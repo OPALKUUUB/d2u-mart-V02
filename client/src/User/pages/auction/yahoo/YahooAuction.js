@@ -9,7 +9,7 @@ import {
   InputGroup,
   Row,
 } from "react-bootstrap";
-import Loading from "../../../../Admin/components/Loading";
+import Loading from "../../../components/Loading";
 // NPM package at https://www.npmjs.com/package/@magicbell/core
 // yarn add @magicbell/core
 

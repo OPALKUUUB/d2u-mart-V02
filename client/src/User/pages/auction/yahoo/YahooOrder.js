@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./YahooOrder.css";
 import ReactLoading from "react-loading";
-import Loading from "../../../../Admin/components/Loading";
+import Loading from "../../../components/Loading";
 import {
   Button,
   Table,
