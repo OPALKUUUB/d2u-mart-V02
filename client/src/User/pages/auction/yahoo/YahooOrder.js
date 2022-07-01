@@ -22,7 +22,7 @@ export default function YahooOrder() {
   useEffect(() => {
     const CheckSession = async () => {
       await fetch("/check/session", {
-        headers: { token: localStorage.getItem("token") },
+        headers: { token: JSON.parse(localStorage.getItem("token")).token },
       })
         .then((res) => res.json())
         .then((json) => {
@@ -42,7 +42,7 @@ export default function YahooOrder() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          token: localStorage.getItem("token"),
+          token: JSON.parse(localStorage.getItem("token")).token,
         },
       }).then((res) => res.json());
       if (json.status) {
@@ -67,101 +67,103 @@ export default function YahooOrder() {
   };
 
   return (
-    <>
-      <h3 className="mb-3">Yahoo Order</h3>
-      <Table responsive="md" striped bordered hover size="sm">
-        <thead style={{ textAlign: "center" }}>
-          <tr>
-            <th>#</th>
-            <th>Order</th>
-            <th>Link</th>
-            <th>Bidding</th>
-            <th>Status</th>
-            <th>Addbid</th>
-          </tr>
-        </thead>
-        <tbody style={{ textAlign: "center" }}>
-          {!loading && (
-            <>
-              {orders.map((item, index) => (
-                <tr key={index}>
-                  <td className="align-middle">{index + 1}</td>
-                  <td className="align-middle">
-                    <img src={item.imgsrc} width={100} alt={item.imgsrc} />
-                  </td>
-                  <td className="align-middle">
-                    <a href={item.link} target="_blank" rel="noreferrer">
-                      link
-                    </a>
-                  </td>
-                  <td className="align-middle">
-                    Maxbid: {item.maxbid} (¥)
-                    {item.addbid1 !== null && (
-                      <>
-                        <br />
-                        Addbid#1: {item.addbid1 === null
-                          ? "-"
-                          : item.addbid1}{" "}
-                        (¥)
-                        {item.addbid2 !== null && (
-                          <>
-                            <br />
-                            Addbid#2:{" "}
-                            {item.addbid2 === null ? "-" : item.addbid2} (¥)
-                          </>
-                        )}
-                      </>
-                    )}
-                  </td>
-                  <td className="align-middle">
-                    {item.maxbid_work_by !== null ||
-                    item.addbid1_work_by !== null ||
-                    item.addbid2_work_by !== null
-                      ? "กำลังประมูล"
-                      : "รอเจ้าหน้าที่"}
-                  </td>
-                  <td className="align-middle">
-                    <Button
-                      size="sm"
-                      onClick={() => handleShowAddbidModal(item)}
-                    >
-                      Addbid
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </>
-          )}
-        </tbody>
-      </Table>
-      {loading && (
-        <>
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <ReactLoading
-              type={"bubbles"}
-              color={"rgba(0,0,0,0.2)"}
-              height={400}
-              width={300}
-            />
+    <div style={{ background: "#fdeee4", width: "100vw", height: "100vh" }}>
+      <div style={{ paddingTop: "30px", width: "80vw", margin: "0 auto" }}>
+        <h3 className="mb-3">Yahoo Order</h3>
+        <Table responsive="md" striped bordered hover size="sm">
+          <thead style={{ textAlign: "center" }}>
+            <tr>
+              <th>#</th>
+              <th>Order</th>
+              <th>Link</th>
+              <th>Bidding</th>
+              <th>Status</th>
+              <th>Addbid</th>
+            </tr>
+          </thead>
+          <tbody style={{ textAlign: "center" }}>
+            {!loading && (
+              <>
+                {orders.map((item, index) => (
+                  <tr key={index}>
+                    <td className="align-middle">{index + 1}</td>
+                    <td className="align-middle">
+                      <img src={item.imgsrc} width={100} alt={item.imgsrc} />
+                    </td>
+                    <td className="align-middle">
+                      <a href={item.link} target="_blank" rel="noreferrer">
+                        link
+                      </a>
+                    </td>
+                    <td className="align-middle">
+                      Maxbid: {item.maxbid} (¥)
+                      {item.addbid1 !== null && (
+                        <>
+                          <br />
+                          Addbid#1: {item.addbid1 === null
+                            ? "-"
+                            : item.addbid1}{" "}
+                          (¥)
+                          {item.addbid2 !== null && (
+                            <>
+                              <br />
+                              Addbid#2:{" "}
+                              {item.addbid2 === null ? "-" : item.addbid2} (¥)
+                            </>
+                          )}
+                        </>
+                      )}
+                    </td>
+                    <td className="align-middle">
+                      {item.maxbid_work_by !== null ||
+                      item.addbid1_work_by !== null ||
+                      item.addbid2_work_by !== null
+                        ? "กำลังประมูล"
+                        : "รอเจ้าหน้าที่"}
+                    </td>
+                    <td className="align-middle">
+                      <Button
+                        size="sm"
+                        onClick={() => handleShowAddbidModal(item)}
+                      >
+                        Addbid
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </>
+            )}
+          </tbody>
+        </Table>
+        {loading && (
+          <>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <ReactLoading
+                type={"bubbles"}
+                color={"rgba(0,0,0,0.2)"}
+                height={400}
+                width={300}
+              />
+            </div>
+          </>
+        )}
+        {!loading && orders.length === 0 && (
+          <div
+            className="d-flex align-items-center justify-content-center"
+            style={{ height: "200px" }}
+          >
+            <h4>ไม่พบรายการสั่งประมูล!</h4>
           </div>
-        </>
-      )}
-      {!loading && orders.length === 0 && (
-        <div
-          className="d-flex align-items-center justify-content-center"
-          style={{ height: "200px" }}
-        >
-          <h4>ไม่พบรายการสั่งประมูล!</h4>
-        </div>
-      )}
-      <AddbidModal
-        show={modalShow}
-        onHide={() => setModalShow(false)}
-        item={temp}
-        trigger={trigger}
-        setTrigger={setTrigger}
-      />
-    </>
+        )}
+        <AddbidModal
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+          item={temp}
+          trigger={trigger}
+          setTrigger={setTrigger}
+        />
+      </div>
+    </div>
   );
 }
 
@@ -213,7 +215,7 @@ function AddbidModal(props) {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          token: localStorage.getItem("token"),
+          token: JSON.parse(localStorage.getItem("token")).token,
         },
         body: JSON.stringify(addbid),
       })

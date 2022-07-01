@@ -1,0 +1,8 @@
+.container .card .fa-arrow-down {
+    z-index: 100;
+    position: absolute;
+    right: 60px;
+    bottom: 25px;
+    font-size: 40px;
+    cursor: pointer;
+}

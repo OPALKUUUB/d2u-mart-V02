@@ -1,0 +1,98 @@
+.Menu-Content{
+    width: 100%;
+    align-content: center;
+    height: 700px;
+    background-color: #e6e5e1;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+.cover {
+    width: 100%;
+    height: auto;
+    left: 0px;
+    z-index: 100;
+}
+
+.promotion {
+    width: 250px;
+    position: absolute;
+    padding-top: 7%;
+    margin-left: 18%;
+}
+
+.side {
+    position: absolute;
+    width: 230px;
+}
+
+.sideProduct {
+    right: 0;
+    width: 230px;
+    position: absolute;
+}
+
+.content-right {
+    margin-left: 25%;
+    padding-left: 14%;
+    padding-top: 6%;
+    margin-right: 5%;
+}
+
+.content-left {
+    margin-right: 20%;
+    padding-right: 5%;
+    padding-top: 6%;
+    margin-left: 8%;
+}
+
+.product{
+    margin-top: 335px;
+    height: max-content;
+}
+
+.productHeader {
+    width: 250px;
+    position: absolute;
+    padding-top: 7%;
+    right: 18%;
+}
+
+.break{
+    position: absolute;
+    margin-top: 88px;
+    left: 0;
+    width: 100%;
+}
+
+.Readmore-right{
+    position: absolute;
+    margin-top: 70px;
+    right: 9%;
+    cursor: pointer;
+    color: #100f28;
+    font-weight: 500;
+}
+
+.Readmore-left{
+    position: absolute;
+    margin-top: 70px;
+    left: 9%;
+    cursor: pointer;
+    color: #100f28;
+    font-weight: 500;
+}
+
+.Readmore-left:hover {
+    color: #718275;
+    transition: 0.5;
+}
+
+.Readmore-right:hover {
+    color: #718275;
+    transition: 0.5;
+}
+
+
+

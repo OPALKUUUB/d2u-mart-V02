@@ -8,10 +8,11 @@ const jwt = require("jsonwebtoken");
 const app = express();
 const multer = require("multer");
 var fs = require("fs");
+const conn = require("./configs/connection");
 const adminRoutes = require("./routes/admin");
 const otherRoutes = require("./routes/other");
 const userRoutes = require("./routes/user");
-const conn = require("./configs/connection");
+const authRoutes = require("./routes/auth");
 
 app.use(cors());
 app.use(express.json());
@@ -21,6 +22,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "client/build")));
 
 // Put all API endpoints under '/api'
+app.use(authRoutes);
+app.use(adminRoutes);
+app.use(otherRoutes);
+app.use(userRoutes);
 
 function genDate() {
   let today = new Date();
@@ -32,12 +37,6 @@ function genDate() {
     today.getMinutes() >= 10 ? today.getMinutes() : `0${today.getMinutes()}`;
   return `${today.getFullYear()}-${month}-${date}T${hour}:${minute}`;
 }
-
-app.use(adminRoutes);
-
-app.use(otherRoutes);
-
-app.use(userRoutes);
 
 app.get("/check/session", (req, res) => {
   const decoded = jwt.verify(

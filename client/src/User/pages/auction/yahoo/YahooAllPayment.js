@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Loading from "../../../components/Loading";
 import {
   Button,
@@ -12,8 +13,9 @@ import {
 } from "react-bootstrap";
 
 export default function YahooAllPayment(props) {
+  const location = useLocation();
   const [yen, setYen] = useState("");
-  const [payment, setPayment] = useState(props.location.state);
+  const [payment, setPayment] = useState(location.state);
   const [image, setImage] = useState(null);
   const [file, setFile] = useState(null);
   const [slipImageFilename, setSlipImageFilename] = useState("");
@@ -24,7 +26,7 @@ export default function YahooAllPayment(props) {
   useEffect(() => {
     const CheckSession = async () => {
       await fetch("/check/session", {
-        headers: { token: localStorage.getItem("token") },
+        headers: { token: JSON.parse(localStorage.getItem("token")).token },
       })
         .then((res) => res.json())
         .then((json) => {
@@ -38,6 +40,7 @@ export default function YahooAllPayment(props) {
     };
     CheckSession();
   }, []);
+
   useEffect(() => {
     fetch("/api/yen", {
       method: "GET",
@@ -58,8 +61,8 @@ export default function YahooAllPayment(props) {
   }, []);
 
   useEffect(() => {
-    setPayment(props.location.state);
-  }, [props.location.state]);
+    setPayment(location.state);
+  }, [location.state]);
 
   const handleSumPayment = () => {
     let temp = 0;
@@ -121,7 +124,7 @@ export default function YahooAllPayment(props) {
           <Col md>
             <Card style={{ padding: "10px", marginBottom: "10px" }}>
               <div style={{ height: "300px", overflowY: "scroll" }}>
-                {props.location.state.map((item, index) => (
+                {location.state.map((item, index) => (
                   <Card style={{ width: "95%" }} key={index}>
                     <Card.Body>
                       <Container>
@@ -163,7 +166,7 @@ export default function YahooAllPayment(props) {
               <Card.Body>
                 <blockquote className="blockquote mb-2">
                   <p>
-                    Amount Order({props.location.state.length})
+                    Amount Order({location.state.length})
                     <br />
                     Sum: {handleSumPayment()} bath
                   </p>
@@ -219,7 +222,7 @@ export default function YahooAllPayment(props) {
         onHide={() => setModalShow(false)}
         image={image}
         slipFilename={slipImageFilename}
-        amount={props.location.state.length}
+        amount={location.state.length}
         sum={sum}
         arrId={arrId}
       />
@@ -228,7 +231,8 @@ export default function YahooAllPayment(props) {
 }
 
 function ConfirmAddSlipModal(props) {
-  const history = useHistory();
+  // const history = useHistory();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = () => {
@@ -236,7 +240,7 @@ function ConfirmAddSlipModal(props) {
     fetch("/api/yahoo/payment", {
       method: "PATCH",
       headers: {
-        token: localStorage.getItem("token"),
+        token: JSON.parse(localStorage.getItem("token")).token,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -249,7 +253,8 @@ function ConfirmAddSlipModal(props) {
       .then((data) => {
         if (data.status) {
           setLoading(false);
-          history.push("/auction/yahoo/payment");
+          // history.push("/auction/yahoo/payment");
+          navigate("/auction/yahoo/payment");
         } else {
           if (data.error === "jwt") {
             alert("Your Login Session Is Expired,\nPlease Sign In Again!");

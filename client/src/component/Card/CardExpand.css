@@ -1,0 +1,60 @@
+.CardExpand-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.CardExpand-container .CardExpand-card {
+    position: relative;
+    width: 700px;
+    height: 700px;
+    background-color: #e1d6d1;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.CardExpand-container .CardExpand-card .CardExpand-pic {
+    z-index: 100;
+    width: 600px;
+    height: 700px;
+    background-color: #fff;
+    background-size: 100% 100%;
+}
+
+.CardExpand-container .CardExpand-card ul {
+    z-index: 99;
+    position: absolute;
+    left: 39px;
+    top: 5px;
+    list-style-type: none;
+}
+
+.CardExpand-container .CardExpand-card ul li {
+    width: 3px;
+    height: 3px;
+    border-radius: 3px;
+    margin: 6px 0;
+    background-color: #e6e5e1;
+}
+
+.CardExpand-container .CardExpand-card p {
+    z-index: 99;
+    position: absolute;
+    top: 20px;
+    right: 70px;
+    color: #fff;
+    opacity: 1;
+    font-size: 15px;
+    letter-spacing: 1px;
+    writing-mode: vertical-lr;
+    -webkit-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+}
+
+
+
+
+

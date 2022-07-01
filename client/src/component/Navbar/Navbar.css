@@ -1,0 +1,39 @@
+.Navbar {
+  padding: 10px;
+  font-family: "Prompt", sans-serif;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #dbbba4;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+.Navbar-left img {
+  margin-left: 20px;
+  width: 200px;
+}
+
+.Navbar-mid ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  column-gap: 50px;
+}
+
+.Navbar-mid .link {
+  font-size: 1.1rem;
+  text-decoration: none;
+  color: white;
+}
+
+.link.active {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.Navbar-right {
+  margin-right: 20px;
+}

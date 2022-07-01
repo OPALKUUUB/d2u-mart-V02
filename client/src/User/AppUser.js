@@ -12,7 +12,7 @@ import YahooPayment from "./pages/auction/yahoo/YahooPayment";
 import YahooAllPayment from "./pages/auction/yahoo/YahooAllPayment";
 import YahooHistory from "./pages/auction/yahoo/YahooHistory";
 import Profile from "./pages/Profile";
-
+// this version use react router dom v6
 export default function AppUser() {
   const [loginStatus, setLoginStatus] = useState(
     localStorage.getItem("token") !== null

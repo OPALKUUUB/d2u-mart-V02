@@ -1,0 +1,163 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+i {
+    opacity: 0;
+    font-size: 18px;
+    color: #fff;
+    will-change: transform;
+    -webkit-transform: scale(0.1);
+    transform: scale(0.1);
+    -webkit-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+}
+
+h2 {
+    pointer-events: none;
+}
+
+body {
+    background-color: #e6e5e1;
+    width: 100vw;
+    height: 100vh;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.container .card {
+    position: relative;
+    width: 700px;
+    height: 300px;
+    background-color: #fff;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.container .card .pic{
+    width: 600px;
+    height: 300px;
+    background-color: #333;
+    background-image: url(https://img.freepik.com/free-vector/japanese-temple-surrounded-by-nature_52683-46009.jpg?w=2000);
+    background-size: 100% 100%;
+}
+
+.container .card:before {
+    content: "";
+    z-index: 99;
+    position: absolute;
+    top: -10px;
+    left: 32px;
+    display: block;
+    width: 16px;
+    height: 16px;
+    border-radius: 16px;
+    background-color: #e6e5e1;
+}
+
+.container .card:after {
+    content: "";
+    z-index: 99;
+    position: absolute;
+    bottom: -10px;
+    left: 32px;
+    display: block;
+    width: 16px;
+    height: 16px;
+    border-radius: 16px;
+    background-color: #e6e5e1;
+}
+
+.container .card ul {
+    z-index: 99;
+    position: absolute;
+    left: 39px;
+    top: 5px;
+    list-style-type: none;
+}
+
+.container .card ul li {
+    width: 2px;
+    height: 2px;
+    border-radius: 2px;
+    margin: 6px 0;
+    background-color: #e6e5e1;
+}
+
+.container .card h2 {
+    z-index: 99;
+    font-family: "Poppins", sans-serif;
+    position: absolute;
+    bottom: 20px;
+    right: 150px;
+    font-size: 70px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.container .card .fa-arrow-right {
+    z-index: 100;
+    position: absolute;
+    right: 75px;
+    bottom: 25px;
+    font-size: 40px;
+    cursor: pointer;
+}
+
+.container .card p {
+    z-index: 99;
+    position: absolute;
+    bottom: 20px;
+    right: 70px;
+    color: #333;
+    opacity: 0.7;
+    font-size: 15px;
+    letter-spacing: 1px;
+    writing-mode: vertical-lr;
+    -webkit-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+}
+
+.container .card:hover i {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+}
+
+.container .card button {
+    position: absolute;
+    right: 14px;
+    bottom: 14px;
+    width: 30px;
+    height: 30px;
+    background-color: #b09b8d;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease;
+    mix-blend-mode: multiply;
+}
+
+.container .card button i {
+    font-size: 3rem;
+}
+
+.container .card:hover button {
+    transform: scale(16.5);
+}
+
+.container .card:hover p {
+    color: #fff;
+    bottom: 80px;
+}
+

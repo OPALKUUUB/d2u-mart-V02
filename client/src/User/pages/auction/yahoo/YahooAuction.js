@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 import {
   Button,
   Col,
@@ -14,9 +14,11 @@ import Loading from "../../../components/Loading";
 // yarn add @magicbell/core
 
 import MagicBellClient from "@magicbell/core";
+import { useNavigate } from "react-router-dom";
 
 export default function YahooAuction() {
-  const history = useHistory();
+  // const history = useHistory();
+  const navigate = useNavigate();
   const [imgsrc, setImgsrc] = useState(null);
   const [link, setLink] = useState();
   const [price, setPrice] = useState();
@@ -38,7 +40,7 @@ export default function YahooAuction() {
   useEffect(() => {
     const CheckSession = async () => {
       await fetch("/check/session", {
-        headers: { token: localStorage.getItem("token") },
+        headers: { token: JSON.parse(localStorage.getItem("token")).token },
       })
         .then((res) => res.json())
         .then((json) => {
@@ -118,7 +120,7 @@ export default function YahooAuction() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            token: localStorage.getItem("token"),
+            token: JSON.parse(localStorage.getItem("token")).token,
           },
           body: JSON.stringify(offer),
         })
@@ -127,7 +129,8 @@ export default function YahooAuction() {
             if (json.status) {
               notify(offer, json.username);
               setLoading(false);
-              history.push("/auction/yahoo/order");
+              // history.push("/auction/yahoo/order");
+              navigate("/auction/yahoo/order");
             } else {
               alert(json.message);
               if (json.error === "jwt") {
@@ -140,66 +143,73 @@ export default function YahooAuction() {
     }
   };
   return (
-    <>
-      {loading && <Loading />}
-      <InputGroup className="mb-3">
-        <FormControl
-          placeholder="Example https://page.auctions.yahoo.co.jp/jp/auction/x0000000"
-          aria-label="Enter Your yahoo link"
-          aria-describedby="link-yahoo-auction"
-          style={{ textAlign: "center" }}
-          onChange={(e) => setLink(e.target.value)}
-        />
-        <Button
-          variant="outline-secondary"
-          id="link-yahoo-auction"
-          onClick={handleSearchImgsrc}
-        >
-          Search
-        </Button>
-      </InputGroup>
-      <Row>
-        <Col md>
-          {imgsrc === null ? (
-            <div style={style.imgPlacehd}>please search link...</div>
-          ) : (
-            <Figure>
-              <Figure.Image width="100%" alt="300x..." src={imgsrc} />
-            </Figure>
-          )}
-        </Col>
-        <Col md>
-          <h3>Offer Price</h3>
-
-          <InputGroup className="mb-3">
-            <InputGroup.Text>¥</InputGroup.Text>
-            <FormControl
-              aria-label="Amount (to the nearest yen)"
-              onChange={(e) => setPrice(e.target.value)}
-              type="number"
-              placeholder="หน่วยเป็นเยน"
-            />
-            <InputGroup.Text>.00</InputGroup.Text>
-          </InputGroup>
-          <Form.Text className="text-muted">
-            (1 yen: {yen} bath){" "}
-            {price > 0 && <>แปลงเป็นเงินไทย: {Math.round(price * yen)} บาท.</>}
-          </Form.Text>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-            <Form.Label>Remark</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={3}
-              onChange={(e) => setRemark(e.target.value)}
-              placeholder="(เช่น ราคาไม่รวมภาษี หรือ ไม่รวมค่าส่ง)"
-            />
-          </Form.Group>
-          <Button variant="primary" onClick={handleSubmitOffer}>
-            Submit
+    <div style={{ background: "#fdeee4", width: "100vw", height: "100vh" }}>
+      <div style={{ paddingTop: "30px", width: "80vw", margin: "0 auto" }}>
+        {loading && <Loading />}
+        <InputGroup className="mb-3">
+          <FormControl
+            placeholder="Example https://page.auctions.yahoo.co.jp/jp/auction/x0000000"
+            aria-label="Enter Your yahoo link"
+            aria-describedby="link-yahoo-auction"
+            style={{ textAlign: "center" }}
+            onChange={(e) => setLink(e.target.value)}
+          />
+          <Button
+            variant="outline-secondary"
+            id="link-yahoo-auction"
+            onClick={handleSearchImgsrc}
+          >
+            Search
           </Button>
-        </Col>
-      </Row>
-    </>
+        </InputGroup>
+        <Row>
+          <Col md>
+            {imgsrc === null ? (
+              <div style={style.imgPlacehd}>please search link...</div>
+            ) : (
+              <Figure>
+                <Figure.Image width="100%" alt="300x..." src={imgsrc} />
+              </Figure>
+            )}
+          </Col>
+          <Col md>
+            <h3>Offer Price</h3>
+
+            <InputGroup className="mb-3">
+              <InputGroup.Text>¥</InputGroup.Text>
+              <FormControl
+                aria-label="Amount (to the nearest yen)"
+                onChange={(e) => setPrice(e.target.value)}
+                type="number"
+                placeholder="หน่วยเป็นเยน"
+              />
+              <InputGroup.Text>.00</InputGroup.Text>
+            </InputGroup>
+            <Form.Text className="text-muted">
+              (1 yen: {yen} bath){" "}
+              {price > 0 && (
+                <>แปลงเป็นเงินไทย: {Math.round(price * yen)} บาท.</>
+              )}
+            </Form.Text>
+            <Form.Group
+              className="mb-3"
+              controlId="exampleForm.ControlTextarea1"
+            >
+              <Form.Label>Remark</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                onChange={(e) => setRemark(e.target.value)}
+                placeholder="(เช่น ราคาไม่รวมภาษี หรือ ไม่รวมค่าส่ง)"
+              />
+            </Form.Group>
+            <Button variant="primary" onClick={handleSubmitOffer}>
+              Submit
+            </Button>
+          </Col>
+        </Row>
+      </div>
+    </div>
   );
 }
 

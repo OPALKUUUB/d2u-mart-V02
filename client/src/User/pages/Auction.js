@@ -1,13 +1,15 @@
 import React, { useEffect } from "react";
 import { Col, Container, Figure, Row } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 
 export default function Auction() {
-  const history = useHistory();
+  const navigate = useNavigate();
+  // const history = useHistory();
   useEffect(() => {
     const CheckSession = async () => {
       await fetch("/check/session", {
-        headers: { token: localStorage.getItem("token") },
+        headers: { token: JSON.parse(localStorage.getItem("token")).token },
       })
         .then((res) => res.json())
         .then((json) => {
@@ -22,16 +24,33 @@ export default function Auction() {
     CheckSession();
   }, []);
   return (
-    <Container
+    <div
       style={{
-        textAlign: "center",
+        background: "#fdeee4",
+        height: "100%",
       }}
     >
-      <h3 style={{ marginBottom: "20px", fontWeight: "700" }}>เลือกทำรายการ</h3>
-      <Row className="justify-content-md-center">
-        <Col md={4}>
+      <div style={{ width: "80vw", margin: "0 auto" }}>
+        <h3
+          style={{
+            textAlign: "center",
+            paddingTop: "20px",
+            marginBottom: "20px",
+            fontWeight: "700",
+          }}
+        >
+          เลือกทำรายการ
+        </h3>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            columnGap: "150px",
+          }}
+        >
           <Figure
-            onClick={() => history.push("/auction/yahoo")}
+            // onClick={() => history.push("/auction/yahoo")}
+            onClick={() => navigate("/auction/yahoo")}
             style={{ cursor: "pointer" }}
           >
             <Figure.Image width={200} src="/resource/auction.png" />
@@ -39,10 +58,9 @@ export default function Auction() {
               ส่งลิงค์ประมูล
             </Figure.Caption>
           </Figure>
-        </Col>
-        <Col md={4}>
           <Figure
-            onClick={() => history.push("/auction/yahoo/order")}
+            // onClick={() => history.push("/auction/yahoo/order")}
+            onClick={() => navigate("/auction/yahoo/order")}
             style={{ cursor: "pointer" }}
           >
             <Figure.Image width={200} src="/resource/shopping-cart.png" />
@@ -50,12 +68,17 @@ export default function Auction() {
               รายการสั่งซื้อสินค้า
             </Figure.Caption>
           </Figure>
-        </Col>
-      </Row>
-      <Row className="justify-content-md-center">
-        <Col md={4}>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            columnGap: "150px",
+          }}
+        >
           <Figure
-            onClick={() => history.push("/auction/yahoo/payment")}
+            // onClick={() => history.push("/auction/yahoo/payment")}
+            onClick={() => navigate("/auction/yahoo/payment")}
             style={{ cursor: "pointer" }}
           >
             <Figure.Image width={200} src="/resource/hand.png" />
@@ -63,10 +86,9 @@ export default function Auction() {
               รายการสินค้าที่ต้องชำระ
             </Figure.Caption>
           </Figure>
-        </Col>
-        <Col md={4}>
           <Figure
-            onClick={() => history.push("/auction/yahoo/history")}
+            // onClick={() => history.push("/auction/yahoo/history")}
+            onClick={() => navigate("/auction/yahoo/history")}
             style={{ cursor: "pointer" }}
           >
             <Figure.Image width={200} src="/resource/history.png" />
@@ -74,8 +96,8 @@ export default function Auction() {
               ประวัติการสั่งซื้อ
             </Figure.Caption>
           </Figure>
-        </Col>
-      </Row>
-    </Container>
+        </div>
+      </div>
+    </div>
   );
 }

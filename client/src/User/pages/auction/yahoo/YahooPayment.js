@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 import ReactLoading from "react-loading";
 import {
   Button,
@@ -10,6 +10,7 @@ import {
   Row,
   Table,
 } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 export default function YahooPayment() {
   const [orders, setOrders] = useState([]);
@@ -22,7 +23,7 @@ export default function YahooPayment() {
   useEffect(() => {
     const CheckSession = async () => {
       await fetch("/check/session", {
-        headers: { token: localStorage.getItem("token") },
+        headers: { token: JSON.parse(localStorage.getItem("token")).token },
       })
         .then((res) => res.json())
         .then((json) => {
@@ -42,7 +43,7 @@ export default function YahooPayment() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          token: localStorage.getItem("token"),
+          token: JSON.parse(localStorage.getItem("token")).token,
         },
       }).then((res) => res.json());
       // check status
@@ -103,103 +104,106 @@ export default function YahooPayment() {
   };
 
   return (
-    <>
-      <h2 className="mb-3">Yahoo Payment</h2>
-      <Table responsive="md" striped bordered hover size="sm">
-        <thead style={{ textAlign: "center" }}>
-          <tr>
-            <th>#</th>
-            <th>Select</th>
-            <th>Date</th>
-            <th>Order</th>
-            <th>Link</th>
-            <th>Bid(¥)</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody style={{ textAlign: "center" }}>
-          {!loading && (
-            <>
-              {orders.map((item, index) => (
-                <tr key={index}>
-                  <td className="align-middle">{index + 1}</td>
-                  <td className="align-middle">
-                    {item.payment_status === "pending1" && <>pending</>}
-                    {item.payment_status === "pending2" && (
-                      <input
-                        type="checkbox"
-                        onChange={(e) => handleCheckBox(e, item)}
-                      />
-                    )}
-                    {item.payment_status === "pending3" && (
-                      <Button onClick={() => handleShowSlip(item.payment_id)}>
-                        Slip
-                      </Button>
-                    )}
-                  </td>
-                  <td className="align-middle">{item.created_at}</td>
+    <div style={{ background: "#fdeee4", width: "100vw", height: "100vh" }}>
+      <div style={{ paddingTop: "30px", width: "80vw", margin: "0 auto" }}>
+        <h2 className="mb-3">Yahoo Payment</h2>
+        <Table responsive="md" striped bordered hover size="sm">
+          <thead style={{ textAlign: "center" }}>
+            <tr>
+              <th>#</th>
+              <th>Select</th>
+              <th>Date</th>
+              <th>Order</th>
+              <th>Link</th>
+              <th>Bid(¥)</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody style={{ textAlign: "center" }}>
+            {!loading && (
+              <>
+                {orders.map((item, index) => (
+                  <tr key={index}>
+                    <td className="align-middle">{index + 1}</td>
+                    <td className="align-middle">
+                      {item.payment_status === "pending1" && <>pending</>}
+                      {item.payment_status === "pending2" && (
+                        <input
+                          type="checkbox"
+                          onChange={(e) => handleCheckBox(e, item)}
+                        />
+                      )}
+                      {item.payment_status === "pending3" && (
+                        <Button onClick={() => handleShowSlip(item.payment_id)}>
+                          Slip
+                        </Button>
+                      )}
+                    </td>
+                    <td className="align-middle">{item.created_at}</td>
 
-                  <td className="align-middle">
-                    <img src={item.imgsrc} width={100} />
-                  </td>
-                  <td className="align-middle">
-                    <a href={item.link} target="_blank">
-                      {item.link.split("/")[5]}
-                    </a>
-                  </td>
-                  <td className="align-middle">{item.bid} (¥)</td>
-                  <td className="align-middle">
-                    {item.payment_status === "pending1" && "รอค่าส่ง"}
-                    {item.payment_status === "pending2" && "รอการชำระ"}
-                    {item.payment_status === "pending3" && "รอการตรวจสอบ"}
-                  </td>
-                </tr>
-              ))}
-            </>
-          )}
-        </tbody>
-      </Table>
+                    <td className="align-middle">
+                      <img src={item.imgsrc} width={100} />
+                    </td>
+                    <td className="align-middle">
+                      <a href={item.link} target="_blank">
+                        {item.link.split("/")[5]}
+                      </a>
+                    </td>
+                    <td className="align-middle">{item.bid} (¥)</td>
+                    <td className="align-middle">
+                      {item.payment_status === "pending1" && "รอค่าส่ง"}
+                      {item.payment_status === "pending2" && "รอการชำระ"}
+                      {item.payment_status === "pending3" && "รอการตรวจสอบ"}
+                    </td>
+                  </tr>
+                ))}
+              </>
+            )}
+          </tbody>
+        </Table>
 
-      {/* loading */}
-      {loading && (
-        <>
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <ReactLoading
-              type={"bubbles"}
-              color={"rgba(0,0,0,0.2)"}
-              height={400}
-              width={300}
-            />
+        {/* loading */}
+        {loading && (
+          <>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <ReactLoading
+                type={"bubbles"}
+                color={"rgba(0,0,0,0.2)"}
+                height={400}
+                width={300}
+              />
+            </div>
+          </>
+        )}
+        {!loading && orders.length === 0 && (
+          <div
+            className="d-flex align-items-center justify-content-center"
+            style={{ height: "200px" }}
+          >
+            <h4>ไม่พบรายการที่ต้องชำระ!</h4>
           </div>
-        </>
-      )}
-      {!loading && orders.length === 0 && (
-        <div
-          className="d-flex align-items-center justify-content-center"
-          style={{ height: "200px" }}
-        >
-          <h4>ไม่พบรายการที่ต้องชำระ!</h4>
-        </div>
-      )}
-      {/* Modal */}
-      <ContinuePaymentModal
-        show={continuePaymentModalShow}
-        onHide={() => setContinuePaymentModalShow(false)}
-        arrItem={payment}
-      />
-      <ModalSlip
-        show={slipModalShow}
-        onHide={() => setSlipModalShow(false)}
-        src={slip}
-      />
-      <Button onClick={handleClickPayment}>Payment</Button>
-    </>
+        )}
+        {/* Modal */}
+        <ContinuePaymentModal
+          show={continuePaymentModalShow}
+          onHide={() => setContinuePaymentModalShow(false)}
+          arritem={payment}
+        />
+        <ModalSlip
+          show={slipModalShow}
+          onHide={() => setSlipModalShow(false)}
+          src={slip}
+        />
+        <Button onClick={handleClickPayment}>Payment</Button>
+      </div>
+    </div>
   );
 }
 
 function ContinuePaymentModal(props) {
-  const history = useHistory();
-  const [payment, setPayment] = useState(props.arrItem);
+  // const history = useHistory();
+  const navigate = useNavigate();
+  const [payment, setPayment] = useState(props.arritem);
   const [yen, setYen] = useState("");
 
   useEffect(() => {
@@ -219,8 +223,8 @@ function ContinuePaymentModal(props) {
       });
   }, []);
   useEffect(() => {
-    setPayment(props.arrItem);
-  }, [props.arrItem]);
+    setPayment(props.arritem);
+  }, [props.arritem]);
 
   return (
     <Modal
@@ -270,12 +274,11 @@ function ContinuePaymentModal(props) {
       </Modal.Body>
       <Modal.Footer>
         <Button
-          onClick={() =>
-            history.push({
-              pathname: "/auction/yahoo/payment/all",
+          onClick={() => {
+            navigate("/auction/yahoo/payment/all", {
               state: payment,
-            })
-          }
+            });
+          }}
         >
           Continue
         </Button>
