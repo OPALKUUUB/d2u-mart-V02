@@ -108,7 +108,7 @@ export const Register = () => {
             initial={{opacity:0}}
             transition={{duration:0.5}}
           >REGISTER</motion.h1>
-          <motion.div className="flex flex-col w-full items-start gap-[10px]" controlId="formHorizontalEmail"
+          <motion.div className="flex flex-col w-full items-start gap-[10px]" controlid="formHorizontalEmail"
             animate={{opacity:1}}
             initial={{opacity:0}}
             transition={{duration:0.8}}
@@ -146,7 +146,7 @@ export const Register = () => {
               </span>
             )}
           </motion.div>
-          <motion.div className="flex flex-col w-full items-start gap-[10px]" controlId="formHorizontalEmail"
+          <motion.div className="flex flex-col w-full items-start gap-[10px]" controlid="formHorizontalEmail"
             animate={{opacity:1}}
             initial={{opacity:0}}
             transition={{duration:1.4}}
@@ -165,7 +165,7 @@ export const Register = () => {
               onChange={handleChange}
             />
           </motion.div>
-          <motion.div className="flex flex-col w-full items-start gap-[10px]" controlId="formHorizontalPassword"
+          <motion.div className="flex flex-col w-full items-start gap-[10px]" controlid="formHorizontalPassword"
             animate={{opacity:1}}
             initial={{opacity:0}}
             transition={{duration:1.7}}
@@ -185,7 +185,7 @@ export const Register = () => {
               </span>
             )}
           </motion.div>
-          <motion.iv className="flex flex-col w-full items-start gap-[10px]" controlId="formHorizontalPassword"
+          <motion.div className="flex flex-col w-full items-start gap-[10px]" controlid="formHorizontalPassword"
             animate={{opacity:1}}
             initial={{opacity:0}}
             transition={{duration:2}}
@@ -198,7 +198,7 @@ export const Register = () => {
               name="confirm_password"
               onChange={handleChange}
             />
-          </motion.iv>
+          </motion.div>
           <fieldset className="w-full flex flex-col">
             <motion.div className="flex flex-col w-full items-start gap-[10px]"
               animate={{opacity:1}}
@@ -255,14 +255,16 @@ export const Register = () => {
           )}
           {register.address_case === "ขนส่งในประเทศ" && (
             <>
-              <motion.div className="flex flex-col w-full items-start gap-[10px]" controlId="formGroupPassword"
+              <motion.div className="flex flex-col w-full items-start gap-[10px]" controlid="formGroupPassword"
                 animate={{opacity:1}}
                 initial={{opacity:0}}
                 end={{opacity:0}}
                 transition={{duration:1}}
               >
                 <label className="tracking-[0.05em] text-[20px]">กรณีขนส่งในประเทศ <span className="text-[16px]">{'(กรอกที่อยู่ในการจัดส่ง)'}</span></label>
-                <textarea rows={3} className="resize-none w-full rounded-lg px-3 py-2 outline-none placeholder:text-[18px] text-[#a08689] text-[20px] placeholder:text-[#a08689] bg-[#e0dbd8]" placeholder="กรอกรายละเอียดสถานที่จัดส่ง..." label="Address"/>
+                <textarea rows={3} className="resize-none w-full rounded-lg px-3 py-2 outline-none placeholder:text-[18px] text-[#a08689] text-[20px] placeholder:text-[#a08689] bg-[#e0dbd8]" placeholder="กรอกรายละเอียดสถานที่จัดส่ง..." label="Address" onChange={(e) =>
+                    setRegister({ ...register, address: e.target.value })
+                  } />
 
               </motion.div>
             </>

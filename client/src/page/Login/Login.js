@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import useToken from "../../hook/useToken";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 async function loginUser(credentials) {
   return await fetch("/auth/login", {
@@ -16,6 +17,7 @@ async function loginUser(credentials) {
 }
 
 const Login = () => {
+  const navigate = useNavigate();
   const { setToken } = useToken();
   const [login, setLogin] = useState({
     username: "",
@@ -31,6 +33,7 @@ const Login = () => {
     e.preventDefault();
     const token = await loginUser(login);
     await setToken(token);
+    navigate("/");
     window.location.reload(false);
   };
   return (
