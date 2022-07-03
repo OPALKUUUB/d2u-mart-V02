@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import useToken from "../../hook/useToken";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 async function loginUser(credentials) {
   return await fetch("/auth/login", {
@@ -16,6 +17,7 @@ async function loginUser(credentials) {
 }
 
 const Login = () => {
+  const navigate = useNavigate();
   const { setToken } = useToken();
   const [login, setLogin] = useState({
     username: "",
@@ -31,11 +33,12 @@ const Login = () => {
     e.preventDefault();
     const token = await loginUser(login);
     await setToken(token);
+    navigate("/");
     window.location.reload(false);
   };
   return (
     <div
-      className="w-full min-h-screen flex absolute top-0 justify-center items-center bg-[#fef1e7] overflow-clip pb-3 pt-5"
+      className="flex justify-center items-center bg-[#fef1e7]"
       style={{ fontFamily: '"Prompt", sans-serif' }}
     >
       <img
@@ -60,10 +63,10 @@ const Login = () => {
       />
       <form
         onSubmit={handleSignIn}
-        className="flex flex-col w-full max-w-[600px] h-full justify-center items-center gap-[82px] mt-32"
+        className="flex flex-col w-full max-w-[390px] h-full justify-center items-center gap-[20px] mt-5"
       >
         <motion.h1
-          className="font-semibold tracking-[0.1em] text-[70px] leading-3 mb-6"
+          className="font-semibold tracking-[0.1em] text-[3rem] leading-3 mb-6"
           animate={{ y: 0, opacity: 1, scale: 1 }}
           initial={{ y: 0, opacity: 0, scale: 0 }}
           end={{ y: -200 }}

@@ -6,7 +6,7 @@ const Home = () => {
   return (
     <div style={{ background: "#fdeee4" }}>
       <Header />
-      <ImageSlider />
+      {/* <ImageSlider /> */}
 
       <img
         src="/image/section_footer_1.jpg"

@@ -37,3 +37,27 @@
 .Navbar-right {
   margin-right: 20px;
 }
+
+@media only screen and (max-width: 960px) {
+  .Navbar,
+  .Navbar-mid .link {
+    font-size: 0.8rem;
+  }
+  .Navbar-left img {
+    width: 100px;
+    margin-left: 10px;
+  }
+  .Navbar-mid ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+  }
+  .Navbar-right {
+    margin-right: 10px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+}
