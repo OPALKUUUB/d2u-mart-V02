@@ -15,16 +15,16 @@ const ImageSlider = (slides) => {
   };
 
   return (
-    <section className="slider">
+    <section className="slider py-[50px] lg:py-[100px]">
       <img
         src="/image/left.png"
-        className="left-arrow"
+        className="left-arrow -translate-y-1/2 top-1/2 w-[40px] h-[80px] sm:w-[50px] sm:h-[100px] md:w-[80px] md:h-[160px] lg:w-[100px] lg:h-[200px]"
         onClick={prevSlide}
         alt="left.png"
       />
       <img
         src="/image/right.png"
-        className="right-arrow"
+        className="right-arrow -translate-y-1/2 top-1/2 w-[40px] h-[80px] sm:w-[50px] sm:h-[100px] md:w-[80px] md:h-[160px] lg:w-[100px] lg:h-[200px]"
         onClick={nextSlide}
         alt="right.png"
       />
@@ -32,12 +32,11 @@ const ImageSlider = (slides) => {
         return (
           <div
             className={index === current ? "slide active" : "slide"}
-            key={index}
+            key={`imageSlider${index}`}
           >
-            {index === current && (
-              <img src={slides.image} alt="" className="Image" />
-            )}
+             <img src={slides.image} alt="" className={`Image object-cover w-full h-full max-h-[700px] max-w-[1200px] rounded-[0px] lg:rounded-[10px] ${index === current ? 'flex' :'hidden'} `}/>
           </div>
+        
         );
       })}
     </section>

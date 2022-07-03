@@ -48,7 +48,6 @@
 }
 
 .product{
-    margin-top: 335px;
     height: max-content;
 }
 
@@ -60,8 +59,6 @@
 }
 
 .break{
-    position: absolute;
-    margin-top: 88px;
     left: 0;
     width: 100%;
 }

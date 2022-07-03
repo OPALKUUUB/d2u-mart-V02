@@ -23,6 +23,9 @@ import MartShop from "../page/Mart/Martshop/MartShop";
 import Daiso from "../page/Mart/Shop/Daiso/Daiso";
 import Mart from "../page/Mart/Mart";
 import Footer from "../component/Footer/Footer";
+import Abc from "../page/Mart/Shop/Abc/Abc";
+import ShowMoreAllItem from "../page/Mart/Shop/ShowMore/ShowMoreAllItem";
+import ShowMorePromotion from "../page/Mart/Shop/ShowMorePromotion/ShowMorePromotion";
 
 const AppUserV2 = () => {
   const { token } = useToken();
@@ -134,6 +137,21 @@ const routeAuth = [
     id: 15,
     path: "/mart/shop/daiso",
     element: <Daiso />,
+  },
+  {
+    id: 16,
+    path: "/mart/shop/abc",
+    element: <Abc />,
+  },
+  {
+    id: 17,
+    path: "/mart/shop/showmoreall/:shop",
+    element: <ShowMoreAllItem/> ,
+  },
+  {
+    id: 18,
+    path: "/mart/shop/showmorepromotion/:shop",
+    element: <ShowMorePromotion/> ,
   },
 ];
 const route = [
