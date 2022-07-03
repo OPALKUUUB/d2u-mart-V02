@@ -1,0 +1,54 @@
+.mart-category .swiper-button-next{
+    position: absolute;
+    top: auto;
+    bottom: 30px;
+    right: 0px;
+    content: '>>';
+    font-size: 22px !important;
+    font-weight: bold;
+    color: #7b7e7c !important;
+}
+.mart-category .swiper-button-next::after {
+    position: absolute;
+    content: '>>';
+    font-size: 22px !important;
+    font-weight: bold;
+    color: #7b7e7c !important;
+  }
+  
+.mart-category .swiper-button-prev{
+    position: absolute !important;
+    bottom: 30px !important;
+    left: auto !important;
+    top: auto;
+    right: 100px;
+    content: '<<';
+    font-size: 22px !important;
+    font-weight: bold;
+    color: #7b7e7c !important;
+  }
+
+.mart-category .swiper-button-prev::after{
+    position: absolute !important;
+    content: '<<';
+    font-size: 22px !important;
+    font-weight: bold;
+    color: #7b7e7c !important;
+  }
+
+.mart-category .swiper-pagination{
+    position: absolute;
+    top: 235px;
+    bottom: auto;
+    text-align: start;
+    padding-left: 10px;
+  }
+  
+.mart-category .swiper-pagination-bullets{
+    left: 0;
+    width: 30%;
+}
+  
+.mart-category .swiper-pagination-bullet-active {
+    background-color: #f0a28e;
+  }

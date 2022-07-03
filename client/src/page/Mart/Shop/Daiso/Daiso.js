@@ -1,22 +1,49 @@
 import BackButt from "../../../../component/button/BackButt";
 import SubCard from "../../../../component/SubCard/SubCard";
 import "../../Martshop/MartMenu.css"
-import { useEffect } from "react";
-import { getAllShop } from "../api";
+import { useEffect, useState } from "react";
+import { getAllCategory, getItemInCategory } from "../api";
+import MartCategory from "../../../../component/MartCategory/MartCategory";
+import { useNavigate } from "react-router-dom";
 
 const Daiso = () => {
+    const [ allCategory , setAllCategory ] = useState([])
+    const [ categorySelected , setCategorySelected ] = useState(0);
+    const [ allItemData , setAllItemData ] = useState([]);
+    const navigate = useNavigate();
     useEffect(()=>{
+        window.scrollTo(0, 0);
         (async function(){
-            await getAllShop();
+            let resultCategory = await getAllCategory('daisonet.com');
+            let categoryList = [];
+            resultCategory.forEach((category)=>{
+                categoryList.push(category.data())
+            })
+            setAllCategory(categoryList);
         }())
     },[])
+
+    useEffect(()=>{
+        if(allCategory.length > 0){
+            (async function(){
+                let resultItems = await getItemInCategory('daisonet.com',allCategory[categorySelected]?.name);
+                setAllItemData(resultItems)
+            }())
+        }
+    },[allCategory , categorySelected])
+
+    console.log(allItemData);
+
     return (
         <section style={{backgroundColor:'#e6e5e1'}}>
             <BackButt link = "/mart/shop"/>
             <img src="/image/daisoCover.png" className="cover" alt=""></img>
-            <div>
-                <a className="Readmore-right">แสดงเพิ่มเติม &raquo;</a>
-                <img src="/image/side.png" className="side" alt=""></img>
+            <MartCategory key={'DaisoCategory'} allCategory={allCategory} categorySelected={categorySelected} setCategorySelected={setCategorySelected}/>
+            <div className="relative pb-[100px]">
+                <a className="Readmore-right"
+                    onClick={()=>navigate('/mart/shop/showmorepromotion/daiso')}
+                >แสดงเพิ่มเติม &raquo;</a>
+                <img src="/image/side.png" className="absolute w-[230px] h-full" alt=""></img>
                 <img src="/image/promotionText.png" className="promotion" alt=""></img>
                 <div className="content-right">
                     <SubCard text = "DAISO"/>
@@ -28,17 +55,24 @@ const Daiso = () => {
                 </div>
             </div>
             <img src="/image/break.png" className="break" alt=""></img>
-            <div className="product">
-                <a className="Readmore-left">แสดงเพิ่มเติม &raquo;</a>
+            <div className="product relative">
+                <a className="Readmore-left" 
+                    onClick={() => navigate('/mart/shop/showmoreall/daiso')}
+                >แสดงเพิ่มเติม &raquo;</a>
                 <img src="/image/product.png" className="productHeader" alt=""></img>
-                <img src="/image/side.png" className="sideProduct" alt=""></img>
+                <img src="/image/side.png" className="absolute right-0 w-[230px] h-full object-cover top-0" alt=""></img>
                 <div className="content-left">
+                    {allItemData.map((item,index)=>{
+                        if(index < 6){
+                            return <SubCard key={`subcard${index}`} text = {item?.name} image_url = {item?.image_url} price={item?.price} />
+                        }
+                    })}
+                    
+                    {/* <SubCard text = "DAISO"/>
                     <SubCard text = "DAISO"/>
                     <SubCard text = "DAISO"/>
                     <SubCard text = "DAISO"/>
-                    <SubCard text = "DAISO"/>
-                    <SubCard text = "DAISO"/>
-                    <SubCard text = "DAISO"/>
+                    <SubCard text = "DAISO"/> */}
                 </div>
             </div>
         </section>

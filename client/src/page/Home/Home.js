@@ -7,7 +7,7 @@ const Home = () => {
   return (
     <div style={{ background: "#fdeee4" }}>
       <Header />
-      {/* <ImageSlider /> */}
+      <ImageSlider />
 
       <ServiceProcess />
     </div>

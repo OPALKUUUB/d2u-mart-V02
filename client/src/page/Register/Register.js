@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { FloatingLabel, Form } from "react-bootstrap";
+import {  FloatingLabel, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"
 export const Register = () => {
   const navigate = useNavigate();
   const [register, setRegister] = useState({
@@ -15,7 +15,7 @@ export const Register = () => {
   });
   const [alertUsername, setAlertUsername] = useState(null);
   const [alertPassword, setAlertPassword] = useState(null);
-  const [isHoverButton, setIsHoverButton] = useState(false);
+  const [ isHoverButton , setIsHoverButton ] = useState(false);
   const handleChange = (e) => {
     if (e.target.name === "case") {
       setRegister({
@@ -57,7 +57,7 @@ export const Register = () => {
       check = false;
       alert("Please match format Username that we required!");
     }
-    console.log(register, check);
+
     if (IsNotEmpty(register) && check) {
       if (ConfirmPassword(register)) {
         fetch("/api/user/customer", {
@@ -94,65 +94,26 @@ export const Register = () => {
     }
   };
   return (
-    <div
-      className="relative flex justify-center pt-10 pb-96"
-      style={{
-        background: "#fdeee4",
-        width: "100vw",
-        height: "100%",
-        fontFamily: '"Prompt", sans-serif',
-      }}
-    >
-      <img
-        src="/image/sakura-rotate.png"
-        alt=""
-        className="top-20 -right-5 absolute w-[500px] object-cover object-center hidden lg:flex"
-      />
-      <img
-        src="/image/welcome2.png"
-        alt=""
-        className="top-48 left-28 absolute h-[500px] object-cover object-center hidden lg:flex"
-      />
-      <img
-        src="/image/torii.png"
-        alt=""
-        className="bottom-0 left-14 absolute h-[320px] object-cover object-center flex z-10"
-      />
-      <img
-        src="/image/barbgon-horizontal.png"
-        alt=""
-        className="bottom-0 absolute w-full h-[130px] object-cover object-center flex"
-      />
-      <img
-        src="/image/ciecle.png"
-        alt=""
-        className="absolute bottom-44 right-20 flex w-[50px]"
-      />
-      <img
-        src="/image/bird.png"
-        alt=""
-        className="absolute bottom-60 left-[500px] w-[120px] flex"
-      />
+    <div className="relative flex justify-center pt-10 pb-96" style={{ background: "#fdeee4", width: "100vw", height: "100%" , fontFamily: '"Prompt", sans-serif'}}>
+      <img src="/image/sakura-rotate.png" alt="" className="top-20 -right-5 absolute w-[500px] object-cover object-center hidden lg:flex" />
+      <img src="/image/welcome2.png" alt="" className="top-48 left-28 absolute h-[500px] object-cover object-center hidden lg:flex" />
+      <img src="/image/torii.png" alt="" className="bottom-0 left-14 absolute h-[320px] object-cover object-center flex z-10" />
+      <img src="/image/barbgon-horizontal.png" alt="" className="bottom-0 absolute w-full h-[130px] object-cover object-center flex" />
+      <img src="/image/ciecle.png" alt="" className="absolute bottom-44 right-20 flex w-[50px]" />
+      <img src="/image/bird.png" alt="" className="absolute bottom-60 left-[500px] w-[120px] flex" />
       <div className=" w-full max-w-[550px] pt-[30px] flex justify-center">
         <form className="flex flex-col w-full items-center gap-10 z-10">
-          <motion.h1
-            className="tracking-[0.05em] leading-[70px] text-[50px]"
-            animate={{ opacity: 1 }}
-            initial={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
+          <motion.h1 className="tracking-[0.05em] leading-[70px] text-[50px]"
+            animate={{opacity:1}}
+            initial={{opacity:0}}
+            transition={{duration:0.5}}
+          >REGISTER</motion.h1>
+          <motion.div className="flex flex-col w-full items-start gap-[10px]" controlId="formHorizontalEmail"
+            animate={{opacity:1}}
+            initial={{opacity:0}}
+            transition={{duration:0.8}}
           >
-            REGISTER
-          </motion.h1>
-          <motion.div
-            className="flex flex-col w-full items-start gap-[10px]"
-            controlid="formHorizontalEmail"
-            animate={{ opacity: 1 }}
-            initial={{ opacity: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <label className="tracking-[0.05em] text-[18px]">
-              FIRST NAME - LAST NAME
-            </label>
+            <label className="tracking-[0.05em] text-[18px]">FIRST NAME - LAST NAME</label>
             <input
               className="w-full py-2 px-[18px] rounded-lg bg-[#dcd1ca] text-[22px] text-[#bd9095] placeholder:text-[#bd9095] outline-none"
               type="text"
@@ -161,11 +122,10 @@ export const Register = () => {
               onChange={handleChange}
             />
           </motion.div>
-          <motion.div
-            className="flex flex-col w-full items-start gap-[10px]"
-            animate={{ opacity: 1 }}
-            initial={{ opacity: 0 }}
-            transition={{ duration: 1.1 }}
+          <motion.div className="flex flex-col w-full items-start gap-[10px]"
+            animate={{opacity:1}}
+            initial={{opacity:0}}
+            transition={{duration:1.1}}
           >
             <label className="tracking-[0.05em] text-[18px]">USERNAME</label>
             <input
@@ -174,10 +134,7 @@ export const Register = () => {
               placeholder="Enter Username"
               name="username"
               onKeyPress={(event) => {
-                if (
-                  !/[a-z]/.test(event.key) ||
-                  event.target.value.length > 14
-                ) {
+                if (!/[a-z]/.test(event.key) || event.target.value.length > 14) {
                   event.preventDefault();
                 }
               }}
@@ -189,12 +146,10 @@ export const Register = () => {
               </span>
             )}
           </motion.div>
-          <motion.div
-            className="flex flex-col w-full items-start gap-[10px]"
-            controlid="formHorizontalEmail"
-            animate={{ opacity: 1 }}
-            initial={{ opacity: 0 }}
-            transition={{ duration: 1.4 }}
+          <motion.div className="flex flex-col w-full items-start gap-[10px]" controlId="formHorizontalEmail"
+            animate={{opacity:1}}
+            initial={{opacity:0}}
+            transition={{duration:1.4}}
           >
             <label className="tracking-[0.05em] text-[18px]">MOBILE</label>
             <input
@@ -203,22 +158,17 @@ export const Register = () => {
               placeholder="Enter Phone"
               name="phone"
               onKeyPress={(event) => {
-                if (
-                  !/[0-9]/.test(event.key) ||
-                  event.target.value.length > 10
-                ) {
+                if (!/[0-9]/.test(event.key) || event.target.value.length > 10) {
                   event.preventDefault();
                 }
               }}
               onChange={handleChange}
             />
           </motion.div>
-          <motion.div
-            className="flex flex-col w-full items-start gap-[10px]"
-            controlid="formHorizontalPassword"
-            animate={{ opacity: 1 }}
-            initial={{ opacity: 0 }}
-            transition={{ duration: 1.7 }}
+          <motion.div className="flex flex-col w-full items-start gap-[10px]" controlId="formHorizontalPassword"
+            animate={{opacity:1}}
+            initial={{opacity:0}}
+            transition={{duration:1.7}}
           >
             <label className="tracking-[0.05em] text-[18px]">PASSWORD</label>
             <input
@@ -235,16 +185,12 @@ export const Register = () => {
               </span>
             )}
           </motion.div>
-          <motion.div
-            className="flex flex-col w-full items-start gap-[10px]"
-            controlid="formHorizontalPassword"
-            animate={{ opacity: 1 }}
-            initial={{ opacity: 0 }}
-            transition={{ duration: 2 }}
+          <motion.iv className="flex flex-col w-full items-start gap-[10px]" controlId="formHorizontalPassword"
+            animate={{opacity:1}}
+            initial={{opacity:0}}
+            transition={{duration:2}}
           >
-            <label className="tracking-[0.05em] text-[18px]">
-              CONFIRM PASSWORD
-            </label>
+            <label className="tracking-[0.05em] text-[18px]">CONFIRM PASSWORD</label>
             <input
               className="w-full py-2 px-[18px] rounded-lg bg-[#dcd1ca] text-[22px] text-[#bd9095] placeholder:text-[#bd9095] outline-none"
               type="password"
@@ -252,18 +198,15 @@ export const Register = () => {
               name="confirm_password"
               onChange={handleChange}
             />
-          </motion.div>
+          </motion.iv>
           <fieldset className="w-full flex flex-col">
-            <motion.div
-              className="flex flex-col w-full items-start gap-[10px]"
-              animate={{ opacity: 1 }}
-              initial={{ opacity: 0 }}
-              transition={{ duration: 2.3 }}
+            <motion.div className="flex flex-col w-full items-start gap-[10px]"
+              animate={{opacity:1}}
+              initial={{opacity:0}}
+              transition={{duration:2.3}}
             >
-              <label className="tracking-[0.05em] text-[20px]">
-                รูปแบบการจัดส่ง
-              </label>
-
+              <label className="tracking-[0.05em] text-[20px]">รูปแบบการจัดส่ง</label>
+              
               <Form.Check
                 type="radio"
                 label="มารับเอง"
@@ -286,15 +229,12 @@ export const Register = () => {
           </fieldset>
           {register.address_case === "มารับเอง" && (
             <fieldset className="w-full flex flex-col">
-              <motion.div
-                className="flex flex-col w-full items-start gap-[10px]"
-                animate={{ opacity: 1 }}
-                initial={{ opacity: 0 }}
-                transition={{ duration: 2.6 }}
+              <motion.div className="flex flex-col w-full items-start gap-[10px]"
+                animate={{opacity:1}}
+                initial={{ opacity:0}}
+                transition={{duration:1}}
               >
-                <label className="tracking-[0.05em] text-[20px]">
-                  กรณีที่มารับเอง สามารถเลือกสถานที่ได้ดังนี้
-                </label>
+                <label className="tracking-[0.05em] text-[20px]">กรณีที่มารับเอง สามารถเลือกสถานที่ได้ดังนี้</label>
 
                 <Form.Check
                   type="radio"
@@ -315,51 +255,25 @@ export const Register = () => {
           )}
           {register.address_case === "ขนส่งในประเทศ" && (
             <>
-              <motion.div
-                className="flex flex-col w-full items-start gap-[10px]"
-                controlid="formGroupPassword"
-                animate={{ opacity: 1 }}
-                initial={{ opacity: 0 }}
-                end={{ opacity: 0 }}
-                transition={{ duration: 2.6 }}
+              <motion.div className="flex flex-col w-full items-start gap-[10px]" controlId="formGroupPassword"
+                animate={{opacity:1}}
+                initial={{opacity:0}}
+                end={{opacity:0}}
+                transition={{duration:1}}
               >
-                <label className="tracking-[0.05em] text-[20px]">
-                  กรณีขนส่งในประเทศ{" "}
-                  <span className="text-[16px]">
-                    {"(กรอกที่อยู่ในการจัดส่ง)"}
-                  </span>
-                </label>
-                <textarea
-                  rows={3}
-                  className="resize-none w-full rounded-lg px-3 py-2 outline-none placeholder:text-[18px] text-[#a08689] text-[20px] placeholder:text-[#a08689] bg-[#e0dbd8]"
-                  placeholder="กรอกรายละเอียดสถานที่จัดส่ง..."
-                  label="Address"
-                  onChange={(e) =>
-                    setRegister({ ...register, address: e.target.value })
-                  }
-                />
+                <label className="tracking-[0.05em] text-[20px]">กรณีขนส่งในประเทศ <span className="text-[16px]">{'(กรอกที่อยู่ในการจัดส่ง)'}</span></label>
+                <textarea rows={3} className="resize-none w-full rounded-lg px-3 py-2 outline-none placeholder:text-[18px] text-[#a08689] text-[20px] placeholder:text-[#a08689] bg-[#e0dbd8]" placeholder="กรอกรายละเอียดสถานที่จัดส่ง..." label="Address"/>
+
               </motion.div>
             </>
           )}
-          <motion.button
-            className="tracking-[0.15em] font-semibold text-[22px] bg-[#f47e67] rounded-full py-[15px] w-[240px] ease-linear duration-150 flex justify-center"
-            animate={{ opacity: 1 }}
-            initial={{ opacity: 0 }}
-            transition={{ duration: 2.9 }}
-            onMouseEnter={() => setIsHoverButton(true)}
-            onMouseLeave={() => setIsHoverButton(false)}
-            onClick={handleSubmit}
-          >
-            {" "}
-            REGISTER
-            <span
-              className={`${
-                isHoverButton ? " w-5 opacity-100 pl-3" : " w-0 opacity-0 pl-0"
-              } duration-200 ease-linear inline-block`}
-            >
-              &raquo;
-            </span>
-          </motion.button>
+          <motion.button className="tracking-[0.15em] font-semibold text-[22px] bg-[#f47e67] rounded-full py-[15px] w-[240px] ease-linear duration-150 flex justify-center"
+            animate={{opacity:1}}
+            initial={{opacity:0}}
+            transition={{duration:2.9}}
+            onMouseEnter={()=>setIsHoverButton(true)}
+            onMouseLeave={()=>setIsHoverButton(false)}
+            onClick={handleSubmit}> REGISTER<span className={`${isHoverButton ? " w-5 opacity-100 pl-3" : " w-0 opacity-0 pl-0"} duration-200 ease-linear inline-block`}>&raquo;</span></motion.button>
         </form>
       </div>
     </div>

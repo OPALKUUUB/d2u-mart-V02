@@ -13,11 +13,13 @@ const MartShop = () => {
         className="w-full object-cover object-center"
         alt=""
       ></img>
-      <div className=" w-full flex justify-start items-center bg-[#e6e5e1] h-[700px]">
-        <img src="/image/vertical-break.png" className="h-full" alt="" />
-        <div className="flex flex-wrap w-full justify-center gap-x-28">
-          <SubCard text="DAISO" link="/mart/shop/daiso" />
-          <SubCard text="ABC-MART" link="/mart/MartDaiso" />
+      <div className=" w-full flex justify-start items-center bg-[#e6e5e1] py-4 md:py-0">
+        <img src="/image/vertical-break.png" className="hidden md:flex w-[120px] lg:w-[180px]" alt="" />
+        <div className="w-full flex justify-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 w-full max-w-[900px] justify-items-center gap-y-4" >
+              <SubCard text="DAISO" link="/mart/shop/daiso" />
+              <SubCard text="ABC-MART" link="/mart/shop/abc" />
+            </div>
         </div>
         {/* <SubCard text = "DAISO" link = "/mart/MartDaiso"/>
             <SubCard text = "DAISO" link = "/mart/MartDaiso"/> */}

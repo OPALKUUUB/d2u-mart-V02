@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import useToken from "../../hook/useToken";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
 
 async function loginUser(credentials) {
   return await fetch("/auth/login", {
@@ -17,7 +16,6 @@ async function loginUser(credentials) {
 }
 
 const Login = () => {
-  const navigate = useNavigate();
   const { setToken } = useToken();
   const [login, setLogin] = useState({
     username: "",
@@ -33,12 +31,11 @@ const Login = () => {
     e.preventDefault();
     const token = await loginUser(login);
     await setToken(token);
-    navigate("/");
     window.location.reload(false);
   };
   return (
     <div
-      className="flex justify-center items-center bg-[#fef1e7]"
+      className="w-full min-h-screen flex absolute top-0 justify-center items-center bg-[#fef1e7] overflow-clip py-4"
       style={{ fontFamily: '"Prompt", sans-serif' }}
     >
       <img
@@ -63,10 +60,10 @@ const Login = () => {
       />
       <form
         onSubmit={handleSignIn}
-        className="flex flex-col w-full max-w-[390px] h-full justify-center items-center gap-[20px] mt-5"
+        className="flex flex-col w-full max-w-[600px] h-full justify-center items-center gap-[50px] mt-[80px]"
       >
         <motion.h1
-          className="font-semibold tracking-[0.1em] text-[3rem] leading-3 mb-6"
+          className="font-semibold tracking-[0.1em] text-[50px]"
           animate={{ y: 0, opacity: 1, scale: 1 }}
           initial={{ y: 0, opacity: 0, scale: 0 }}
           end={{ y: -200 }}
@@ -75,15 +72,15 @@ const Login = () => {
           SIGN IN
         </motion.h1>
         <motion.div
-          className="flex flex-col w-full items-start gap-[27px]"
+          className="flex flex-col w-full items-start gap-[10px]"
           animate={{ y: 0, opacity: 1 }}
           initial={{ y: -500, opacity: 0 }}
           end={{ y: -500 }}
           transition={{ duration: 0.8 }}
         >
-          <label className="tracking-[0.15em] text-[22px]">USERNAME</label>
+          <label className="tracking-[0.05em] text-[18px]">USERNAME</label>
           <input
-            className="w-full py-3 px-3 rounded-lg bg-[#dcd1ca] text-[24px] text-[#bd9095] outline-none font-[600]"
+            className="w-full py-2 px-[18px] rounded-lg bg-[#dcd1ca] text-[22px] text-[#bd9095] placeholder:text-[#bd9095] outline-none"
             type="text"
             name="username"
             value={login.username}
@@ -91,15 +88,15 @@ const Login = () => {
           />
         </motion.div>
         <motion.div
-          className="flex flex-col w-full items-start gap-[27px]"
+          className="flex flex-col w-full items-start gap-[10px]"
           animate={{ y: 0, opacity: 1 }}
           initial={{ y: -500, opacity: 0 }}
           end={{ y: -500 }}
           transition={{ duration: 1.1 }}
         >
-          <label className="tracking-[0.15em] text-[22px]">PASSWORD</label>
+          <label className="tracking-[0.05em] text-[18px]">PASSWORD</label>
           <input
-            className="w-full py-3 px-3 rounded-lg bg-[#dcd1ca] text-[24px] text-[#bd9095] outline-none"
+            className="w-full py-2 px-[18px] rounded-lg bg-[#dcd1ca] text-[22px] text-[#bd9095] placeholder:text-[#bd9095] outline-none"
             type="password"
             name="password"
             value={login.password}
