@@ -1,0 +1,31 @@
+.ServiceProcess {
+  position: relative;
+  background-image: url("./background.png");
+  width: 100%;
+}
+.ServiceProcess .header {
+  margin: 0 auto;
+  padding: 30px 0;
+  width: 60%;
+}
+
+.ServiceProcess .content {
+  display: flex;
+  flex-wrap: wrap;
+  width: 80%;
+  margin: 0 auto;
+  padding-bottom: 30px;
+  justify-content: space-evenly;
+  align-items: center;
+  row-gap: 30px;
+  column-gap: 30px;
+}
+.ServiceProcess .content img {
+  height: 250px;
+}
+
+@media only screen and (max-width: 600px) {
+  .ServiceProcess img {
+    width: 50%;
+  }
+}

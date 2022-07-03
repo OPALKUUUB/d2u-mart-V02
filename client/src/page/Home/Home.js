@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "../../component/Header/Header";
 import ImageSlider from "../../component/ImageSlider/ImageSlider";
+import ServiceProcess from "../../component/ServiceProcess/ServiceProcess";
 
 const Home = () => {
   return (
@@ -8,11 +9,7 @@ const Home = () => {
       <Header />
       {/* <ImageSlider /> */}
 
-      <img
-        src="/image/section_footer_1.jpg"
-        style={{ width: "100%" }}
-        alt="process"
-      />
+      <ServiceProcess />
     </div>
   );
 };

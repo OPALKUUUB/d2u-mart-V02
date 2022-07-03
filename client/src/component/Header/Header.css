@@ -207,7 +207,7 @@
   .Header .welcome {
     width: 60px;
     position: absolute;
-    top: 50px;
+    top: 100px;
     left: 15%;
     z-index: 1;
   }
@@ -241,7 +241,7 @@
     width: 240px;
     position: absolute;
     left: -30px;
-    bottom: 100px;
+    bottom: 10px;
     z-index: 4;
   }
 
