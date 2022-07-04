@@ -80,7 +80,7 @@ body {
 .container .card ul {
     z-index: 99;
     position: absolute;
-    left: 39px;
+    left: 8px;
     top: 5px;
     list-style-type: none;
 }

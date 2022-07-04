@@ -5,11 +5,15 @@ import { useEffect, useState } from "react";
 import { getAllCategory, getItemInCategory } from "../api";
 import MartCategory from "../../../../component/MartCategory/MartCategory";
 import { useNavigate } from "react-router-dom";
+import Basket from "../../Martshop/Basket";
+import { useRecoilState } from "recoil";
+import { basketState } from "../../../../AppStateManagement/ShopAtom";
 
 const Daiso = () => {
     const [ allCategory , setAllCategory ] = useState([])
     const [ categorySelected , setCategorySelected ] = useState(0);
     const [ allItemData , setAllItemData ] = useState([]);
+    const [ itemInBasket , setItemInBasket ] = useRecoilState(basketState);
     const navigate = useNavigate();
     useEffect(()=>{
         window.scrollTo(0, 0);
@@ -32,14 +36,12 @@ const Daiso = () => {
         }
     },[allCategory , categorySelected])
 
-    console.log(allItemData);
-
     return (
         <section style={{backgroundColor:'#e6e5e1'}}>
             <BackButt link = "/mart/shop"/>
             <img src="/image/daisoCover.png" className="cover" alt=""></img>
             <MartCategory key={'DaisoCategory'} allCategory={allCategory} categorySelected={categorySelected} setCategorySelected={setCategorySelected}/>
-            <div className="relative pb-[100px]">
+            {/* <div className="relative pb-[100px]">
                 <a className="Readmore-right"
                     onClick={()=>navigate('/mart/shop/showmorepromotion/daiso')}
                 >แสดงเพิ่มเติม &raquo;</a>
@@ -53,18 +55,19 @@ const Daiso = () => {
                     <SubCard text = "DAISO"/>
                     <SubCard text = "DAISO"/>
                 </div>
-            </div>
+            </div> */}
             <img src="/image/break.png" className="break" alt=""></img>
-            <div className="product relative">
-                <a className="Readmore-left" 
-                    onClick={() => navigate('/mart/shop/showmoreall/daiso')}
-                >แสดงเพิ่มเติม &raquo;</a>
-                <img src="/image/product.png" className="productHeader" alt=""></img>
-                <img src="/image/side.png" className="absolute right-0 w-[230px] h-full object-cover top-0" alt=""></img>
-                <div className="content-left">
+            <div className=" relative w-full flex flex-col items-center py-5 pr-0 lg:pr-[280px] xl:pr-[400px]">
+                
+                <img src="/image/side.png" className="absolute hidden xl:flex right-0 w-[160px] h-full object-cover top-0" alt=""/>
+                <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 w-full max-w-fit 2xl:max-w-[1100px] justify-items-ce gap-y-6 gap-x-4 relative py-[40px]">
+                    <p className="absolute mb-0 top-0 left-7 hover:text-[#718275] ease-linear duration-500 underline cursor-pointer" 
+                        onClick={() => navigate('/mart/shop/showmoreall/daiso')}
+                    >แสดงเพิ่มเติม &raquo;</p>
+                    <img src="/image/product.png" className="absolute hidden lg:flex top-[55px] -right-[300px] 2xl:-right-[280px] " alt=""/>
                     {allItemData.map((item,index)=>{
                         if(index < 6){
-                            return <SubCard key={`subcard${index}`} text = {item?.name} image_url = {item?.image_url} price={item?.price} />
+                            return <SubCard key={`subcard${index}`} text = {item?.name} image_url = {item?.image_url} price={item?.price} item={item} />
                         }
                     })}
                     
@@ -75,6 +78,7 @@ const Daiso = () => {
                     <SubCard text = "DAISO"/> */}
                 </div>
             </div>
+            <Basket/>
         </section>
       );
   };
