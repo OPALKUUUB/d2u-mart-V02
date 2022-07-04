@@ -9,6 +9,15 @@ function Basket() {
     const [ itemInBasket , setItemInBasket ] = useRecoilState(basketState);
     const [ countItemInBasket , setCountItemInBasket ] = useState(0);
     const [ totalPrice , setTotalPrice ] = useState(0);
+    
+    useEffect(()=>{
+        let oldBasketData = window.localStorage.getItem('d2u-mart-basket');
+        oldBasketData = JSON.parse(oldBasketData);
+        if(oldBasketData && oldBasketData.length > 0){
+            setItemInBasket(oldBasketData);
+        }
+    },[])
+    
     useEffect(()=>{
         let count = 0;
         let price = 0;
@@ -18,6 +27,11 @@ function Basket() {
         })
         setCountItemInBasket(count);
         setTotalPrice(price);
+        if(itemInBasket.length > 0){
+            window.localStorage.setItem('d2u-mart-basket', JSON.stringify(itemInBasket));
+        }else{
+            window.localStorage.removeItem('d2u-mart-basket');
+        }
     },[itemInBasket])
 
     function calculateEachItemPrice(price , number){
