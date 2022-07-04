@@ -22,20 +22,34 @@ function PromotionRecommend({allCategory , categorySelected , setCategorySelecte
                 </div>
                 <div className="w-[77%] flex flex-col items-end relative ml-2 gap-3">
                     <p className="mb-0 text-[32px] tracking-[3px] font-[300] text-[#f69f87] ">RECOMMEND</p>
-                    {allCategory && 
-                    <Swiper 
+                    {allCategory.length >= 4 ? 
+                    <Swiper
+                        key={'swipermain'}
                         navigation={true}
                         pagination={{
                             clickable: true,
                         }}
                         modules={[Navigation , Pagination]}
-                        slidesPerView={allCategory.length >= 4 ? 4 : allCategory.length}
-                        slidesPerGroup={4}
-                        spaceBetween={allCategory.length >= 4 ? 30 : 100}
+                        slidesPerView={2}
+                        slidesPerGroup={2}
+                        spaceBetween={10}
+                        breakpoints={{
+                            768:{
+                                slidesPerView:3,
+                                slidesPerGroup:3,
+                                spaceBetween:10
+                            },
+                            1024:{
+                                slidesPerView:4,
+                                slidesPerGroup:4,
+                                spaceBetween:30
+                            },
+                        }}
                         className="w-full flex justify-center justify-items-center h-[300px] px-2 mart-category"
+                           
                     >
                         {allCategory?.map((category , index)=>(
-                            <SwiperSlide key={`category${index}`} >
+                            <SwiperSlide key={`category0${index}`} >
                                 <div className={`cursor-pointer w-full max-w-[250px] h-full max-h-[200px] bg-[#c8ceca] ${categorySelected === index ? 'bg-[#f48566] scale-105' : 'bg-[#c8ceca]'} rounded-xl flex p-2 items-center justify-center scale-100 hover:scale-105 ease-linear duration-200 mt-2 shadow-md`}
                                     onClick={()=>setCategorySelected(index)}
                                 >
@@ -45,7 +59,46 @@ function PromotionRecommend({allCategory , categorySelected , setCategorySelecte
                             </SwiperSlide>
                         ))}
                         {allCategory.length > 4 && <p className="absolute bottom-[23px] right-[48px] text-[#7b7e7c]">เลื่อน</p>}
-                    </Swiper>}
+                    </Swiper>
+                    :
+                    <Swiper 
+                        key={'swipersub'}
+                        navigation={true}
+                        pagination={{
+                            clickable: true,
+                        }}
+                        modules={[Navigation , Pagination]}
+                        slidesPerView={2}
+                        slidesPerGroup={2}
+                        spaceBetween={10}
+                        breakpoints={{
+                            768:{
+                                slidesPerView:3,
+                                slidesPerGroup:3,
+                                spaceBetween:10
+                            },
+                            1024:{
+                                slidesPerView:3,
+                                slidesPerGroup:3,
+                                spaceBetween:100
+                            },
+                        }}
+                        className="w-full flex justify-center justify-items-center h-[300px] px-2 mart-category"
+                           
+                    >
+                        {allCategory?.map((category , index)=>(
+                            <SwiperSlide key={`category2${index}`} >
+                                <div className={`cursor-pointer w-full max-w-[250px] h-full max-h-[200px] bg-[#c8ceca] ${categorySelected === index ? 'bg-[#f48566] scale-105' : 'bg-[#c8ceca]'} rounded-xl flex p-2 items-center justify-center scale-100 hover:scale-105 ease-linear duration-200 mt-2 shadow-md`}
+                                    onClick={()=>setCategorySelected(index)}
+                                >
+                                    <p className="m-0 text-[16px] text-center">{category?.name}</p>
+                                </div>
+                                
+                            </SwiperSlide>
+                        ))}
+                        <p className="flex md:hidden absolute bottom-[23px] right-[48px] text-[#7b7e7c]">เลื่อน</p>
+                    </Swiper>
+                    }
                     
                 </div>
             </div>

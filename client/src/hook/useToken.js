@@ -25,6 +25,7 @@ export default function useToken() {
     setToken(userToken.token);
   };
   const removeToken = () => {
+    window.localStorage.removeItem('d2u-mart-basket');
     localStorage.removeItem("token");
     window.location.reload(false);
   };
