@@ -129,8 +129,8 @@ export default function YahooAuction() {
             if (json.status) {
               notify(offer, json.username);
               setLoading(false);
-              console.log(json);
-              // navigate("/auction/yahoo/order");
+              // console.log(json);
+              navigate("/auction/yahoo/order");
             } else {
               alert(json.message);
               if (json.error === "jwt") {
