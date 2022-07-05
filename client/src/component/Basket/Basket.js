@@ -1,15 +1,16 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react'
-import { useRecoilState } from "recoil";
-import { basketState, isShowPopupBasketState } from "../../AppStateManagement/ShopAtom";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { basketState, isShowPopupBasketState, prevPaymentPathState, totalPriceState } from "../../AppStateManagement/ShopAtom";
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
-
+import { useNavigate } from "react-router-dom";
 function Basket() {
     const [ isShowPopupBasket , setIsShowPopupBasket ] = useRecoilState(isShowPopupBasketState);
     const [ itemInBasket , setItemInBasket ] = useRecoilState(basketState);
     const [ countItemInBasket , setCountItemInBasket ] = useState(0);
-    const [ totalPrice , setTotalPrice ] = useState(0);
-    
+    const [ totalPrice , setTotalPrice ] = useRecoilState(totalPriceState);
+    const setPrevPath = useSetRecoilState(prevPaymentPathState);
+    const navigate = useNavigate();
     useEffect(()=>{
         let oldBasketData = window.localStorage.getItem('d2u-mart-basket');
         oldBasketData = JSON.parse(oldBasketData);
@@ -40,12 +41,16 @@ function Basket() {
     }
 
     function handlePaid( basket , price , numbertOfItem ){
-        console.log(basket, price , numbertOfItem);
+        // console.log(basket, price , numbertOfItem);
+        if(basket.length > 0){
+            setPrevPath(window.location.pathname);
+            navigate('/mart/payment');
+        }
     }
 
     return (
         <>
-            <div className={`fixed bottom-7 left-10 ${isShowPopupBasket ? 'bg-[#c8ceca]' : 'bg-[#f48b66]'} rounded-full p-3 flex justify-center items-center cursor-pointer hover:-translate-y-2 hover:scale-105 ease-in duration-200 z-[999]`} 
+            <div className={`fixed bottom-2 sm:bottom-7 left-10 ${isShowPopupBasket ? 'bg-[#c8ceca]' : 'bg-[#f48b66]'} rounded-full p-3 flex justify-center items-center cursor-pointer hover:scale-105 ease-in duration-200 z-[999]`} 
                 style={{fontFamily: '"Prompt", sans-serif' , boxShadow: 'rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px'}}
                 onClick={()=>{
                     setIsShowPopupBasket(!isShowPopupBasket);
@@ -59,14 +64,14 @@ function Basket() {
             <AnimatePresence>
                 {
                     isShowPopupBasket &&
-                    <motion.div className="fixed bottom-[120px] left-7 sm:bottom-7 sm:left-[120px] flex flex-col items-center w-screen max-w-[340px] sm:max-w-[380px] max-h-[550px] h-screen rounded-xl shadow-lg bg-[#fff4ed] z-[999] gap-3 overflow-x-clip" 
+                    <motion.div className="fixed bottom-[80px] left-7 sm:bottom-7 sm:left-[120px] flex flex-col items-center w-screen max-w-[340px] sm:max-w-[380px] max-h-[550px] h-screen rounded-xl shadow-lg bg-[#fff4ed] z-[999] gap-3 overflow-x-clip" 
                         style={{fontFamily: '"Prompt", sans-serif'}}
                         animate={{scale:1 , x:0 , y:0 , opacity:1}}
                         initial={{scale:0 , x:-205 , y:300 , opacity:0}}
                         exit={{scale:0 , x:-205 , y:300 , opacity:0}}
                         transition={{duration:0.2}}
                     >
-                        <div className=" absolute top-0 w-full flex justify-between items-center pl-[24px] pr-[10px] py-[10px] text-[20px]  bg-[#c8ceca] rounded-t-xl">
+                        <div className=" absolute top-0 w-full flex justify-between items-center pl-[24px] pr-[8px] py-[10px] text-[20px]  bg-[#c8ceca] rounded-t-xl">
                             <div className="flex items-center gap-2">
                                 <ShoppingBasketIcon/>
                                 ตะกร้า

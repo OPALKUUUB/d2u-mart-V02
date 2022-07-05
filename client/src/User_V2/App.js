@@ -27,6 +27,7 @@ import Abc from "../page/Mart/Shop/Abc/Abc";
 import ShowMoreAllItem from "../page/Mart/Shop/ShowMore/ShowMoreAllItem";
 import ShowMorePromotion from "../page/Mart/Shop/ShowMorePromotion/ShowMorePromotion";
 import { RecoilRoot } from 'recoil';
+import Payment from "../page/Mart/Payment/Payment";
 const AppUserV2 = () => {
   const { token } = useToken();
   let navData = !token ? route : routeAuth;
@@ -152,6 +153,11 @@ const routeAuth = [
     id: 18,
     path: "/mart/shop/showmorepromotion/:shop",
     element: <ShowMorePromotion/> ,
+  },
+  {
+    id: 19,
+    path: "/mart/payment",
+    element: <Payment/> ,
   },
 ];
 const route = [
