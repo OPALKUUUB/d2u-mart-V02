@@ -44,7 +44,7 @@ export default function YahooAuction() {
       })
         .then((res) => res.json())
         .then((json) => {
-          console.log(json);
+          // console.log(json);
           if (!json.status) {
             alert(json.message);
             localStorage.removeItem("token");
@@ -77,7 +77,7 @@ export default function YahooAuction() {
     let link_id = obj.link
       .split("/")
       [obj.link.split("/").length - 1].split("?")[0];
-    console.log(link_id);
+    // console.log(link_id);
     const notifications = client.getStore();
     const notification = await notifications.create({
       title: "Yahoo Order",
@@ -129,8 +129,8 @@ export default function YahooAuction() {
             if (json.status) {
               notify(offer, json.username);
               setLoading(false);
-              // history.push("/auction/yahoo/order");
-              navigate("/auction/yahoo/order");
+              console.log(json);
+              // navigate("/auction/yahoo/order");
             } else {
               alert(json.message);
               if (json.error === "jwt") {
