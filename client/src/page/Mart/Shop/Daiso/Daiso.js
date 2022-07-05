@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { getAllCategory, getItemInCategory } from "../api";
 import MartCategory from "../../../../component/MartCategory/MartCategory";
 import { useNavigate } from "react-router-dom";
-import Basket from "../../Martshop/Basket";
+import Basket from "../../../../component/Basket/Basket";
 import { useRecoilState } from "recoil";
 import { basketState } from "../../../../AppStateManagement/ShopAtom";
 

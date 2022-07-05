@@ -2,7 +2,7 @@ import React from "react";
 import BackButt from "../../../component/button/BackButt";
 import Footer from "../../../component/Footer/Footer";
 import SubCard from "../../../component/SubCard/SubCard";
-import Basket from "./Basket";
+import Basket from "../../../component/Basket/Basket";
 import "./MartMenu.css";
 
 const MartShop = () => {

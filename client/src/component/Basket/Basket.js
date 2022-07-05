@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react'
 import { useRecoilState } from "recoil";
-import { basketState, isShowPopupBasketState } from "../../../AppStateManagement/ShopAtom";
+import { basketState, isShowPopupBasketState } from "../../AppStateManagement/ShopAtom";
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 
 function Basket() {
@@ -22,7 +22,7 @@ function Basket() {
         let count = 0;
         let price = 0;
         itemInBasket.forEach((item)=>{
-            price += Number(item.price.replace("円","").replaceAll(",",''))*item.count;
+            price += Number(item.price.replace("￥","").replaceAll(",",''))*item.count;
             count += item.count;
         })
         setCountItemInBasket(count);
@@ -35,7 +35,7 @@ function Basket() {
     },[itemInBasket])
 
     function calculateEachItemPrice(price , number){
-        let result = Number(price.replace("円","").replaceAll(",",''))*number;
+        let result = Number(price.replace("￥","").replaceAll(",",''))*number;
         return result.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
@@ -140,9 +140,9 @@ function Basket() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="h-full flex items-center gap-1">
+                                        <div className="h-full flex items-center">
+                                            <p className='m-0 text-[15px]'>￥</p>
                                             <p className='m-0 text-[20px]'>{calculateEachItemPrice(item.price , item.count)}</p>
-                                            <p className='m-0 text-[12px]'>円</p>
                                         </div>
                                     </div>
                                 </div>
@@ -155,9 +155,9 @@ function Basket() {
                                     รวมทั้งหมด
                                 </div>
                                 <div className="flex flex-1 h-full justify-center items-center rounded-r-xl bg-[#f0ecea]">
-                                    <div className='flex items-center gap-1'>
-                                        <p className='m-0 text-[14px]'>{totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</p>
-                                        <p className='m-0 text-[10px]'>円</p>
+                                    <div className='flex items-center'>
+                                        <p className='m-0 text-[14px]'>￥</p>
+                                        <p className='m-0 text-[14px]'>{totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</p> 
                                     </div>
                                 </div>
                             </div>       

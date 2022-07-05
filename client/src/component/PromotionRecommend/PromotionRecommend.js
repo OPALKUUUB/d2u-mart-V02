@@ -10,14 +10,14 @@ function PromotionRecommend({allCategory , categorySelected , setCategorySelecte
     return (
         <div className="w-full flex justify-center bg-[#fef1e7] relative" style={{fontFamily: '"Prompt", sans-serif'}}>
             
-            <img src="/image/flag.png" alt="" className="absolute left-20 bottom-0 w-[400px]" />
+            <img src="/image/flag.png" alt="" className="hidden md:flex absolute left-20 bottom-0 w-[400px]" />
             
             <div className="w-full max-w-[1200px] flex flex-col items-start p-2 gap-5">
-                <div className="w-full flex flex-col items-end gap-4 relative pr-[135px]">
+                <div className="w-full flex flex-col items-end gap-4 relative pr-[10px] lg:pr-[135px]">
                     <p className="mb-0 text-[50px] tracking-[3px] leading-3">PROMOTION</p>
                     <p className="mb-0 text-[42px] tracking-[3px] font-[300]">โปรโมชั่น</p>
-                    <img src="/image/vertical-dots.png" alt="" className="absolute top-[120px] right-[140px] w-[52px]" />
-                    <img src="/image/product-banner.png" alt="" className="absolute -top-[20px] right-0 w-[110px]" />
+                    <img src="/image/vertical-dots.png" alt="" className="absolute top-[120px] right-[10px] lg:right-[140px] w-[52px]" />
+                    <img src="/image/product-banner.png" alt="" className="hidden lg:flex absolute -top-[20px] right-0 w-[110px]" />
                     <img src="/image/ciecle.png" alt="" className="absolute -bottom-[330px] right-0 w-[48px]" />
                 </div>
                 <div className="w-[77%] flex flex-col items-end relative ml-2 gap-3">

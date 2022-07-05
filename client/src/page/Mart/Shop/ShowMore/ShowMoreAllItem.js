@@ -11,7 +11,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "./ShowMoreAllItem.css";
 import { Navigation , Pagination } from "swiper";
-import Basket from "../../Martshop/Basket";
+import Basket from "../../../../component/Basket/Basket";
 const ShowMoreAllItem = () => {
     const [ allCategory , setAllCategory ] = useState([])
     const [ categorySelected , setCategorySelected ] = useState(0);
@@ -26,15 +26,6 @@ const ShowMoreAllItem = () => {
         }
         if(params.shop === 'abc'){
             return 'www.abc-mart.net'
-        }
-    }
-
-    function imageUrlConditionByShop(item){
-        if(params.shop === 'daiso'){
-            return item?.image_url;
-        }
-        if(params.shop === 'abc'){
-            return item?.image;
         }
     }
 
@@ -80,7 +71,7 @@ const ShowMoreAllItem = () => {
                     <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center gap-x-8 gap-y-3">
                         {allItemData.map((item,index)=>{
                             if(index >= currentPage * 18 && index < (currentPage+1)*18){
-                                return <SubCard key={`subcard${index}`} text = {item?.name} image_url = {imageUrlConditionByShop(item)} price={item?.price} item={item} />
+                                return <SubCard key={`subcard${index}`} text = {item?.name} image_url = {item?.image_url} price={item?.price} item={item} />
                             }
                         })}
                     </div>

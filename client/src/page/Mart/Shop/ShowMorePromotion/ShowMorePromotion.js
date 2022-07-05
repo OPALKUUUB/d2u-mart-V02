@@ -29,15 +29,6 @@ const ShowMorePromotion = () => {
         }
     }
 
-    function imageUrlConditionByShop(item){
-        if(params.shop === 'daiso'){
-            return item?.image_url;
-        }
-        if(params.shop === 'abc'){
-            return item?.image;
-        }
-    }
-
     useEffect(()=>{
         window.scrollTo(0, 0);
         (async function(){
@@ -80,7 +71,7 @@ const ShowMorePromotion = () => {
                     <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center gap-x-8 gap-y-3">
                         {allItemData.map((item,index)=>{
                             if(index >= currentPage * 18 && index < (currentPage+1)*18){
-                                return <SubCard key={`subcard${index}`} text = {item?.name} image_url = {imageUrlConditionByShop(item)} price={item?.price} />
+                                return <SubCard key={`subcard${index}`} text = {item?.name} image_url = {item?.image_url} price={item?.price} />
                             }
                         })}
                     </div>

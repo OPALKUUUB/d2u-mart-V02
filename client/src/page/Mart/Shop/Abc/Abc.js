@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { getAllCategory, getItemInCategory } from "../api";
 import MartCategory from "../../../../component/MartCategory/MartCategory";
 import { useNavigate } from "react-router-dom";
-import Basket from "../../Martshop/Basket";
+import Basket from "../../../../component/Basket/Basket";
 
 const Abc = () => {
     const [ allCategory , setAllCategory ] = useState([])
@@ -66,7 +66,7 @@ const Abc = () => {
                     <img src="/image/product.png" className="absolute hidden lg:flex top-[55px] -right-[300px] 2xl:-right-[280px] " alt=""/>
                     {allItemData.map((item,index)=>{
                         if(index < 6){
-                            return <SubCard key={`subcard${index}`} text = {item?.name} image_url = {item?.image} price={item?.price} item={item} />
+                            return <SubCard key={`subcard${index}`} text = {item?.name} image_url = {item?.image_url} price={item?.price} item={item} />
                         }
                     })}
                     
