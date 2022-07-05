@@ -44,7 +44,7 @@ export default function Tracking() {
       });
   }, []);
   return (
-    <div style={{ background: "#fdeee4", width: "100vw", height: "100vh" }}>
+    <div style={{ background: "#fdeee4", width: "100vw", height: "100%" }}>
       <div style={{ paddingTop: "30px", width: "80vw", margin: "0 auto" }}>
         <h3 className="">Tracking</h3>
         <Table responsive striped bordered hover>
