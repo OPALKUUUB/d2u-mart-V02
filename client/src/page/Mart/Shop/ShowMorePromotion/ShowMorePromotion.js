@@ -12,6 +12,7 @@ import "swiper/css/pagination";
 import "./ShowMorePromotion.css";
 import { Navigation , Pagination } from "swiper";
 import PromotionRecommend from "../../../../component/PromotionRecommend/PromotionRecommend";
+import Basket from "../../../../component/Basket/Basket";
 const ShowMorePromotion = () => {
     const [ allCategory , setAllCategory ] = useState([])
     const [ categorySelected , setCategorySelected ] = useState(0);
@@ -19,20 +20,20 @@ const ShowMorePromotion = () => {
     const [ currentPage , setCurrentPage ] = useState(0);
     const [ numberOfPage , setNumberOfPage ] = useState(0);
     const [ pageIndexList , setPageIndexList ] = useState([]);
-    const params = useParams();
-    function firebaseCollectionConditionByShop(){
-        if(params.shop === 'daiso'){
-            return 'daisonet.com';
-        }
-        if(params.shop === 'abc'){
-            return 'www.abc-mart.net'
-        }
-    }
+    // const params = useParams();
+    // function firebaseCollectionConditionByShop(){
+    //     if(params.shop === 'daiso'){
+    //         return 'daisonet.com';
+    //     }
+    //     if(params.shop === 'abc'){
+    //         return 'www.abc-mart.net'
+    //     }
+    // }
 
     useEffect(()=>{
         window.scrollTo(0, 0);
         (async function(){
-            let resultCategory = await getAllCategory(firebaseCollectionConditionByShop());
+            let resultCategory = await getAllCategory('daisonet.com');
             let categoryList = [];
             resultCategory.forEach((category)=>{
                 categoryList.push(category.data())
@@ -44,7 +45,7 @@ const ShowMorePromotion = () => {
     useEffect(()=>{
         if(allCategory.length > 0){
             (async function(){
-                let resultItems = await getItemInCategory(firebaseCollectionConditionByShop(),allCategory[categorySelected]?.name);
+                let resultItems = await getItemInCategory('daisonet.com',allCategory[categorySelected]?.name);
                 setAllItemData(resultItems);
                 setNumberOfPage(Math.ceil(resultItems.length / 18));
                 setCurrentPage(0);
@@ -59,9 +60,9 @@ const ShowMorePromotion = () => {
 
     return (
         <section style={{backgroundColor:'#e6e5e1' , fontFamily: '"Prompt", sans-serif'}}>
-            <BackButt link = {`/mart/shop/${params.shop}`}/>
+            <BackButt link = {`/mart/shop`}/>
             <img src="/image/daisoCover.png" className="cover" alt=""></img>
-            <PromotionRecommend key={'promotionRecommend'} allCategory={allCategory} categorySelected={categorySelected} setCategorySelected={setCategorySelected}/>
+            {/* <PromotionRecommend key={'promotionRecommend'} allCategory={allCategory} categorySelected={categorySelected} setCategorySelected={setCategorySelected}/> */}
             <div id="allProduct" className="w-full flex flex-col bg-[#e6e5e1] items-center py-24 gap-12">
                 <div className="w-full max-w-[1100px] flex flex-col items-center gap-8">
                     <div className="w-full flex justify-start items-end gap-2 pl-[10px]">
@@ -71,7 +72,7 @@ const ShowMorePromotion = () => {
                     <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center gap-x-8 gap-y-3">
                         {allItemData.map((item,index)=>{
                             if(index >= currentPage * 18 && index < (currentPage+1)*18){
-                                return <SubCard key={`subcard${index}`} text = {item?.name} image_url = {item?.image_url} price={item?.price} />
+                                return <SubCard key={`subcard${index}`} text = {item?.name} image_url = {item?.image_url} price={item?.price} item={item} />
                             }
                         })}
                     </div>
@@ -129,7 +130,7 @@ const ShowMorePromotion = () => {
                     >{'>>'}</div> */}
                 </div>
             </div>
-           
+           <Basket/>
         </section>
       );
   };

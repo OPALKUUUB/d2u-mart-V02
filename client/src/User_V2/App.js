@@ -151,7 +151,7 @@ const routeAuth = [
   },
   {
     id: 18,
-    path: "/mart/shop/showmorepromotion/:shop",
+    path: "/mart/shop/showmorepromotion",
     element: <ShowMorePromotion/> ,
   },
   {
