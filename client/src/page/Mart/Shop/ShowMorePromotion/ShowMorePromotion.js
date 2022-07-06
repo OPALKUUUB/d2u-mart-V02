@@ -60,7 +60,7 @@ const ShowMorePromotion = () => {
 
     return (
         <section style={{backgroundColor:'#e6e5e1' , fontFamily: '"Prompt", sans-serif'}}>
-            <BackButt link = {`/mart/shop`}/>
+            <BackButt link = {`/mart`}/>
             <img src="/image/daisoCover.png" className="cover" alt=""></img>
             {/* <PromotionRecommend key={'promotionRecommend'} allCategory={allCategory} categorySelected={categorySelected} setCategorySelected={setCategorySelected}/> */}
             <div id="allProduct" className="w-full flex flex-col bg-[#e6e5e1] items-center py-24 gap-12">
