@@ -49,13 +49,6 @@ exports.getAuctionImage = (req, res, next) => {
             "Cann't get image from this link! Please show message to admin!",
         });
       } else {
-        // const sources = body
-        //   .match(/<img [^>]*src="[^"]*"[^>]*>/gm)
-        //   .map((x) => x.replace(/.*src="([^"]*)".*/, "$1"));
-        // res.status(200).json({
-        //   status: true,
-        //   imgsrc: sources[2],
-        // });
         const dom = htmlparser2.parseDocument(body);
         // Title
         const title = render(
@@ -66,7 +59,6 @@ exports.getAuctionImage = (req, res, next) => {
         )
           .replace(/<h1 class="ProductTitle__text">/, "")
           .replace(/<\/h1>/, "");
-        // console.log(title);
         //   IMAGE
         const image = CSSselect.selectAll(
           "div.ProductImage__inner img",
@@ -161,7 +153,7 @@ exports.postOrder = (req, res) => {
       req.body.imgsrc,
       req.body.price,
       "Auction",
-      req.body.remark,
+      req.body.remark === undefined ? "" : req.body.remark,
       date,
       date,
     ];
@@ -177,12 +169,7 @@ exports.postOrder = (req, res) => {
           error: "sql",
         });
       } else {
-        console.log(result);
-        res.status(200).json({
-          status: true,
-          message: "Offer " + req.body.link + "is successfully",
-          username: decoded.username,
-        });
+        // console.log(result);
         // ref: https://somnuekmueanprasan.medium.com/line-notify-nodejs-1feb050c1016
         request(
           {
@@ -202,7 +189,12 @@ exports.postOrder = (req, res) => {
             if (err) {
               console.log(err);
             } else {
-              console.log(body);
+              console.log("in line api");
+              res.status(200).json({
+                status: true,
+                message: "Offer " + req.body.link + "is successfully",
+                username: decoded.username,
+              });
             }
           }
         );

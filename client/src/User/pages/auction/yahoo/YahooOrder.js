@@ -67,7 +67,7 @@ export default function YahooOrder() {
   };
 
   return (
-    <div style={{ background: "#fdeee4", width: "100vw", height: "100vh" }}>
+    <div style={{ background: "#fdeee4", width: "100vw", height: "100%" }}>
       <div style={{ paddingTop: "30px", width: "80vw", margin: "0 auto" }}>
         <h3 className="mb-3">Yahoo Order</h3>
         <Table responsive="md" striped bordered hover size="sm">
