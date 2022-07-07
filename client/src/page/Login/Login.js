@@ -60,10 +60,10 @@ const Login = () => {
       />
       <form
         onSubmit={handleSignIn}
-        className="flex flex-col w-full max-w-[600px] h-full justify-center items-center gap-[50px] mt-[80px]"
+        className="flex flex-col w-full max-w-[600px] h-full justify-center items-center gap-[50px] mt-[80px] px-4"
       >
         <motion.h1
-          className="font-semibold tracking-[0.1em] text-[50px]"
+          className="font-semibold tracking-[0.1em] text-[36px] md:text-[50px]"
           animate={{ y: 0, opacity: 1, scale: 1 }}
           initial={{ y: 0, opacity: 0, scale: 0 }}
           end={{ y: -200 }}
@@ -78,9 +78,9 @@ const Login = () => {
           end={{ y: -500 }}
           transition={{ duration: 0.8 }}
         >
-          <label className="tracking-[0.05em] text-[18px]">USERNAME</label>
+          <label className="tracking-[0.05em] text-[16px] md:text-[18px]">USERNAME</label>
           <input
-            className="w-full py-2 px-[18px] rounded-lg bg-[#dcd1ca] text-[22px] text-[#bd9095] placeholder:text-[#bd9095] outline-none"
+            className="w-full py-2 px-[18px] rounded-lg bg-[#dcd1ca] text-[18px] md:text-[22px] text-[#bd9095] placeholder:text-[#bd9095] outline-none"
             type="text"
             name="username"
             value={login.username}
@@ -94,9 +94,9 @@ const Login = () => {
           end={{ y: -500 }}
           transition={{ duration: 1.1 }}
         >
-          <label className="tracking-[0.05em] text-[18px]">PASSWORD</label>
+          <label className="tracking-[0.05em] text-[16px] md:text-[18px]">PASSWORD</label>
           <input
-            className="w-full py-2 px-[18px] rounded-lg bg-[#dcd1ca] text-[22px] text-[#bd9095] placeholder:text-[#bd9095] outline-none"
+            className="w-full py-2 px-[18px] rounded-lg bg-[#dcd1ca] text-[18px] md:text-[22px] text-[#bd9095] placeholder:text-[#bd9095] outline-none"
             type="password"
             name="password"
             value={login.password}
@@ -111,7 +111,7 @@ const Login = () => {
         >
           <button
             type="submit"
-            className="tracking-[0.15em] font-semibold text-[22px] bg-[#f47e67] rounded-full py-[15px] w-[240px] ease-linear duration-150 flex justify-center"
+            className="tracking-[0.15em] font-semibold text-[18px] md:text-[22px] bg-[#f47e67] rounded-full py-[15px] w-[180px] md:w-[240px] ease-linear duration-150 flex justify-center"
             onMouseEnter={() => setIsHoverButton(true)}
             onMouseLeave={() => setIsHoverButton(false)}
           >
