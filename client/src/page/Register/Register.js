@@ -94,16 +94,16 @@ export const Register = () => {
     }
   };
   return (
-    <div className="relative flex justify-center pt-10 pb-96" style={{ background: "#fdeee4", width: "100vw", height: "100%" , fontFamily: '"Prompt", sans-serif'}}>
+    <div className="relative flex justify-center pt-10 pb-80 sm:pb-96" style={{ background: "#fdeee4", width: "100vw", height: "100%" , fontFamily: '"Prompt", sans-serif'}}>
       <img src="/image/sakura-rotate.png" alt="" className="top-20 -right-5 absolute w-[500px] object-cover object-center hidden lg:flex" />
       <img src="/image/welcome2.png" alt="" className="top-48 left-28 absolute h-[500px] object-cover object-center hidden lg:flex" />
-      <img src="/image/torii.png" alt="" className="bottom-0 left-14 absolute h-[320px] object-cover object-center flex z-10" />
+      <img src="/image/torii.png" alt="" className="bottom-0 left-1/2 transform -translate-x-1/2 absolute h-[240px] sm:h-[320px] object-cover object-center flex z-10" />
       <img src="/image/barbgon-horizontal.png" alt="" className="bottom-0 absolute w-full h-[130px] object-cover object-center flex" />
-      <img src="/image/ciecle.png" alt="" className="absolute bottom-44 right-20 flex w-[50px]" />
-      <img src="/image/bird.png" alt="" className="absolute bottom-60 left-[500px] w-[120px] flex" />
-      <div className=" w-full max-w-[550px] pt-[30px] flex justify-center">
+      <img src="/image/ciecle.png" alt="" className="hidden sm:flex absolute bottom-44 right-20 w-[50px]" />
+      <img src="/image/bird.png" alt="" className="hidden md:flex absolute bottom-60 left-[500px] w-[120px]" />
+      <div className=" w-full max-w-[550px] px-4 pt-[30px] flex justify-center">
         <form className="flex flex-col w-full items-center gap-10 z-10">
-          <motion.h1 className="tracking-[0.05em] leading-[70px] text-[50px]"
+          <motion.h1 className="tracking-[0.05em] leading-[70px] text-[36px] md:text-[50px]"
             animate={{opacity:1}}
             initial={{opacity:0}}
             transition={{duration:0.5}}
@@ -113,9 +113,9 @@ export const Register = () => {
             initial={{opacity:0}}
             transition={{duration:0.8}}
           >
-            <label className="tracking-[0.05em] text-[18px]">FIRST NAME - LAST NAME</label>
+            <label className="tracking-[0.05em] text-[16px] md:text-[18px]">FIRST NAME - LAST NAME</label>
             <input
-              className="w-full py-2 px-[18px] rounded-lg bg-[#dcd1ca] text-[22px] text-[#bd9095] placeholder:text-[#bd9095] outline-none"
+              className="w-full py-2 px-[18px] rounded-lg bg-[#dcd1ca] text-[18px] md:text-[22px] text-[#bd9095] placeholder:text-[#bd9095] outline-none"
               type="text"
               placeholder="Enter Name"
               name="name"
@@ -127,9 +127,9 @@ export const Register = () => {
             initial={{opacity:0}}
             transition={{duration:1.1}}
           >
-            <label className="tracking-[0.05em] text-[18px]">USERNAME</label>
+            <label className="tracking-[0.05em] text-[16px] md:text-[18px]">USERNAME</label>
             <input
-              className="w-full py-2 px-[18px] rounded-lg bg-[#dcd1ca] text-[22px] text-[#bd9095] placeholder:text-[#bd9095] outline-none"
+              className="w-full py-2 px-[18px] rounded-lg bg-[#dcd1ca] text-[18px] md:text-[22px] text-[#bd9095] placeholder:text-[#bd9095] outline-none"
               type="text"
               placeholder="Enter Username"
               name="username"
@@ -151,9 +151,9 @@ export const Register = () => {
             initial={{opacity:0}}
             transition={{duration:1.4}}
           >
-            <label className="tracking-[0.05em] text-[18px]">MOBILE</label>
+            <label className="tracking-[0.05em] text-[16px] md:text-[18px]">MOBILE</label>
             <input
-              className="w-full py-2 px-[18px] rounded-lg bg-[#dcd1ca] text-[22px] text-[#bd9095] placeholder:text-[#bd9095] outline-none"
+              className="w-full py-2 px-[18px] rounded-lg bg-[#dcd1ca] text-[18px] md:text-[22px] text-[#bd9095] placeholder:text-[#bd9095] outline-none"
               type="tel"
               placeholder="Enter Phone"
               name="phone"
@@ -170,9 +170,9 @@ export const Register = () => {
             initial={{opacity:0}}
             transition={{duration:1.7}}
           >
-            <label className="tracking-[0.05em] text-[18px]">PASSWORD</label>
+            <label className="tracking-[0.05em] text-[16px] md:text-[18px]">PASSWORD</label>
             <input
-              className="w-full py-2 px-[18px] rounded-lg bg-[#dcd1ca] text-[22px] text-[#bd9095] placeholder:text-[#bd9095] outline-none"
+              className="w-full py-2 px-[18px] rounded-lg bg-[#dcd1ca] text-[18px] md:text-[22px] text-[#bd9095] placeholder:text-[#bd9095] outline-none"
               type="password"
               placeholder="Enter Password"
               name="password"
@@ -190,9 +190,9 @@ export const Register = () => {
             initial={{opacity:0}}
             transition={{duration:2}}
           >
-            <label className="tracking-[0.05em] text-[18px]">CONFIRM PASSWORD</label>
+            <label className="tracking-[0.05em] text-[16px] md:text-[18px]">CONFIRM PASSWORD</label>
             <input
-              className="w-full py-2 px-[18px] rounded-lg bg-[#dcd1ca] text-[22px] text-[#bd9095] placeholder:text-[#bd9095] outline-none"
+              className="w-full py-2 px-[18px] rounded-lg bg-[#dcd1ca] text-[18px] md:text-[22px] text-[#bd9095] placeholder:text-[#bd9095] outline-none"
               type="password"
               placeholder="Enter Confirm Password"
               name="confirm_password"
@@ -205,7 +205,7 @@ export const Register = () => {
               initial={{opacity:0}}
               transition={{duration:2.3}}
             >
-              <label className="tracking-[0.05em] text-[20px]">รูปแบบการจัดส่ง</label>
+              <label className="tracking-[0.05em] text-[18px] md:text-[20px]">รูปแบบการจัดส่ง</label>
               
               <Form.Check
                 type="radio"
@@ -234,7 +234,7 @@ export const Register = () => {
                 initial={{ opacity:0}}
                 transition={{duration:1}}
               >
-                <label className="tracking-[0.05em] text-[20px]">กรณีที่มารับเอง สามารถเลือกสถานที่ได้ดังนี้</label>
+                <label className="tracking-[0.05em] text-[18px] md:text-[20px]">กรณีที่มารับเอง สามารถเลือกสถานที่ได้ดังนี้</label>
 
                 <Form.Check
                   type="radio"
@@ -261,13 +261,13 @@ export const Register = () => {
                 end={{opacity:0}}
                 transition={{duration:1}}
               >
-                <label className="tracking-[0.05em] text-[20px]">กรณีขนส่งในประเทศ <span className="text-[16px]">{'(กรอกที่อยู่ในการจัดส่ง)'}</span></label>
-                <textarea rows={3} className="resize-none w-full rounded-lg px-3 py-2 outline-none placeholder:text-[18px] text-[#a08689] text-[20px] placeholder:text-[#a08689] bg-[#e0dbd8]" placeholder="กรอกรายละเอียดสถานที่จัดส่ง..." label="Address"/>
+                <label className="tracking-[0.05em] text-[18px] md:text-[20px]">กรณีขนส่งในประเทศ <span className="text-[16px]">{'(กรอกที่อยู่ในการจัดส่ง)'}</span></label>
+                <textarea rows={3} className="resize-none w-full rounded-lg px-3 py-2 outline-none placeholder:text-[18px] text-[#a08689] text-[18px] md:text-[20px] placeholder:text-[#a08689] bg-[#e0dbd8]" placeholder="กรอกรายละเอียดสถานที่จัดส่ง..." label="Address"/>
 
               </motion.div>
             </>
           )}
-          <motion.button className="tracking-[0.15em] font-semibold text-[22px] bg-[#f47e67] rounded-full py-[15px] w-[240px] ease-linear duration-150 flex justify-center"
+          <motion.button className="tracking-[0.15em] font-semibold text-[18px] md:text-[22px] bg-[#f47e67] rounded-full py-[15px] w-[180px] md:w-[240px] ease-linear duration-150 flex justify-center"
             animate={{opacity:1}}
             initial={{opacity:0}}
             transition={{duration:2.9}}
