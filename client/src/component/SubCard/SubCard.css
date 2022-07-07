@@ -58,7 +58,7 @@
     margin: 0;
 }
 
-.SubCard-container .SubCard-card .SubCard-contentBx a{
+.SubCard-container .SubCard-card .SubCard-contentBx div{
     display: inline-block;
     padding: 10px 20px;
     background: #718275;
@@ -72,9 +72,10 @@
     transition: 0.5s;
     margin-top: 10px;
     cursor: pointer;
+    gap: 5px;
 }
 
-.SubCard-container .SubCard-card:hover .SubCard-contentBx a{
+.SubCard-container .SubCard-card:hover .SubCard-contentBx div{
     opacity: 1;
     transform: translateY(0px);
     transition-delay: 0.1s;
