@@ -264,7 +264,7 @@ export const Register = () => {
 
                 <label className="tracking-[0.05em] text-[18px] md:text-[20px]">กรณีขนส่งในประเทศ <span className="text-[16px]">{'(กรอกที่อยู่ในการจัดส่ง)'}</span></label>
                 <textarea rows={3} className="resize-none w-full rounded-lg px-3 py-2 outline-none placeholder:text-[18px] text-[#a08689] text-[18px] md:text-[20px] placeholder:text-[#a08689] bg-[#e0dbd8]" placeholder="กรอกรายละเอียดสถานที่จัดส่ง..." label="Address" onChange={(e) =>
-                 setRegister({ ...register, address: e.target.value } />
+                 setRegister({ ...register, address: e.target.value })} />
 
 
               </motion.div>
