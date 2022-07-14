@@ -1,9 +1,5 @@
 import React, { useState } from "react";
-<<<<<<< HEAD
-import { FloatingLabel, Form } from "react-bootstrap";
-=======
 import { Form } from "react-bootstrap";
->>>>>>> c1c69b78506818ed4dfb8e4ce94859c9699afe8e
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 export const Register = () => {

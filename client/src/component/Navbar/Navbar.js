@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useToken from "../../hook/useToken";
-import Hamburger from 'hamburger-react'
+import Hamburger from "hamburger-react";
 import "./Navbar.css";
 
 export const Navbar = () => {
@@ -91,10 +91,23 @@ export const Navbar = () => {
                 ติดต่อเรา
               </Link>
             </li>
+            <li>
+              <span
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  navigate("/");
+                  logout();
+                }}
+              >
+                Logout
+              </span>
+            </li>
           </ul>
         </div>
         <div className="Navbar-right">
-          <button onClick={() => setShowLinks(!showLink)}><Hamburger /></button>
+          <button onClick={() => setShowLinks(!showLink)}>
+            <Hamburger />
+          </button>
           <span
             style={{ cursor: "pointer" }}
             onClick={() => {
@@ -161,7 +174,7 @@ export const Navbar = () => {
           </li>
         </ul>
       </div>
-      <div className="Navbar-right">
+      <div className="Navbar-right no-auth">
         <span>
           <Link
             to="/login"
