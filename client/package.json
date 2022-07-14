@@ -15,6 +15,7 @@
     "cloudinary-react": "^1.7.1",
     "firebase": "^9.8.4",
     "framer-motion": "^6.3.16",
+    "hamburger-react": "^2.5.0",
     "react": "^17.0.2",
     "react-bootstrap": "^2.1.1",
     "react-bootstrap-typeahead": "^6.0.0-alpha.6",
