@@ -1,19 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useToken from "../../hook/useToken";
+import Hamburger from 'hamburger-react'
 import "./Navbar.css";
 
 export const Navbar = () => {
   const navigate = useNavigate();
   const { token, logout } = useToken();
   const location = useLocation();
+  const [showLink, setShowLinks] = useState(false);
   if (token) {
     return (
       <nav className="Navbar">
         <div className="Navbar-left">
           <img src="/logo_none.png" alt="logo_image" />
         </div>
-        <div className="Navbar-mid">
+        <div className="Navbar-mid" id={showLink ? "hidden" : ""}>
           <ul>
             <li>
               <Link
@@ -92,6 +94,7 @@ export const Navbar = () => {
           </ul>
         </div>
         <div className="Navbar-right">
+          <button onClick={() => setShowLinks(!showLink)}><Hamburger /></button>
           <span
             style={{ cursor: "pointer" }}
             onClick={() => {

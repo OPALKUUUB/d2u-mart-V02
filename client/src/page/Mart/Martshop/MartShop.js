@@ -18,7 +18,7 @@ const MartShop = () => {
         <img src="/image/vertical-break.png" className="hidden md:flex w-[120px] lg:w-[180px]" alt="" />
         <div className="w-full flex justify-center">
           <div className="grid grid-cols-1 md:grid-cols-2 w-full max-w-[900px] justify-items-center gap-y-4 py-4 md:py-0" >
-              <SubCard text="DAISO" link="/mart/shop/daiso" />
+              <SubCard text="DAISO" link="/mart/shop/showmoreall/daiso" />
               <SubCard text="ABC-MART" link="/mart/shop/abc" />
             </div>
         </div>
