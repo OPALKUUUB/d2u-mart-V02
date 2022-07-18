@@ -26,8 +26,9 @@ import Footer from "../component/Footer/Footer";
 import Abc from "../page/Mart/Shop/Abc/Abc";
 import ShowMoreAllItem from "../page/Mart/Shop/ShowMore/ShowMoreAllItem";
 import ShowMorePromotion from "../page/Mart/Shop/ShowMorePromotion/ShowMorePromotion";
-import { RecoilRoot } from 'recoil';
+import { RecoilRoot } from "recoil";
 import Payment from "../page/Mart/Payment/Payment";
+import Ewelcia from "../page/Mart/Shop/Ewelcia/Ewelcia";
 const AppUserV2 = () => {
   const { token } = useToken();
   let navData = !token ? route : routeAuth;
@@ -145,19 +146,24 @@ const routeAuth = [
     element: <Abc />,
   },
   {
+    id: 30,
+    path: "/mart/shop/ewelcia",
+    element: <Ewelcia />,
+  },
+  {
     id: 17,
     path: "/mart/shop/showmoreall/:shop",
-    element: <ShowMoreAllItem/> ,
+    element: <ShowMoreAllItem />,
   },
   {
     id: 18,
     path: "/mart/shop/showmorepromotion",
-    element: <ShowMorePromotion/> ,
+    element: <ShowMorePromotion />,
   },
   {
     id: 19,
     path: "/mart/payment",
-    element: <Payment/> ,
+    element: <Payment />,
   },
 ];
 const route = [
