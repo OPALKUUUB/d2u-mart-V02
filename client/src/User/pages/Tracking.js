@@ -5,8 +5,6 @@ import { ShowImage } from "../components/ShowImage";
 export default function Tracking() {
   const [trackings, setTrackings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [image, setImage] = useState("");
-  const [modalShowImage, setModalShowImage] = useState(false);
   useEffect(() => {
     fetch("/check/session", {
       headers: { token: JSON.parse(localStorage.getItem("token")).token },
@@ -78,11 +76,12 @@ export default function Tracking() {
                         <td className="align-middle">{item.weight}</td>
                         <td className="align-middle">{item.round_boat}</td>
                         <td className="align-middle">
-                          <img
+                          {/* <img
                             src={item.imgsrc}
                             alt="image for pic1"
                             width={100}
-                          />
+                          /> */}
+                          <ShowImage src={item.imgsrc} />
                         </td>
                         <td className="align-middle text-center">-</td>
                         <td className="align-middle text-center">-</td>
@@ -121,15 +120,16 @@ export default function Tracking() {
                           item.pic1_filename === "" ? (
                             "-"
                           ) : (
-                            <img
-                              src={item.pic1_filename}
-                              onClick={() => {
-                                setImage(item.pic1_filename);
-                                setModalShowImage(true);
-                              }}
-                              alt="image for pic1"
-                              width={100}
-                            />
+                            // <img
+                            //   src={item.pic1_filename}
+                            //   onClick={() => {
+                            //     setImage(item.pic1_filename);
+                            //     setModalShowImage(true);
+                            //   }}
+                            //   alt="image for pic1"
+                            //   width={100}
+                            // />
+                            <ShowImage src={item.pic1_filename} />
                           )}
                         </td>
                         <td className="align-middle">
@@ -137,15 +137,16 @@ export default function Tracking() {
                           item.pic2_filename === "" ? (
                             "-"
                           ) : (
-                            <img
-                              src={item.pic2_filename}
-                              onClick={() => {
-                                setImage(item.pic2_filename);
-                                setModalShowImage(true);
-                              }}
-                              alt="image for pic2"
-                              width={100}
-                            />
+                            // <img
+                            //   src={item.pic2_filename}
+                            //   onClick={() => {
+                            //     setImage(item.pic2_filename);
+                            //     setModalShowImage(true);
+                            //   }}
+                            //   alt="image for pic2"
+                            //   width={100}
+                            // />
+                            <ShowImage src={item.pic2_filename} />
                           )}
                         </td>
                       </>
@@ -176,11 +177,6 @@ export default function Tracking() {
             <h4>ไม่พบรายการติดตามสินค้า!</h4>
           </div>
         )}
-        <ShowImage
-          show={modalShowImage}
-          onHide={() => setModalShowImage(false)}
-          src={image}
-        />
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
 import ReactLoading from "react-loading";
+import { ShowImage } from "../../../../component/ShowImage/ShowImage";
 
 export default function YahooHistory() {
   const [orders, setOrders] = useState([]);
@@ -80,7 +81,8 @@ export default function YahooHistory() {
                     <td className="align-middle">{index + 1}</td>
                     <td className="align-middle">{item.created_at}</td>
                     <td className="align-middle">
-                      <img src={item.imgsrc} width={100} />
+                      {/* <img src={item.imgsrc} width={100} /> */}
+                      <ShowImage src={item.imgsrc} />
                     </td>
                     <td className="align-middle">
                       <a href={item.link} target="_blank">

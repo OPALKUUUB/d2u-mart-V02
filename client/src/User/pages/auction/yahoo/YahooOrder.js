@@ -12,6 +12,7 @@ import {
   FormControl,
 } from "react-bootstrap";
 import MagicBellClient from "@magicbell/core";
+import { ShowImage } from "../../../../component/ShowImage/ShowImage";
 
 export default function YahooOrder() {
   const [orders, setOrders] = useState([]);
@@ -88,7 +89,8 @@ export default function YahooOrder() {
                   <tr key={index}>
                     <td className="align-middle">{index + 1}</td>
                     <td className="align-middle">
-                      <img src={item.imgsrc} width={100} alt={item.imgsrc} />
+                      {/* <img src={item.imgsrc} width={100} alt={item.imgsrc} /> */}
+                      <ShowImage src={item.imgsrc} />
                     </td>
                     <td className="align-middle">
                       <a href={item.link} target="_blank" rel="noreferrer">

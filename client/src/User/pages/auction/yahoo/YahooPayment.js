@@ -11,6 +11,7 @@ import {
   Table,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { ShowImage } from "../../../../component/ShowImage/ShowImage";
 
 export default function YahooPayment() {
   const [orders, setOrders] = useState([]);
@@ -144,7 +145,8 @@ export default function YahooPayment() {
                     <td className="align-middle">{item.created_at}</td>
 
                     <td className="align-middle">
-                      <img src={item.imgsrc} width={100} />
+                      {/* <img src={item.imgsrc} width={100} /> */}
+                      <ShowImage src={item.imgsrc} />
                     </td>
                     <td className="align-middle">
                       <a href={item.link} target="_blank">
