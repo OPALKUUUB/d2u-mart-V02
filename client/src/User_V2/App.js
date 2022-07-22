@@ -41,7 +41,6 @@ const AppUserV2 = () => {
         ))}
         <Route path="/*" element={<NotFound />} />
       </Routes>
-      <Footer />
     </RecoilRoot>
   );
 };
@@ -164,6 +163,11 @@ const routeAuth = [
     id: 19,
     path: "/mart/payment",
     element: <Payment />,
+  },
+  {
+    id: 20,
+    path: "/mart/shop/Ewelcia",
+    element: <Ewelcia /> ,
   },
 ];
 const route = [

@@ -38,7 +38,7 @@ const Abc = () => {
     return (
         <section style={{backgroundColor:'#e6e5e1'}}>
             <BackButt link = "/mart/shop"/>
-            <img src="/image/daisoCover.png" className="cover" alt=""></img>
+            <img src="/image/abcmart.png" className="cover" alt=""></img>
             <MartCategory key={'AbcCategory'} allCategory={allCategory} categorySelected={categorySelected} setCategorySelected={setCategorySelected}/>
             {/* <div className="relative pb-[100px]">
                 <a className="Readmore-right"
