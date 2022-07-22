@@ -20,6 +20,8 @@ const MartShop = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 w-full max-w-[900px] justify-items-center gap-y-4 py-4 md:py-0" >
               <SubCard text="DAISO" link="/mart/shop/showmoreall/daiso" />
               <SubCard text="ABC-MART" link="/mart/shop/abc" />
+              <SubCard text="E-WELCIA" link="/mart/shop/Ewelcia" />
+              <SubCard text="7-ELEVEN" link="/mart/shop/abc" />
             </div>
         </div>
         {/* <SubCard text = "DAISO" link = "/mart/MartDaiso"/>

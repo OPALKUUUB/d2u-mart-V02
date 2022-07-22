@@ -59,7 +59,7 @@ const ShowMoreAllItem = () => {
 
     return (
         <section style={{backgroundColor:'#e6e5e1' , fontFamily: '"Prompt", sans-serif'}}>
-            <BackButt link = {`/mart/shop/${params.shop}`}/>
+            <BackButt link ="/mart/shop" />
             <img src="/image/daisoCover.png" className="cover" alt=""></img>
             <ProductCategory key={'productCategory'} allCategory={allCategory} categorySelected={categorySelected} setCategorySelected={setCategorySelected}/>
             <div id="allProduct" className="w-full flex flex-col bg-[#e6e5e1] items-center py-24 gap-12">
