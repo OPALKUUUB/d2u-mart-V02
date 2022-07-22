@@ -15,7 +15,6 @@ const Home = () => {
       <img src="/image/old/D2U_3.png" width="100%" />
       <img src="/image/old/D2U_4.png" width="100%" />
       <img src="/image/old/D2U_5.png" width="100%" />
-      <img src="/image/old/D2U_6.png" width="100%" />
 
       <Footer />
     </div>
