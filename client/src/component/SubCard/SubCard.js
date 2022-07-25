@@ -14,8 +14,8 @@ const SubCard = (props) => {
                     <img className="w-[180px] h-[180px] object-cover object-center rounded-lg" alt="" src={props.image_url !== undefined ? props.image_url :'https://www.daisonet.com/images/common/header/logo_pc.jpg'}/>
                 </div>
                 <div className="SubCard-txt">
-                    <h2 className="text-[18px]">{props.text}</h2>
-                    <p className="mb-0 text-[22px] font-semibold py-[2px]">{props.price}</p>
+                    <h2 className="text-[14px]">{props.text}</h2>
+                    <p className="mb-0 text-[15px] font-semibold py-[2px]">{props.price}</p>
                 </div>
                 <div className="SubCard-contentBx">
                     <div className="flex" onClick={()=>{

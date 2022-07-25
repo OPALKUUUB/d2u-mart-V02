@@ -1,10 +1,10 @@
-.SubCard-container{
+.NewSubCard-container{
     margin: 10px 10px 10px 10px;
     position: relative;
     display: inline-block;
   }
   
-.SubCard-container .SubCard-card{
+.NewSubCard-container .NewSubCard-card{
     position: relative;
     width: 320px;
     height: 350px;
@@ -13,7 +13,7 @@
     overflow: hidden;
 }
 
-.SubCard-container .SubCard-card .SubCard-imgBx{
+.NewSubCard-container .NewSubCard-card .NewSubCard-imgBx{
     position: absolute;
     top: 40%;
     transform: translateY(-50%);
@@ -23,12 +23,12 @@
     transition: 0.5s;
 }
 
-.SubCard-container .SubCard-card:hover .SubCard-imgBx{
+.NewSubCard-container .NewSubCard-card:hover .NewSubCard-imgBx{
     top: 0%;
     transform: translateY(0%);    
 }
 
-.SubCard-container .SubCard-card .SubCard-imgBx img{
+.NewSubCard-container .NewSubCard-card .NewSubCard-imgBx img{
     position: absolute;
     top: 50%;
     left: 50%;
@@ -36,7 +36,7 @@
     width: 200px;
 }
 
-.SubCard-container .SubCard-card .SubCard-contentBx{
+.NewSubCard-container .NewSubCard-card .NewSubCard-contentBx{
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -46,11 +46,11 @@
     z-index: 1;
 }
 
-.SubCard-container .SubCard-card:hover .SubCard-contentBx{
+.NewSubCard-container .NewSubCard-card:hover .NewSubCard-contentBx{
     height: 140px;
 }
 
-.SubCard-container .SubCard-card .SubCard-contentBx h2{
+.NewSubCard-container .NewSubCard-card .NewSubCard-contentBx h2{
     position: relative;
     font-weight: 600;
     letter-spacing: 1px;
@@ -58,7 +58,7 @@
     margin: 0;
 }
 
-.SubCard-container .SubCard-card .SubCard-contentBx div{
+.NewSubCard-container .NewSubCard-card .NewSubCard-contentBx div{
     display: inline-block;
     padding: 10px 20px;
     background: #718275;
@@ -75,7 +75,7 @@
     gap: 5px;
 }
 
-.SubCard-container .SubCard-card:hover .SubCard-contentBx div{
+.NewSubCard-container .NewSubCard-card:hover .NewSubCard-contentBx div{
     opacity: 1;
     transform: translateY(0px);
     transition-delay: 0.1s;
