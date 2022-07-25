@@ -1,0 +1,82 @@
+.SubCard-container{
+    margin: 10px 10px 10px 10px;
+    position: relative;
+    display: inline-block;
+  }
+  
+.SubCard-container .SubCard-card{
+    position: relative;
+    width: 320px;
+    height: 350px;
+    background: #c8ceca;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.SubCard-container .SubCard-card .SubCard-imgBx{
+    position: absolute;
+    top: 40%;
+    transform: translateY(-50%);
+    z-index: 1;
+    width: 100%;
+    height: 220px;
+    transition: 0.5s;
+}
+
+.SubCard-container .SubCard-card:hover .SubCard-imgBx{
+    top: 0%;
+    transform: translateY(0%);    
+}
+
+.SubCard-container .SubCard-card .SubCard-imgBx img{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+}
+
+.SubCard-container .SubCard-card .SubCard-contentBx{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100px;
+    text-align: center;
+    transition: 1s;
+    z-index: 1;
+}
+
+.SubCard-container .SubCard-card:hover .SubCard-contentBx{
+    height: 140px;
+}
+
+.SubCard-container .SubCard-card .SubCard-contentBx h2{
+    position: relative;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #000000;
+    margin: 0;
+}
+
+.SubCard-container .SubCard-card .SubCard-contentBx div{
+    display: inline-block;
+    padding: 10px 20px;
+    background: #718275;
+    border-radius: 4px;
+    margin-top: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    color: #fff;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: 0.5s;
+    margin-top: 10px;
+    cursor: pointer;
+    gap: 5px;
+}
+
+.SubCard-container .SubCard-card:hover .SubCard-contentBx div{
+    opacity: 1;
+    transform: translateY(0px);
+    transition-delay: 0.1s;
+}

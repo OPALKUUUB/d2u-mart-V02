@@ -15,7 +15,7 @@ const SubCard = (props) => {
       <div className="SubCard-card">
         <div className="SubCard-imgBx">
           <img
-            className="w-[70px] object-cover object-center rounded-lg"
+            className="w-[180px] h-[180px] object-cover object-center rounded-lg"
             alt=""
             src={
               props.image_url !== undefined
@@ -24,12 +24,13 @@ const SubCard = (props) => {
             }
           />
         </div>
+        <div className="SubCard-txt">
+          <h2 className="text-[18px]">{props.text}</h2>
+          <p className="mb-0 text-[22px] font-semibold py-[2px]">
+            {props.price}
+          </p>
+        </div>
         <div className="SubCard-contentBx">
-          <h2 className="text-[0.7rem]">{props.text}</h2>
-          <p className="mb-0 text-[0.6rem] font-semibold">{props.price}</p>
-          <p className="mb-0 text-[0.3rem]">Exp: {props?.expire_date || "-"}</p>
-          <p className="mb-0 text-[0.3rem]">include tax</p>
-
           <div
             className="flex"
             onClick={() => {
@@ -66,6 +67,8 @@ const SubCard = (props) => {
             {props.link === undefined && <AddShoppingCartIcon />}
             {props.link === undefined ? "เพิ่มลงตะกร้า" : "ซื้อเลย"}
           </div>
+          <h3>exp.</h3>
+          <h3>tax</h3>
         </div>
       </div>
     </div>
