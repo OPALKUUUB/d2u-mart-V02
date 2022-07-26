@@ -79,11 +79,11 @@ const ShowMoreAllItem = () => {
         className="w-full flex flex-col bg-[#e6e5e1] items-center py-24 gap-12"
       >
         <div className="w-full max-w-[1800px] flex flex-col items-center gap-8">
-          <div className="w-full flex justify-start items-end gap-2 pl-[10px]">
-            <p className="m-0 text-[30px]">สินค้า</p>
-            <p className="m-0 text-[26px] text-[#f0a28e]">ทั้งหมด</p>
+          <div className="w-full flex justify-center items-end gap-2 pl-[10px]">
+            <p className="m-0 text-[50px]">สินค้า</p>
+            <p className="m-0 text-[49px] text-[#f0a28e]">ทั้งหมด</p>
           </div>
-          <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 justify-items-center gap-x-8 gap-y-3">
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 justify-items-center gap-x-2 gap-y-2">
             {allItemData.map((item, index) => {
               if (index >= currentPage * 18 && index < (currentPage + 1) * 18) {
                 return (
