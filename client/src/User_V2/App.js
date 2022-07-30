@@ -29,6 +29,7 @@ import ShowMorePromotion from "../page/Mart/Shop/ShowMorePromotion/ShowMorePromo
 import { RecoilRoot } from "recoil";
 import Payment from "../page/Mart/Payment/Payment";
 import Ewelcia from "../page/Mart/Shop/Ewelcia/Ewelcia";
+import Omni7 from "../page/Mart/Shop/Omni7/Omni7";
 const AppUserV2 = () => {
   const { token } = useToken();
   let navData = !token ? route : routeAuth;
@@ -168,6 +169,11 @@ const routeAuth = [
     id: 20,
     path: "/mart/shop/Ewelcia",
     element: <Ewelcia /> ,
+  },
+  {
+    id: 21,
+    path: "/mart/shop/Omni7",
+    element: <Omni7 /> ,
   },
 ];
 const route = [

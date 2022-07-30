@@ -19,6 +19,7 @@ const Daiso = () => {
     window.scrollTo(0, 0);
     (async function () {
       let resultCategory = await getAllCategory("daisonet.com");
+      console.log(resultCategory);
       let categoryList = [];
       resultCategory.forEach((category) => {
         categoryList.push(category.data());

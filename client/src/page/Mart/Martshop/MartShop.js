@@ -20,9 +20,9 @@ const MartShop = () => {
         <div className="w-full flex justify-center">
           <div className="grid grid-cols-1 md:grid-cols-2 w-full max-w-[900px] justify-items-center gap-y-4 py-4 md:py-0" >
               <NewSubCard text="DAISO" link="/mart/shop/showmoreall/daiso" />
-              <NewSubCard text="ABC-MART" link="/mart/shop/abc" />
+              <NewSubCard text="ABC-MART" link="/mart/shop/showmoreall/abc" />
               <NewSubCard text="E-WELCIA" link="/mart/shop/Ewelcia" />
-              <NewSubCard text="7-ELEVEN" link="/mart/shop/abc" />
+              <NewSubCard text="7-ELEVEN" link="/mart/shop/Omni7" />
             </div>
         </div>
         {/* <SubCard text = "DAISO" link = "/mart/MartDaiso"/>
