@@ -34,7 +34,7 @@ const Omni7 = ({ children }) => {
           let data = [];
           Object.keys(result).forEach((id) => {
             let item = {
-              code: id,
+              id: id,
               name: result[id]?.name,
               category: result[id]?.category,
               price: result[id]?.price,
