@@ -14,7 +14,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation , Pagination } from "swiper";
 
-const Ewelcia = ({ children }) => {
+const Omni7 = ({ children }) => {
   // useSearchParams
   const [ewilciaData, setEwilciaData] = useState([]);
   const [show, setShow] = useState(10);
@@ -27,7 +27,7 @@ const Ewelcia = ({ children }) => {
   const navigate = useNavigate();
   useEffect(() => {
     Firebase.database()
-      .ref("/ewelcia")
+      .ref("/omni7")
       .on("value", (snapshot) => {
         if (snapshot.val()) {
           let result = snapshot.val();
@@ -58,7 +58,7 @@ const Ewelcia = ({ children }) => {
         }
       });
     return () => {
-      Firebase.database().ref("/ewelcia").off();
+      Firebase.database().ref("/omni7").off();
     };
   }, []);
 
@@ -119,4 +119,4 @@ const Ewelcia = ({ children }) => {
   );
 };
 
-export default Ewelcia;
+export default Omni7;
