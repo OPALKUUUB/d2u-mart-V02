@@ -37,7 +37,7 @@ const ProductCard = (props) => {
       <div className="w-[200px] h-[250px] rounded-[1.5rem] bg-[#ebcdc4] shadow-sm overflow-hidden relative cursor-pointer">
         <div className="relative w-[180px] m-auto mt-3">
           <img
-            className="absolute top-0 left-0"
+            className="absolute top-0 left-0 rounded-lg"
             src={props.data.image}
             alt=""
             width={200}
