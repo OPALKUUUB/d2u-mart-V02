@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import BackButt from "../../../../component/button/BackButt";
-import SubCard from "../../../../component/SubCard/SubCard";
 import Basket from "../../../../component/Basket/Basket";
 import Firebase from "../../../../Firebase/FirebaseConfig";
 import ProductCard from "../../../../component/SubCard/ProductCard";
 
 const Omni7 = ({ children }) => {
   const [allItemData, setAllItemData] = useState([]);
+  const sectionRef = useRef();
+
   useEffect(() => {
     Firebase.database()
       .ref("/omni7")
@@ -40,24 +41,24 @@ const Omni7 = ({ children }) => {
     };
   }, []);
 
+  useEffect(() => {
+    window.scrollTo({
+      behavior: "smooth",
+      top: sectionRef.current.offsetTop - 120,
+    });
+  });
+
   return (
     <section style={{ fontFamily: '"Prompt", sans-serif' }}>
       <BackButt link="/mart/shop" />
       <img src="/image/daisoCover.png" alt="" className="shadow-sm" />
-      <div className="w-full bg-[#ece7e2] py-[50px]">
+      <div className="w-full bg-[#ece7e2] py-[50px]" ref={sectionRef}>
         <div className="w-[90%] mx-auto ">
           <div className="ml-[10px] mb-2">
             <Header />
           </div>
           <div className="flex justify-center flex-wrap gap-4">
             {allItemData.map((item, index) => (
-              // <SubCard
-              //   key={`subcard${index}`}
-              //   text={item?.name}
-              //   image_url={item?.image}
-              //   price={item?.price}
-              //   item={item}
-              // />
               <ProductCard
                 key={"subcard" + index}
                 name={item?.name || "no name"}
