@@ -1,10 +1,8 @@
 import React from "react";
 import BackButt from "../../../component/button/BackButt";
-import Footer from "../../../component/Footer/Footer";
-import SubCard from "../../../component/SubCard/SubCard";
 import Basket from "../../../component/Basket/Basket";
 import "./MartMenu.css";
-import NewSubCard from "../../../component/SubCard/NewSubCard";
+import ShopCard from "../../../component/SubCard/ShopCard";
 
 const MartShop = () => {
   return (
@@ -15,22 +13,46 @@ const MartShop = () => {
         className="w-full object-cover object-center"
         alt=""
       ></img>
-      <div className=" w-full flex justify-start items-center bg-[#e6e5e1]">
-        <img src="/image/vertical-break.png" className="hidden md:flex w-[120px] lg:w-[180px]" alt="" />
-        <div className="w-full flex justify-center">
-          <div className="grid grid-cols-1 md:grid-cols-2 w-full max-w-[900px] justify-items-center gap-y-4 py-4 md:py-0" >
-              <NewSubCard text="DAISO" link="/mart/shop/showmoreall/daiso" />
-              <NewSubCard text="ABC-MART" link="/mart/shop/showmoreall/abc" />
-              <NewSubCard text="E-WELCIA" link="/mart/shop/Ewelcia" />
-              <NewSubCard text="7-ELEVEN" link="/mart/shop/Omni7" />
-            </div>
+      <div className="w-full flex bg-gray-100">
+        <img
+          src="/image/vertical-break.png"
+          className="hidden md:flex w-[120px] lg:w-[180px] justify-start"
+          alt="vertical-break"
+        />
+        <div className="w-full">
+          <div className="flex justify-center flex-wrap gap-[100px] mt-[50px]">
+            {ShopData.map((item) => (
+              <ShopCard
+                name={item.name}
+                link={item.link}
+                image_url={item.image_url}
+                alt={item.alt}
+              />
+            ))}
+          </div>
         </div>
-        {/* <SubCard text = "DAISO" link = "/mart/MartDaiso"/>
-            <SubCard text = "DAISO" link = "/mart/MartDaiso"/> */}
       </div>
-      <Basket/>
+      <Basket />
     </section>
   );
 };
+
+const ShopData = [
+  {
+    id: 1,
+    name: "7-Eleven",
+    link: "/mart/shop/Omni7",
+    image_url: "https://img.omni7.jp/cm/9999/logo/site/PC/header_omni_2x.png",
+    alt: "https://www.omni7.jp/",
+  },
+  {
+    id: 1,
+    name: "E-Welcia",
+    link: "/mart/shop/Ewelcia",
+    image_url:
+      "https://www.welcia-yakkyoku.co.jp/images/index/kaigyou_com_banner.png",
+    alt: "https://www.welcia-yakkyoku.co.jp/",
+  },
+];
 
 export default MartShop;

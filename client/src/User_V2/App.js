@@ -47,7 +47,6 @@ const AppUserV2 = () => {
 };
 
 const NotFound = () => {
-  const navigate = useNavigate();
   return (
     <div
       style={{
@@ -168,12 +167,12 @@ const routeAuth = [
   {
     id: 20,
     path: "/mart/shop/Ewelcia",
-    element: <Ewelcia /> ,
+    element: <Ewelcia />,
   },
   {
     id: 21,
     path: "/mart/shop/Omni7",
-    element: <Omni7 /> ,
+    element: <Omni7 />,
   },
 ];
 const route = [
