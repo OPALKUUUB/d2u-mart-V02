@@ -1,3 +1,18 @@
+.product_box_content {
+  position: relative;
+  height: 55px;
+  width: 200px;
+  background-color: white;
+  font-size: 0.6rem;
+  border-top-left-radius: 1.5rem;
+  padding: 0 0.75rem;
+  padding-top: 0.5rem;
+}
+
+.product_box_content:hover {
+  height: fit-content;
+  transition: height 0.5s ease-in;
+}
 #curved-corner-bottomright {
   position: relative;
 }

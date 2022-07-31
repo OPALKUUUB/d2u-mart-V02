@@ -46,7 +46,8 @@ const ProductCard = (props) => {
         <div className="absolute bottom-0">
           <div
             id="curved-corner-bottomright"
-            className="h-[55px] hover:h-fit transition-height w-[200px] bg-white text-[.6rem] rounded-tl-[1.5rem] relative px-3 pt-2"
+            className="product_box_content"
+            // className="h-[55px] hover:h-fit transition duration-150 ease-out hover:ease-in w-[200px] bg-white text-[.6rem] rounded-tl-[1.5rem] relative px-3 pt-2"
           >
             <div
               id="product_name"

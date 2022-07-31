@@ -27,6 +27,7 @@ const MartShop = () => {
                 link={item.link}
                 image_url={item.image_url}
                 alt={item.alt}
+                mode={item?.mode || ""}
               />
             ))}
           </div>
@@ -52,6 +53,7 @@ const ShopData = [
     image_url:
       "https://www.welcia-yakkyoku.co.jp/images/index/kaigyou_com_banner.png",
     alt: "https://www.welcia-yakkyoku.co.jp/",
+    mode: "dev",
   },
 ];
 

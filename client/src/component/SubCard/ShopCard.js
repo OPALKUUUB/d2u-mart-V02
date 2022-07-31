@@ -6,7 +6,13 @@ const ShopCard = (props) => {
     <div
       className="cursor-pointer bg-gray-200 px-3 py-2 rounded-lg shadow-sm w-[250px] flex flex-col justify-between gap-2"
       style={{ fontFamily: '"Prompt", sans-serif' }}
-      onClick={() => navigate(props.link)}
+      onClick={() =>
+        navigate(
+          props.mode === "dev"
+            ? alert("This shop is comming soon...")
+            : props.link
+        )
+      }
     >
       <img
         className="w-full"
