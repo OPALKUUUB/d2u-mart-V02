@@ -1,17 +1,20 @@
 .product_box_content {
   position: relative;
-  height: 55px;
   width: 200px;
   background-color: white;
   font-size: 0.6rem;
   border-top-left-radius: 1.5rem;
   padding: 0 0.75rem;
   padding-top: 0.5rem;
+  max-height: 55px;
+  transition: max-height 5s;
 }
 
 .product_box_content:hover {
-  height: fit-content;
-  transition: height 0.5s ease-in;
+  /* min-height: fit-content; */
+  max-height: fit-content;
+  /* animation-name: showMore;
+  animation-duration: 0.5s; */
 }
 #curved-corner-bottomright {
   position: relative;
@@ -29,4 +32,13 @@
   top: -50px;
   right: 0;
   box-shadow: 1.5rem 0 0 0 white;
+}
+
+@keyframes showMore {
+  0% {
+    height: 55px;
+  }
+  100% {
+    height: fit-content;
+  }
 }

@@ -67,7 +67,7 @@ const Ewelcia = ({ children }) => {
       style={{ backgroundColor: "#e6e5e1", fontFamily: '"Prompt", sans-serif' }}
     >
       <BackButt link="/mart/shop" />
-      <img src="/image/daisoCover.png" className="cover" alt=""></img>
+      <img src="/image/eWelcia.png" className="cover" alt=""></img>
       <div
         id="allProduct"
         className="w-full flex flex-col bg-[#e6e5e1] items-center py-24 gap-12"

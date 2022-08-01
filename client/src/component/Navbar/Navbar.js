@@ -46,7 +46,7 @@ export const Navbar = () => {
                   location.pathname === "/tracking" ? "link active" : "link"
                 }
               >
-                Tracking
+                เช็กสถานะสินค้า
               </Link>
             </li>
             <li>
@@ -56,7 +56,17 @@ export const Navbar = () => {
                   location.pathname === "/mart" ? "link active" : "link"
                 }
               >
-                ร้านค้า
+                ซื้อของหน้าร้าน
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/pay-service"
+                className={
+                  location.pathname === "/pay-service" ? "link active" : "link"
+                }
+              >
+                ชำระค่าบริการ
               </Link>
             </li>
             <li>
