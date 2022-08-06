@@ -13,19 +13,45 @@ const adminRoutes = require("./routes/admin");
 const otherRoutes = require("./routes/other");
 const userRoutes = require("./routes/user");
 const authRoutes = require("./routes/auth");
+const martRoutes = require("./routes/mart");
 
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, "client/build")));
-
+app.use("/api/mart", async (req, res, next) => {
+  if (req.headers.token === undefined) {
+    res.status(400).json({
+      status: false,
+      message: "Your login session is expired,\nPlease Sign In Again!",
+      error: "jwt",
+    });
+  } else {
+    // console.log(req.headers.authorization);
+    // let token = req.headers.authorization.split(" ")[1];
+    let token = req.headers.token;
+    jwt.verify(token, process.env.SECRET_KEY, (error, decoded) => {
+      if (error) {
+        res.status(400).json({
+          status: false,
+          message: "Your login session is expired,\nPlease Sign In Again!",
+          error: "jwt",
+        });
+      } else {
+        res.locals = { username: decoded.username };
+        next();
+      }
+    });
+  }
+});
 // Put all API endpoints under '/api'
 app.use(authRoutes);
 app.use(adminRoutes);
 app.use(otherRoutes);
 app.use(userRoutes);
+app.use(martRoutes);
 
 function genDate() {
   let today = new Date();

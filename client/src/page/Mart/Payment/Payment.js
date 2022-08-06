@@ -64,19 +64,45 @@ function Payment() {
     }
   }
 
-  function handlePayment() {
+  async function handlePayment() {
     if (
-      timeInputRef.current &&
-      amountInputRef.current &&
-      newAddressRef.current
+      // timeInputRef.current &&
+      // amountInputRef.current &&
+      // newAddressRef.current &&
+      imageFileList.length > 0
     ) {
-      console.log(itemInBasket);
-      console.log(totalPrice);
-      console.log(
-        timeInputRef.current.value,
-        amountInputRef.current.value,
-        newAddressRef.current.value
-      );
+      let count = 0;
+      for (let i = 0; i < itemInBasket.length; i++) {
+        count += itemInBasket[i].count;
+      }
+      try {
+        await fetch("/api/mart/booking", {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+            token: JSON.parse(localStorage.getItem("token")).token,
+          },
+          body: JSON.stringify({
+            items: itemInBasket,
+            price: totalPrice,
+            slip_image: imageFileList[0],
+            count: count,
+          }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.status) {
+              alert("success");
+              console.log(data);
+            } else {
+              alert("fail");
+              console.log(data);
+            }
+          });
+        // console.log(result);
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
 
@@ -92,7 +118,6 @@ function Payment() {
             alt=""
             className="w-[600px]"
           />
-          {/* <div className="absolute w-[60px] h-full top-0  right-0 bg-gradient-to-r from-transparent to-[#e6e5e1] "></div> */}
         </div>
         <div
           className={`w-[150px] h-[50px] rounded-full bg-[#100f28] flex justify-center items-center absolute top-7 left-[50px] cursor-pointer text-[18px] text-white font-semibold ease-linear duration-200`}
@@ -110,7 +135,8 @@ function Payment() {
           กลับ
         </div>
 
-        <div className="flex-1 flex flex-col items-start gap-5 lg:gap-24">
+        <div className="w-full flex flex-col gap-5 justify-start">
+          {/* qr code component */}
           <div className="w-full flex flex-col items-start gap-4">
             <p className="m-0 text-[24px] font-semibold text-[#52514f]">
               รูปแบบการชำระเงิน
@@ -138,33 +164,8 @@ function Payment() {
               />
             </div>
           </div>
+          {/* upload slip component */}
           <div className="w-full flex flex-col items-center gap-4 max-w-[380px]">
-            <p className="m-0 text-[24px] font-semibold text-[#52514f]">
-              หลักฐานการชำระเงิน
-            </p>
-            <div className="w-full flex flex-col items-start gap-[10px] max-w-[280px]">
-              <label className="tracking-[0.05em] text-[20px] pl-1 text-[#3d3c3b]">
-                เวลาที่โอน
-              </label>
-              <input
-                className="w-full py-2 px-[18px] rounded-lg bg-[#c9ceca] text-[18px] text-[#bd9095] placeholder:text-[#bd9095] outline-none"
-                type="text"
-                placeholder="ระบุเวลาโอนเงิน"
-                ref={timeInputRef}
-              />
-            </div>
-            <div className="w-full flex flex-col items-start gap-[10px] max-w-[280px]">
-              <label className="tracking-[0.05em] text-[20px] pl-1 text-[#3d3c3b]">
-                จำนวนเงิน
-              </label>
-              <input
-                className="w-full py-2 px-[18px] rounded-lg bg-[#c9ceca] text-[18px] text-[#bd9095] placeholder:text-[#bd9095] outline-none"
-                type="text"
-                placeholder="ระบุจำนวนเงิน"
-                ref={amountInputRef}
-              />
-            </div>
-
             <div className="w-full flex items-center gap-3 justify-center">
               {imageFileList.map((image, index) => (
                 <div
@@ -220,56 +221,19 @@ function Payment() {
               />
             </label>
           </div>
-        </div>
-        <div className="flex-1 flex flex-col items-center gap-[40px] lg:gap-[96px] max-w-[380px]">
-          <div className="w-full flex flex-col items-start lg:pt-[450px] gap-8">
-            <p className="m-0 text-[24px] font-semibold pl-[48px] text-[#52514f]">
-              ที่อยู่ในการจัดส่ง
-            </p>
-            <div className="flex items-start gap-[20px] pl-1 w-full">
+          {/* button pay component */}
+          <div className="w-full flex justify-center">
+            <div className="w-full  max-w-[280px] flex flex-col items-center gap-4">
               <div
-                className={`w-[22px] h-[22px] mt-1 rounded-full border-2 border-[#bf8c90] cursor-pointer ${
-                  deliveryMethod === "old" && "bg-[#be8a97]"
-                }`}
-                onClick={() => setDeliveryMethod("old")}
-              ></div>
-              <div className="w-full max-w-[300px]">
-                <span className="text-[20px] text-[#3d3c3b] break-all">
-                  {testData}
-                </span>
+                className="w-full rounded-full h-[80px] bg-[#eb7470] font-bold text-[30px] flex justify-center items-center cursor-pointer active:bg-[#5b2d2c] ease-linear duration-200"
+                onClick={handlePayment}
+              >
+                ชำระเงิน
               </div>
+              <p className="text-[18px] text-center max-w-[200px] text-[#3d3c3b]">
+                ตรวจสอบข้อมูลให้ถูกต้องก่อนการชำระเงิน
+              </p>
             </div>
-            <div className="flex items-start gap-[20px] pl-1 w-full">
-              <div
-                className={`w-[22px] h-[22px] mt-1 rounded-full border-2 border-[#bf8c90] cursor-pointer ${
-                  deliveryMethod === "new" && "bg-[#be8a97]"
-                }`}
-                onClick={() => setDeliveryMethod("new")}
-              ></div>
-              <div className="w-full flex flex-col items-start max-w-[300px] gap-2">
-                <p className="text-[20px] text-[#3d3c3b]">
-                  กำหนดที่อยู่ในการจัดส่งใหม่
-                </p>
-                <textarea
-                  rows={4}
-                  className="resize-none w-full rounded-md px-3 py-2 outline-none placeholder:text-[18px] text-[#a08689] text-[20px] placeholder:text-[#a08689] bg-[#c9ceca]"
-                  placeholder="กรอกรายละเอียดสถานที่จัดส่ง..."
-                  ref={newAddressRef}
-                  onClick={() => setDeliveryMethod("new")}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="w-full max-w-[280px] flex flex-col items-center gap-4">
-            <div
-              className="w-full rounded-full h-[80px] bg-[#eb7470] font-bold text-[30px] flex justify-center items-center cursor-pointer active:bg-[#5b2d2c] ease-linear duration-200"
-              onClick={handlePayment}
-            >
-              ชำระเงิน
-            </div>
-            <p className="text-[18px] text-center max-w-[200px] text-[#3d3c3b]">
-              ตรวจสอบข้อมูลให้ถูกต้องก่อนการชำระเงิน
-            </p>
           </div>
         </div>
       </div>

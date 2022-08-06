@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useRef } from "react";
 import "./ProductCard.css";
 import { useRecoilState } from "recoil";
 import { basketState } from "../../AppStateManagement/ShopAtom";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 const ProductCard = (props) => {
   const [itemInBasket, setItemInBasket] = useRecoilState(basketState);
+  const heightCardRef = useRef();
+  console.log(heightCardRef);
   const handleClickAddProduct = () => {
     const checkIsInBasket =
       itemInBasket.findIndex(
@@ -45,9 +47,10 @@ const ProductCard = (props) => {
         </div>
         <div className="absolute bottom-0">
           <div
+            ref={heightCardRef}
             id="curved-corner-bottomright"
-            className="product_box_content"
-            // className="h-[55px] hover:h-fit transition duration-150 ease-out hover:ease-in w-[200px] bg-white text-[.6rem] rounded-tl-[1.5rem] relative px-3 pt-2"
+            // className="product_box_content"
+            className={`h-fit max-h-[55px] hover:h-[200px] duration-150 ease-out w-[200px] bg-white text-[.6rem] rounded-tl-[1.5rem] relative px-3 pt-2`}
           >
             <div
               id="product_name"
