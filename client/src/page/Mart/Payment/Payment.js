@@ -8,6 +8,7 @@ import {
 } from "../../../AppStateManagement/ShopAtom";
 import BackButt from "../../../component/button/BackButt";
 import Resizer from "react-image-file-resizer";
+import Basket from "../../../component/Basket/Basket";
 
 const testData =
   "ที่อยู่....orem ipsum dolor sit amet, consectetur adipiscing elit. In mattis, eros ac finibus pellentesque, enim urna gravida dui, malesuada semper ipsum nisi at dolor";
@@ -105,7 +106,6 @@ function Payment() {
       }
     }
   }
-
   return (
     <div
       className="w-full min-h-screen flex justify-center  bg-[#fdefe4]"
@@ -260,6 +260,7 @@ function Payment() {
           </svg>
         </div>
       )}
+      <Basket />
     </div>
   );
 }

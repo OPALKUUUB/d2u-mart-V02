@@ -49,8 +49,8 @@ const ProductCard = (props) => {
           <div
             ref={heightCardRef}
             id="curved-corner-bottomright"
-            // className="product_box_content"
-            className={`h-fit max-h-[55px] hover:h-[200px] duration-150 ease-out w-[200px] bg-white text-[.6rem] rounded-tl-[1.5rem] relative px-3 pt-2`}
+            className="product_box_content"
+            // className={`h-fit max-h-[55px] hover:h-[200px] duration-150 ease-out w-[200px] bg-white text-[.6rem] rounded-tl-[1.5rem] relative px-3 pt-2`}
           >
             <div
               id="product_name"

@@ -28,7 +28,7 @@
   display: flex;
 }
 
-.Navbar-mid ul li:nth-child(9) {
+.Navbar-mid ul li:last-child {
   display: none;
 }
 .Navbar-mid .link,
@@ -55,7 +55,7 @@
     margin-left: 10px;
     width: 180px;
   }
-  .Navbar-mid ul li:nth-child(8) {
+  .Navbar-mid ul li:last-child {
     display: block;
   }
   .Navbar-right button {

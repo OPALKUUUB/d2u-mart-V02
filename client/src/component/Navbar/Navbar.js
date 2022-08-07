@@ -70,38 +70,6 @@ export const Navbar = () => {
               </Link>
             </li>
             <li>
-              <Link
-                to="/product-service"
-                className={
-                  location.pathname === "/product-service"
-                    ? "link active"
-                    : "link"
-                }
-              >
-                บริการนำเข้าสินค้า
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/our-service"
-                className={
-                  location.pathname === "/our-service" ? "link active" : "link"
-                }
-              >
-                บริการของเรา
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/contact-us"
-                className={
-                  location.pathname === "/contact-us" ? "link active" : "link"
-                }
-              >
-                ติดต่อเรา
-              </Link>
-            </li>
-            <li>
               <span
                 style={{ cursor: "pointer" }}
                 onClick={() => {
@@ -150,18 +118,7 @@ export const Navbar = () => {
               หน้าหลัก
             </Link>
           </li>
-          <li>
-            <Link
-              to="/product-service"
-              className={
-                location.pathname === "/product-service"
-                  ? "link active"
-                  : "link"
-              }
-            >
-              บริการนำเข้าสินค้า
-            </Link>
-          </li>
+
           <li>
             <Link
               to="/our-service"
@@ -179,7 +136,37 @@ export const Navbar = () => {
                 location.pathname === "/contact-us" ? "link active" : "link"
               }
             >
+              การรับประกัน
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/contact-us"
+              className={
+                location.pathname === "/contact-us" ? "link active" : "link"
+              }
+            >
+              คำถามที่พบบ่อย
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/contact-us"
+              className={
+                location.pathname === "/contact-us" ? "link active" : "link"
+              }
+            >
               ติดต่อเรา
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/contact-us"
+              className={
+                location.pathname === "/contact-us" ? "link active" : "link"
+              }
+            >
+              รีวิว
             </Link>
           </li>
         </ul>

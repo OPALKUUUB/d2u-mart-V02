@@ -51,7 +51,12 @@ const Omni7 = ({ children }) => {
   return (
     <section style={{ fontFamily: '"Prompt", sans-serif' }}>
       <BackButt link="/mart/shop" />
-      <img src="/image/daisoCover.png" alt="" className="shadow-sm" />
+      {/* <img src="/image/daisoCover.png" alt="" className="shadow-sm" /> */}
+      <img
+        src="/image/martCover.png"
+        className="w-full object-cover object-center"
+        alt=""
+      ></img>
       <div className="w-full bg-[#ece7e2] py-[50px]" ref={sectionRef}>
         <div className="w-[90%] mx-auto ">
           <div className="ml-[10px] mb-2">
@@ -78,7 +83,7 @@ const Header = () => {
     <div className="flex justify-start items-end gap-2 ">
       <p className="m-0 text-[50px]">สินค้า</p>
       <p className="m-0 text-[49px] text-[#f0a28e]">ทั้งหมด</p>
-      <p className="m-0 text-[49px] text-[#f0a28e]">(Omni7)</p>
+      <p className="m-0 text-[49px] text-[#f0a28e]">(7-Eleven)</p>
     </div>
   );
 };

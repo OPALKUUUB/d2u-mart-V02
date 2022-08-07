@@ -50,8 +50,7 @@ const ShopData = [
     id: 1,
     name: "Gashapon",
     link: "/mart/shop/Ewelcia",
-    image_url:
-      "https://www.welcia-yakkyoku.co.jp/images/index/kaigyou_com_banner.png",
+    image_url: "/image/gachapong.jpg",
     alt: "https://www.welcia-yakkyoku.co.jp/",
     mode: "dev",
   },
