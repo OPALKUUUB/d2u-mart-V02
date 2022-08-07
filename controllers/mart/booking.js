@@ -1,4 +1,3 @@
-const genDate = require("./genDate");
 const query = require("./query");
 const query_old = require("../other/query");
 
@@ -6,7 +5,7 @@ exports.addBooking = async (req, res) => {
   const sql_booking =
     "insert into booking (username, price, address, slip_img, count_all, created_at, updated_at) values (?,?,?,?,?,?,?)";
   const sql_user = "select * from user_customers where username like ?;";
-  let date = genDate();
+  let date = new Date().toLocaleString();
   try {
     const users = await query_old(sql_user, [res.locals.username]).then(
       (res) => res
