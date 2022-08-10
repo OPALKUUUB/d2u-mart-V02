@@ -59,7 +59,7 @@ const Omni7 = ({ children }) => {
         alt=""
       ></img>
       <div className="w-full bg-[#ece7e2] py-[50px]" ref={sectionRef}>
-        <div className="w-[90%] mx-auto ">
+        <div className="w-[100%] md:w-[90%] mx-auto ">
           <div className="ml-[10px] mb-2">
             <Header />
           </div>
@@ -82,9 +82,9 @@ const Omni7 = ({ children }) => {
 const Header = () => {
   return (
     <div className="flex justify-start items-end gap-2 ">
-      <p className="m-0 text-[50px]">สินค้า</p>
-      <p className="m-0 text-[49px] text-[#f0a28e]">ทั้งหมด</p>
-      <p className="m-0 text-[49px] text-[#f0a28e]">(7-Eleven)</p>
+      <p className="m-0 md:text-[50px] text-[30px]">สินค้า</p>
+      <p className="m-0 md:text-[49px] text-[#f0a28e] text-[30px]">ทั้งหมด</p>
+      <p className="m-0 md:text-[49px] text-[#f0a28e] text-[30px]">(7-Eleven)</p>
     </div>
   );
 };

@@ -20,7 +20,7 @@ const BackButt = (Name) => {
         }
     },[])
     return (
-        <button type="button" className={`backButt ${isButtonMoveUp ? 'mt-[20px]' : 'mt-[175px]' } ease-linear duration-200`} onClick={()=>navigate(Name.link)}>
+        <button type="button" className={`backButt ${isButtonMoveUp ? 'mt-[35px]' : 'mt-[35px]' } ease-linear duration-200`} onClick={()=>navigate(Name.link)}>
             <span>กลับ </span>
         </button>
     );
