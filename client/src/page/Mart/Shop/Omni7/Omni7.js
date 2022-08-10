@@ -66,7 +66,7 @@ const Omni7 = ({ children }) => {
           <div className="flex justify-center flex-wrap gap-4">
             {allItemData.map((item, index) => (
               <ProductCard
-                key={"subcard" + index}
+                key={["ProductCard", item.id].join("_")}
                 name={item?.name || "no name"}
                 data={item}
               />

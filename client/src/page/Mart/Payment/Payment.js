@@ -77,6 +77,7 @@ function Payment() {
         count += itemInBasket[i].count;
       }
       try {
+        console.log(itemInBasket);
         await fetch("/api/mart/booking", {
           method: "post",
           headers: {
