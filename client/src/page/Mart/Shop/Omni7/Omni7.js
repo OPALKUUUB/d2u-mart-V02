@@ -24,6 +24,7 @@ const Omni7 = ({ children }) => {
               expire_date: result[id]?.expire_date,
               image: result[id]?.image,
               description: result[id]?.description,
+              channel: "omni7",
             };
             data.push(item);
           });

@@ -27,11 +27,12 @@ exports.addBooking = async (req, res) => {
         booking.insertId,
         req.body.items[i].id,
         parseInt(req.body.items[i].count),
+        req.body.items[i].channel,
       ];
       data.push(temp);
     }
     const sql_order =
-      "insert into orders (booking_id, order_id, count) values ?;";
+      "insert into orders (booking_id, order_id, count, channel) values ?;";
     const order = await query(sql_order, [data]).then((res) => res);
     res.status(200).json({ status: true, message: order });
   } catch (err) {
