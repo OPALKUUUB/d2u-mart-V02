@@ -1,7 +1,7 @@
 import BackButt from "../../../../component/button/BackButt";
 import SubCard from "../../../../component/SubCard/SubCard";
 import "../../Martshop/MartMenu.css";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { getAllCategory, getItemInCategory } from "../api";
 import { useParams } from "react-router-dom";
 import ProductCategory from "../../../../component/ProductCategory/ProductCategory";
