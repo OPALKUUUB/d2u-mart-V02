@@ -52,7 +52,14 @@ const ShopData = [
     link: "/mart/shop/Ewelcia",
     image_url: "/image/gachapong.jpg",
     alt: "https://www.welcia-yakkyoku.co.jp/",
-    mode: "dev",
+    //mode: "dev",
+  },
+  {
+    id: 1,
+    name: "Donki",
+    link: "/mart/shop/Donki",
+    image_url: "/image/donki.png",
+    alt: "https://www.donki.com/",
   },
 ];
 
