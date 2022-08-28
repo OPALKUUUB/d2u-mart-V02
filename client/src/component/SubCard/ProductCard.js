@@ -30,7 +30,7 @@ const ProductCard = (props) => {
   const [itemInBasket, setItemInBasket] = useRecoilState(basketState);
   const heightCardRef = useRef();
   const [hoverRef, isHovered] = useHover();
-  console.log(heightCardRef);
+  // console.log(heightCardRef);
 
   const handleClickAddProduct = () => {
     const checkIsInBasket =
@@ -58,7 +58,7 @@ const ProductCard = (props) => {
       setItemInBasket([...itemInBasket, itemToBasket]);
     }
   };
-  console.log(props.data);
+  // console.log(props.data);
   return (
     <>
       <div className="w-[300px] h-[320px] rounded-[1.5rem] bg-[#ffffff] shadow-sm overflow-hidden relative cursor-pointer">
