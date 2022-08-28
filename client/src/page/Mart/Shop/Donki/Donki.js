@@ -4,13 +4,14 @@ import Basket from "../../../../component/Basket/Basket";
 import Firebase from "../../../../Firebase/FirebaseConfig";
 import ProductCard from "../../../../component/SubCard/ProductCard";
 
-const Omni7 = ({ children }) => {
+const Donki = ({ children }) => {
+  // useSearchParams
   const [allItemData, setAllItemData] = useState([]);
   const sectionRef = useRef();
 
   useEffect(() => {
     Firebase.database()
-      .ref("/omni7")
+      .ref("/donki")
       .on("value", (snapshot) => {
         if (snapshot.val()) {
           let result = snapshot.val();
@@ -19,12 +20,12 @@ const Omni7 = ({ children }) => {
             let item = {
               id: id,
               name: result[id]?.name,
-              category: result[id]?.category,
+              category: Array.isArray(result[id]?.category)===false ? [] : result[id]?.category,
               price: result[id]?.price,
               expire_date: result[id]?.expire_date,
               image: result[id]?.image,
               description: result[id]?.description,
-              channel: "omni7",
+              channel: "donki",
             };
             data.push(item);
           });
@@ -33,12 +34,13 @@ const Omni7 = ({ children }) => {
           for (let i = 0; i < Math.ceil(data.length / 18); i++) {
             indexList.push(i + 1);
           }
+          console.log(data)
         } else {
           setAllItemData([]);
         }
       });
     return () => {
-      Firebase.database().ref("/omni7").off();
+      Firebase.database().ref("/donki").off();
     };
   }, []);
 
@@ -54,7 +56,7 @@ const Omni7 = ({ children }) => {
       <BackButt link="/mart/shop" />
       {/* <img src="/image/daisoCover.png" alt="" className="shadow-sm" /> */}
       <img
-        src="/image/7-eleven.png"
+        src="/image/coverdonki.png"
         className="w-full object-cover object-center"
         alt=""
       ></img>
@@ -84,9 +86,9 @@ const Header = () => {
     <div className="flex justify-start items-end gap-2 ">
       <p className="m-0 md:text-[50px] text-[30px]">สินค้า</p>
       <p className="m-0 md:text-[49px] text-[#f0a28e] text-[30px]">ทั้งหมด</p>
-      <p className="m-0 md:text-[49px] text-[#f0a28e] text-[30px]">(7-Eleven)</p>
+      <p className="m-0 md:text-[49px] text-[#f0a28e] text-[30px]">(Donki)</p>
     </div>
   );
 };
 
-export default Omni7;
+export default Donki;
