@@ -1,0 +1,25 @@
+.OurService {
+  display: flex;
+  position: relative;
+}
+
+.OurService .bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  width: 100vw;
+  display: flex;
+}
+.OurService .content {
+  position: absolute;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  z-index: 6;
+}
+
+.OurService .content img {
+  margin: 0 auto;
+  width: 70%;
+}
