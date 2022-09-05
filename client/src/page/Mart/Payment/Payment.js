@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
   basketState,
   prevPaymentPathState,
@@ -9,6 +9,7 @@ import {
 import BackButt from "../../../component/button/BackButt";
 import Resizer from "react-image-file-resizer";
 import Basket from "../../../component/Basket/Basket";
+import useToken from "../../../hook/useToken";
 
 const testData =
   "ที่อยู่....orem ipsum dolor sit amet, consectetur adipiscing elit. In mattis, eros ac finibus pellentesque, enim urna gravida dui, malesuada semper ipsum nisi at dolor";
@@ -16,16 +17,19 @@ const qrCodeImagePath = "/image/Qrtest.jpg";
 function Payment() {
   const [isHoverButton, setIsHoverButton] = useState(false);
   const prevPage = useRecoilValue(prevPaymentPathState);
-  const itemInBasket = useRecoilValue(basketState);
+  // const itemInBasket = useRecoilValue(basketState);
+  const [itemInBasket, setItemInBasket] = useRecoilState(basketState);
   const totalPrice = useRecoilValue(totalPriceState);
   const navigate = useNavigate();
   const [methodPayment, setMethodPayment] = useState("bank");
   const [deliveryMethod, setDeliveryMethod] = useState("old");
   const [imageFileList, setImageFileList] = useState([]);
   const [bigPicture, setBigPicture] = useState("");
-  const timeInputRef = useRef();
-  const amountInputRef = useRef();
-  const newAddressRef = useRef();
+  const { logout } = useToken();
+  // let location = useLocation();
+  // const timeInputRef = useRef();
+  // const amountInputRef = useRef();
+  // const newAddressRef = useRef();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -66,45 +70,45 @@ function Payment() {
   }
 
   async function handlePayment() {
-    if (
-      // timeInputRef.current &&
-      // amountInputRef.current &&
-      // newAddressRef.current &&
-      imageFileList.length > 0
-    ) {
-      let count = 0;
-      for (let i = 0; i < itemInBasket.length; i++) {
-        count += itemInBasket[i].count;
+    if (imageFileList.length > 0) {
+      if (window.confirm("dev mode")) {
+        let count = 0;
+        for (let i = 0; i < itemInBasket.length; i++) {
+          count += itemInBasket[i].count;
+        }
+        // console.log(itemInBasket);
+        try {
+          await fetch("/api/mart/booking", {
+            method: "post",
+            headers: {
+              "Content-Type": "application/json",
+              token: JSON.parse(localStorage.getItem("token")).token,
+            },
+            body: JSON.stringify({
+              items: itemInBasket,
+              price: totalPrice,
+              slip_image: imageFileList[0],
+              count: count,
+            }),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              // console.log(data);
+              if (data.status) {
+                alert("success");
+              } else {
+                alert(data.message);
+                logout();
+              }
+              setItemInBasket([]);
+              navigate("/mart/shop");
+            });
+        } catch (err) {
+          console.log(err);
+        }
       }
-      try {
-        console.log(itemInBasket);
-        await fetch("/api/mart/booking", {
-          method: "post",
-          headers: {
-            "Content-Type": "application/json",
-            token: JSON.parse(localStorage.getItem("token")).token,
-          },
-          body: JSON.stringify({
-            items: itemInBasket,
-            price: totalPrice,
-            slip_image: imageFileList[0],
-            count: count,
-          }),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            if (data.status) {
-              alert("success");
-              console.log(data);
-            } else {
-              alert("fail");
-              console.log(data);
-            }
-          });
-        // console.log(result);
-      } catch (err) {
-        console.log(err);
-      }
+    } else {
+      alert("upload slip!");
     }
   }
   return (

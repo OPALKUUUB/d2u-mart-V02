@@ -20,7 +20,10 @@ const Donki = ({ children }) => {
             let item = {
               id: id,
               name: result[id]?.name,
-              category: Array.isArray(result[id]?.category)===false ? [] : result[id]?.category,
+              category:
+                Array.isArray(result[id]?.category) === false
+                  ? []
+                  : result[id]?.category,
               price: result[id]?.price,
               expire_date: result[id]?.expire_date,
               image: result[id]?.image,
@@ -29,12 +32,13 @@ const Donki = ({ children }) => {
             };
             data.push(item);
           });
+          console.log(data);
           setAllItemData(data);
           let indexList = [];
           for (let i = 0; i < Math.ceil(data.length / 18); i++) {
             indexList.push(i + 1);
           }
-          console.log(data)
+          console.log(data);
         } else {
           setAllItemData([]);
         }

@@ -16,6 +16,8 @@ function Basket() {
   const [itemInBasket, setItemInBasket] = useRecoilState(basketState);
   const [countItemInBasket, setCountItemInBasket] = useState(0);
   const [totalPrice, setTotalPrice] = useRecoilState(totalPriceState);
+  const [yen, setYen] = useState(0);
+  const [payBtn, setPayBtn] = useState("block");
   const setPrevPath = useSetRecoilState(prevPaymentPathState);
   const navigate = useNavigate();
   useEffect(() => {
@@ -45,6 +47,25 @@ function Basket() {
       window.localStorage.removeItem("d2u-mart-basket");
     }
   }, [itemInBasket]);
+
+  useEffect(() => {
+    async function FetchYen() {
+      await fetch("/api/yen", {
+        method: "get",
+        headers: {
+          token: JSON.parse(localStorage.getItem("token")).token,
+        },
+      })
+        .then((res) => res.json())
+        .then((res) => setYen(res.yen));
+    }
+    if (window.location.pathname === "/mart/payment") {
+      setPayBtn("none");
+    } else {
+      setPayBtn("block");
+    }
+    FetchYen();
+  }, []);
 
   function calculateEachItemPrice(price, number) {
     let result = Number(price.replace("￥", "").replaceAll(",", "")) * number;
@@ -175,7 +196,7 @@ function Basket() {
                       </p>
                       <div className="min-w-[80px] h-[30px] flex justify-between rounded-lg text-gray-500 shadow-md">
                         <div
-                          className="bg-[#d9cfc9] active:bg-[#877d76] flex-1 flex items-center justify-center cursor-pointer rounded-l-md ease-linear duration-300"
+                          className="w-[20px] bg-[#d9cfc9] active:bg-[#877d76]   flex items-center justify-center cursor-pointer rounded-l-md ease-linear duration-300"
                           onClick={() => {
                             let newBasket = [];
                             itemInBasket.forEach((itemInBasketCountChange) => {
@@ -195,11 +216,30 @@ function Basket() {
                         >
                           -
                         </div>
-                        <div className="bg-[#f0ecea] flex-1 flex items-center justify-center">
-                          {item.count}
+                        <div className="bg-[#f0ecea]  flex items-center justify-center">
+                          {/* {item.count} */}
+                          <input
+                            className="bg-[#f0ecea] w-[60px] text-center focus-visible:outline-none"
+                            onChange={(e) =>
+                              setItemInBasket(
+                                itemInBasket.map((itemInBasketCountChange) => {
+                                  if (itemInBasketCountChange.id === item.id) {
+                                    return {
+                                      ...itemInBasketCountChange,
+                                      count: e.target.value,
+                                    };
+                                  } else {
+                                    return itemInBasketCountChange;
+                                  }
+                                })
+                              )
+                            }
+                            type="number"
+                            value={item.count}
+                          />
                         </div>
                         <div
-                          className="bg-[#d9cfc9] active:bg-[#877d76] flex-1 flex items-center justify-center cursor-pointer rounded-r-md ease-linear duration-300"
+                          className="w-[20px] bg-[#d9cfc9] active:bg-[#877d76]  flex items-center justify-center cursor-pointer rounded-r-md ease-linear duration-300"
                           onClick={() => {
                             setItemInBasket(
                               itemInBasket.map((itemInBasketCountChange) => {
@@ -239,9 +279,9 @@ function Basket() {
                 </div>
                 <div className="flex flex-1 h-full justify-center items-center rounded-r-xl bg-[#f0ecea]">
                   <div className="flex items-center">
-                    <p className="m-0 text-[14px]">￥</p>
+                    <p className="m-0 text-[14px]">฿ </p>
                     <p className="m-0 text-[14px]">
-                      {totalPrice
+                      {(Math.round(totalPrice * yen * 100) / 100)
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                     </p>
@@ -250,13 +290,19 @@ function Basket() {
               </div>
             </div>
             <div className="w-full flex justify-end px-3">
-              <div
-                className="w-[120px] flex justify-center items-center h-[45px] text-white bg-[#b09b8d] rounded-lg cursor-pointer active:bg-[#4a4a4a] ease-linear duration-500"
-                onClick={() => {
-                  handlePaid(itemInBasket, totalPrice, countItemInBasket);
-                }}
-              >
-                ชำระเงิน
+              <div style={{ display: payBtn }}>
+                <div
+                  className="w-[120px] flex justify-center items-center h-[45px] text-white bg-[#b09b8d] rounded-lg cursor-pointer active:bg-[#4a4a4a] ease-linear duration-500"
+                  onClick={() => {
+                    handlePaid(
+                      itemInBasket,
+                      Math.round(totalPrice * yen * 100) / 100,
+                      countItemInBasket
+                    );
+                  }}
+                >
+                  ชำระเงิน
+                </div>
               </div>
             </div>
             <img
