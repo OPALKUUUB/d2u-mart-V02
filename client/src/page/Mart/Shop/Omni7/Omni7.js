@@ -4,6 +4,7 @@ import Basket from "../../../../component/Basket/Basket";
 import Firebase from "../../../../Firebase/FirebaseConfig";
 import ProductCard from "../../../../component/SubCard/ProductCard";
 import Loading from "../../../../component/Loading/Loading";
+import { useSearchParams } from "react-router-dom";
 
 const Omni7 = ({ children }) => {
   const [allItemData, setAllItemData] = useState([]);
@@ -12,8 +13,26 @@ const Omni7 = ({ children }) => {
   const [amount, setAmount] = useState(0);
   const [loading, setLoading] = useState(false);
   const sectionRef = useRef();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [trigger, setTrigger] = useState(false);
+
+  const handleSetCategory = (cat) => {
+    setSearchParams({ ...searchParams, category: cat });
+    setPos(0);
+    setTrigger((prev) => !prev);
+  };
 
   useEffect(() => {
+    let cat_label = searchParams.get("category");
+    let cat_value = "0";
+    if (cat_label !== "ทั้งหมด") {
+      for (let i = 0; i < category.length; i++) {
+        if (cat_label === category[i].label) {
+          cat_value = category[i].value;
+        }
+      }
+    }
+    // console.log(cat_value);
     setLoading(true);
     Firebase.database()
       .ref("/omni7")
@@ -23,17 +42,29 @@ const Omni7 = ({ children }) => {
           let data = [];
           setAmount(Object.keys(result).length);
           Object.keys(result).forEach((id) => {
-            let item = {
-              id: id,
-              name: result[id]?.name,
-              category: result[id]?.category,
-              price: result[id]?.price,
-              expire_date: result[id]?.expire_date,
-              image: result[id]?.image,
-              description: result[id]?.description,
-              channel: "omni7",
-            };
-            data.push(item);
+            let check = false;
+            if (cat_value !== "0") {
+              for (let i = 0; i < result[id].category.length; i++) {
+                if (result[id].category[i].value === cat_value) {
+                  check = true;
+                }
+              }
+            } else if (cat_value === "0") {
+              check = true;
+            }
+            if (check) {
+              let item = {
+                id: id,
+                name: result[id]?.name,
+                category: result[id]?.category,
+                price: result[id]?.price,
+                expire_date: result[id]?.expire_date,
+                image: result[id]?.image,
+                description: result[id]?.description,
+                channel: "omni7",
+              };
+              data.push(item);
+            }
           });
           setAllItemData(data);
           let temp = [];
@@ -52,7 +83,7 @@ const Omni7 = ({ children }) => {
     return () => {
       Firebase.database().ref("/omni7").off();
     };
-  }, []);
+  }, [trigger]);
 
   const handleNext = () => {
     let data_len = allItemData.length;
@@ -91,12 +122,12 @@ const Omni7 = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    window.scrollTo({
-      behavior: "smooth",
-      top: sectionRef.current.offsetTop - 120,
-    });
-  });
+  // useEffect(() => {
+  //   window.scrollTo({
+  //     behavior: "smooth",
+  //     top: sectionRef.current.offsetTop - 120,
+  //   });
+  // }, [itemData]);
 
   return (
     <section style={{ fontFamily: '"Prompt", sans-serif' }}>
@@ -109,8 +140,23 @@ const Omni7 = ({ children }) => {
       />
       <div className="w-full bg-[#ece7e2] py-[50px]" ref={sectionRef}>
         <div className="w-[100%] md:w-[95%] mx-auto ">
-          <div className="ml-[10px] mb-2">
+          <div className="ml-[10px]">
             <Header />
+          </div>
+          <div className="flex gap-2 mb-3 w-[80%] mx-auto">
+            <div className="flex flex-wrap gap-3">
+              {category.map((cat, index) => {
+                return (
+                  <div
+                    key={["CategoryTag", cat.value].join("_")}
+                    className="underline cursor-pointer"
+                    onClick={() => handleSetCategory(cat.label)}
+                  >
+                    {cat.label}
+                  </div>
+                );
+              })}
+            </div>
           </div>
           <div className="flex justify-center flex-wrap gap-4 mb-3">
             {itemData.map((item, index) => (
@@ -121,6 +167,7 @@ const Omni7 = ({ children }) => {
               />
             ))}
           </div>
+
           <div className="flex justify-center items-center gap-4">
             <div
               className={`py-2 px-3 shadow-md text-gray-600 bg-amber-100 rounded-xl  ${
@@ -133,7 +180,7 @@ const Omni7 = ({ children }) => {
               Prev
             </div>
             <div>
-              {Math.ceil((pos + 1) / 20)}/{Math.ceil(amount / 20)}
+              {Math.ceil((pos + 1) / 20)}/{Math.ceil(allItemData.length / 20)}
             </div>
             <div
               className={`py-2 px-3 shadow-md text-gray-600 bg-amber-100 rounded-xl  ${
@@ -155,7 +202,7 @@ const Omni7 = ({ children }) => {
 
 const Header = () => {
   return (
-    <div className="flex justify-center items-end gap-2 mb-10">
+    <div className="flex justify-center items-end gap-2">
       <p className="m-0 md:text-[40px] text-[30px]">สินค้า</p>
       <p className="m-0 md:text-[39px] text-[#f0a28e] text-[30px]">ทั้งหมด</p>
       <p className="m-0 md:text-[39px] text-[#f0a28e] text-[30px]">
@@ -165,4 +212,23 @@ const Header = () => {
   );
 };
 
+const category = [
+  { value: "0", label: "ทั้งหมด" },
+  { value: "1", label: "7 Premium" },
+  { value: "2", label: "ข้าวและข้าวเหนียว" },
+  { value: "3", label: "บะหมี่สำเร็จรูป" },
+  { value: "4", label: "เครื่องปรุงและเครื่องเทศ" },
+  { value: "5", label: "อาหารแห้ง" },
+  { value: "6", label: "อาหารกระป๋อง" },
+  { value: "7", label: "น้ำ" },
+  { value: "8", label: "กาแฟ" },
+  { value: "9", label: "ชาต่างๆ" },
+  { value: "10", label: "ชาดำ" },
+  { value: "11", label: "น้ำอัดลม" },
+  { value: "12", label: "เครื่องดื่มกีฬา" },
+  { value: "13", label: "อาหาร เครื่องดื่ม" },
+  { value: "14", label: "บ้าน และครัว" },
+  { value: "15", label: "เครื่องสำอางค์และความงาม" },
+  { value: "16", label: "อุปกรณ์เครื่องเขียน" },
+];
 export default Omni7;
