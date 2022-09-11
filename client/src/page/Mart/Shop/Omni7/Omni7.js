@@ -14,12 +14,10 @@ const Omni7 = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const sectionRef = useRef();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [trigger, setTrigger] = useState(false);
 
   const handleSetCategory = (cat) => {
     setSearchParams({ ...searchParams, category: cat });
     setPos(0);
-    setTrigger((prev) => !prev);
   };
 
   useEffect(() => {
@@ -32,7 +30,6 @@ const Omni7 = ({ children }) => {
         }
       }
     }
-    // console.log(cat_value);
     setLoading(true);
     Firebase.database()
       .ref("/omni7")
@@ -83,7 +80,7 @@ const Omni7 = ({ children }) => {
     return () => {
       Firebase.database().ref("/omni7").off();
     };
-  }, [trigger]);
+  }, [searchParams]);
 
   const handleNext = () => {
     let data_len = allItemData.length;
@@ -122,12 +119,12 @@ const Omni7 = ({ children }) => {
     }
   };
 
-  // useEffect(() => {
-  //   window.scrollTo({
-  //     behavior: "smooth",
-  //     top: sectionRef.current.offsetTop - 120,
-  //   });
-  // }, [itemData]);
+  useEffect(() => {
+    window.scrollTo({
+      behavior: "smooth",
+      top: sectionRef.current.offsetTop - 120,
+    });
+  }, [itemData]);
 
   return (
     <section style={{ fontFamily: '"Prompt", sans-serif' }}>
@@ -149,7 +146,10 @@ const Omni7 = ({ children }) => {
                 return (
                   <div
                     key={["CategoryTag", cat.value].join("_")}
-                    className="underline cursor-pointer"
+                    className={`underline cursor-pointer ${
+                      cat.label === searchParams.get("category") &&
+                      "text-blue-600"
+                    }`}
                     onClick={() => handleSetCategory(cat.label)}
                   >
                     {cat.label}
