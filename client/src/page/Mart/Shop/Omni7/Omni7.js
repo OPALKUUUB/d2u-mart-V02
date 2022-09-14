@@ -10,7 +10,8 @@ const Omni7 = ({ children }) => {
   const [allItemData, setAllItemData] = useState([]);
   const [itemData, setItemData] = useState([]);
   const [pos, setPos] = useState(0);
-  const [amount, setAmount] = useState(0);
+  // const [amount, setAmount] = useState(0);
+  const [show, setShow] = useState(50);
   const [loading, setLoading] = useState(false);
   const sectionRef = useRef();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -21,62 +22,77 @@ const Omni7 = ({ children }) => {
   };
 
   useEffect(() => {
-    let cat_label = searchParams.get("category");
-    let cat_value = "0";
-    if (cat_label !== "ทั้งหมด") {
-      for (let i = 0; i < category.length; i++) {
-        if (cat_label === category[i].label) {
-          cat_value = category[i].value;
+    async function initial() {
+      setLoading(true);
+      let cat_label = searchParams.get("category");
+      let cat_value = "0";
+      if (cat_label !== "ทั้งหมด") {
+        for (let i = 0; i < category.length; i++) {
+          if (cat_label === category[i].label) {
+            cat_value = category[i].value;
+          }
         }
       }
-    }
-    setLoading(true);
-    Firebase.database()
-      .ref("/omni7")
-      .on("value", (snapshot) => {
-        if (snapshot.val()) {
-          let result = snapshot.val();
-          let data = [];
-          setAmount(Object.keys(result).length);
-          Object.keys(result).forEach((id) => {
-            let check = false;
-            if (cat_value !== "0") {
-              for (let i = 0; i < result[id].category.length; i++) {
-                if (result[id].category[i].value === cat_value) {
-                  check = true;
+      let start_time = Math.ceil(new Date().getTime() / 1000);
+      await Firebase.database()
+        .ref("/omni7")
+        // .orderByChild("category/label")
+        // .equalTo("7 Premium")
+        // .on("value", (data) => {
+        //   console.log(data.val());
+        // });
+        .once("value", (snapshot) => {
+          if (snapshot.val()) {
+            let result = snapshot.val();
+            let data = [];
+            Object.keys(result).forEach((id) => {
+              let check = false;
+              if (cat_value !== "0") {
+                for (let i = 0; i < result[id].category.length; i++) {
+                  if (result[id].category[i].value === cat_value) {
+                    check = true;
+                  }
                 }
+              } else if (cat_value === "0") {
+                check = true;
               }
-            } else if (cat_value === "0") {
-              check = true;
+              if (check) {
+                let item = {
+                  id: id,
+                  name: result[id]?.name,
+                  category: result[id]?.category,
+                  price: result[id]?.price,
+                  expire_date: result[id]?.expire_date,
+                  image: result[id]?.image,
+                  description: result[id]?.description,
+                  channel: "omni7",
+                };
+                data.push(item);
+              }
+            });
+            setAllItemData(data);
+            let temp = [];
+            for (let i = 0; i < 20; i++) {
+              if (i === data.length) {
+                break;
+              }
+              temp.push(data[i]);
             }
-            if (check) {
-              let item = {
-                id: id,
-                name: result[id]?.name,
-                category: result[id]?.category,
-                price: result[id]?.price,
-                expire_date: result[id]?.expire_date,
-                image: result[id]?.image,
-                description: result[id]?.description,
-                channel: "omni7",
-              };
-              data.push(item);
-            }
-          });
-          setAllItemData(data);
-          let temp = [];
-          for (let i = 0; i < 20; i++) {
-            if (i === data.length) {
-              break;
-            }
-            temp.push(data[i]);
+            setItemData(() => {
+              console.log(
+                `take (process 2): ${
+                  Math.ceil(new Date().getTime() / 1000) - start_time
+                }`
+              );
+              return temp;
+            });
+            setLoading(false);
+          } else {
+            setAllItemData([]);
           }
-          setItemData(temp);
-          setLoading(false);
-        } else {
-          setAllItemData([]);
-        }
-      });
+        });
+    }
+    initial();
     return () => {
       Firebase.database().ref("/omni7").off();
     };

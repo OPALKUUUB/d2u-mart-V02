@@ -1,14 +1,12 @@
-.OurService {
+.Home .bg {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  width: 100vw;
-  height: fit-content;
   background-image: url("./bg-wood.jpg");
   background-repeat: repeat;
+  width: 100vw;
+  height: fit-content;
 }
-
-.OurService .content img {
-  width: 100%;
+.Home .bg img {
+  width: 80%;
 }

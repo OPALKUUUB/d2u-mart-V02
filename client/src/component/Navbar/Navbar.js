@@ -118,7 +118,6 @@ export const Navbar = () => {
               หน้าหลัก
             </Link>
           </li>
-
           <li>
             <Link
               to="/our-service"
@@ -131,9 +130,9 @@ export const Navbar = () => {
           </li>
           <li>
             <Link
-              to="/contact-us"
+              to="/insurance"
               className={
-                location.pathname === "/contact-us" ? "link active" : "link"
+                location.pathname === "/insurance" ? "link active" : "link"
               }
             >
               การรับประกัน
@@ -141,10 +140,8 @@ export const Navbar = () => {
           </li>
           <li>
             <Link
-              to="/contact-us"
-              className={
-                location.pathname === "/contact-us" ? "link active" : "link"
-              }
+              to="/qa"
+              className={location.pathname === "/qa" ? "link active" : "link"}
             >
               คำถามที่พบบ่อย
             </Link>
@@ -161,14 +158,15 @@ export const Navbar = () => {
           </li>
           <li>
             <Link
-              to="/contact-us"
+              to="/review"
               className={
-                location.pathname === "/contact-us" ? "link active" : "link"
+                location.pathname === "/review" ? "link active" : "link"
               }
             >
               รีวิว
             </Link>
           </li>
+          <li></li>
         </ul>
       </div>
       <div className="Navbar-right no-auth">

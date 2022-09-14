@@ -34,9 +34,16 @@ const ImageSlider = (slides) => {
             className={index === current ? "slide active" : "slide"}
             key={`imageSlider${index}`}
           >
-             <img src={slides.image} alt="" className={`Image object-cover w-full h-full max-h-[700px] max-w-[1200px] rounded-[0px] lg:rounded-[10px] ${index === current ? 'flex' :'hidden'} `}/>
+            <a href={slides.link}>
+              <img
+                src={slides.image}
+                alt=""
+                className={`Image object-cover w-full h-full max-h-[700px] max-w-[1200px] rounded-[0px] lg:rounded-[10px] ${
+                  index === current ? "flex" : "hidden"
+                } `}
+              />
+            </a>
           </div>
-        
         );
       })}
     </section>

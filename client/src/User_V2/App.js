@@ -31,6 +31,9 @@ import Payment from "../page/Mart/Payment/Payment";
 import Ewelcia from "../page/Mart/Shop/Ewelcia/Ewelcia";
 import Omni7 from "../page/Mart/Shop/Omni7/Omni7";
 import Donki from "../page/Mart/Shop/Donki/Donki";
+import Insurance from "../page/Mart/Insurance/Insurance";
+import Qa from "../page/Mart/Qa/Qa";
+import Review from "../page/Mart/Review/Review";
 const AppUserV2 = () => {
   const { token } = useToken();
   let navData = !token ? route : routeAuth;
@@ -221,6 +224,21 @@ const route = [
     id: 7,
     path: "/contact-us",
     element: <ContactUs />,
+  },
+  {
+    id: 8,
+    path: "/insurance",
+    element: <Insurance />,
+  },
+  {
+    id: 9,
+    path: "/qa",
+    element: <Qa />,
+  },
+  {
+    id: 10,
+    path: "/review",
+    element: <Review />,
   },
 ];
 

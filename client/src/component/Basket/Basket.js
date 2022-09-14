@@ -281,7 +281,7 @@ function Basket() {
                   <div className="flex items-center">
                     <p className="m-0 text-[14px]">฿ </p>
                     <p className="m-0 text-[14px]">
-                      {(Math.round(totalPrice * yen * 100) / 100)
+                      {Math.ceil(totalPrice * yen)
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                     </p>
