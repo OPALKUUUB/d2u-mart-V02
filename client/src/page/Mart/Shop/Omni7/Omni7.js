@@ -36,10 +36,11 @@ const Omni7 = ({ children }) => {
       let start_time = Math.ceil(new Date().getTime() / 1000);
       await Firebase.database()
         .ref("/omni7")
-        // .orderByChild("category/label")
-        // .equalTo("7 Premium")
-        // .on("value", (data) => {
-        //   console.log(data.val());
+        // .orderByChild("name")
+        // .equalTo("ข้าวเหนียว")
+        .limitToFirst(parseInt(show))
+        // .on("value", (snapshot) => {
+        //   console.log(snapshot.val());
         // });
         .once("value", (snapshot) => {
           if (snapshot.val()) {
@@ -96,7 +97,7 @@ const Omni7 = ({ children }) => {
     return () => {
       Firebase.database().ref("/omni7").off();
     };
-  }, [searchParams]);
+  }, [searchParams, show]);
 
   const handleNext = () => {
     let data_len = allItemData.length;
@@ -155,6 +156,11 @@ const Omni7 = ({ children }) => {
         <div className="w-[100%] md:w-[95%] mx-auto ">
           <div className="ml-[10px]">
             <Header />
+            <select onChange={(e) => setShow(e.target.value)}>
+              <option value={100}>100</option>
+              <option value={200}>200</option>
+              <option value={1000}>ทั้งหมด</option>
+            </select>
           </div>
           <div className="flex gap-2 mb-3 w-[80%] mx-auto">
             <div className="flex flex-wrap gap-3">
@@ -233,18 +239,18 @@ const category = [
   { value: "1", label: "7 Premium" },
   { value: "2", label: "ข้าวและข้าวเหนียว" },
   { value: "3", label: "บะหมี่สำเร็จรูป" },
-  { value: "4", label: "เครื่องปรุงและเครื่องเทศ" },
+  // { value: "4", label: "เครื่องปรุงและเครื่องเทศ" },
   { value: "5", label: "อาหารแห้ง" },
   { value: "6", label: "อาหารกระป๋อง" },
-  { value: "7", label: "น้ำ" },
-  { value: "8", label: "กาแฟ" },
-  { value: "9", label: "ชาต่างๆ" },
-  { value: "10", label: "ชาดำ" },
-  { value: "11", label: "น้ำอัดลม" },
-  { value: "12", label: "เครื่องดื่มกีฬา" },
+  // { value: "7", label: "น้ำ" },
+  // { value: "8", label: "กาแฟ" },
+  // { value: "9", label: "ชาต่างๆ" },
+  // { value: "10", label: "ชาดำ" },
+  // { value: "11", label: "น้ำอัดลม" },
+  // { value: "12", label: "เครื่องดื่มกีฬา" },
   { value: "13", label: "อาหาร เครื่องดื่ม" },
-  { value: "14", label: "บ้าน และครัว" },
-  { value: "15", label: "เครื่องสำอางค์และความงาม" },
-  { value: "16", label: "อุปกรณ์เครื่องเขียน" },
+  // { value: "14", label: "บ้าน และครัว" },
+  // { value: "15", label: "เครื่องสำอางค์และความงาม" },
+  // { value: "16", label: "อุปกรณ์เครื่องเขียน" },
 ];
 export default Omni7;

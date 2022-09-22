@@ -10,10 +10,11 @@ import BackButt from "../../../component/button/BackButt";
 import Resizer from "react-image-file-resizer";
 import Basket from "../../../component/Basket/Basket";
 import useToken from "../../../hook/useToken";
+import Loading from "../../../component/Loading/Loading";
 
 const testData =
   "ที่อยู่....orem ipsum dolor sit amet, consectetur adipiscing elit. In mattis, eros ac finibus pellentesque, enim urna gravida dui, malesuada semper ipsum nisi at dolor";
-const qrCodeImagePath = "/image/Qrtest.jpg";
+const qrCodeImagePath = "/image/qr.jpg";
 function Payment() {
   const [isHoverButton, setIsHoverButton] = useState(false);
   const prevPage = useRecoilValue(prevPaymentPathState);
@@ -26,6 +27,7 @@ function Payment() {
   const [imageFileList, setImageFileList] = useState([]);
   const [bigPicture, setBigPicture] = useState("");
   const { logout } = useToken();
+  const [loading, setLoading] = useState(false);
   // let location = useLocation();
   // const timeInputRef = useRef();
   // const amountInputRef = useRef();
@@ -70,52 +72,53 @@ function Payment() {
   }
 
   async function handlePayment() {
-    if (imageFileList.length > 0) {
-      if (window.confirm("dev mode")) {
-        let count = 0;
-        for (let i = 0; i < itemInBasket.length; i++) {
-          count += itemInBasket[i].count;
-        }
-        // console.log(itemInBasket);
-        try {
-          await fetch("/api/mart/booking", {
-            method: "post",
-            headers: {
-              "Content-Type": "application/json",
-              token: JSON.parse(localStorage.getItem("token")).token,
-            },
-            body: JSON.stringify({
-              items: itemInBasket,
-              price: totalPrice,
-              slip_image: imageFileList[0],
-              count: count,
-            }),
-          })
-            .then((res) => res.json())
-            .then((data) => {
-              // console.log(data);
-              if (data.status) {
-                alert("success");
-              } else {
-                alert(data.message);
-                logout();
-              }
-              setItemInBasket([]);
-              navigate("/mart/shop");
-            });
-        } catch (err) {
-          console.log(err);
-        }
+    setLoading(true);
+    if (imageFileList.length === 1) {
+      let count = 0;
+      for (let i = 0; i < itemInBasket.length; i++) {
+        count += itemInBasket[i].count;
+      }
+      // console.log(itemInBasket);
+      try {
+        await fetch("/api/mart/booking", {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+            token: JSON.parse(localStorage.getItem("token")).token,
+          },
+          body: JSON.stringify({
+            items: itemInBasket,
+            price: totalPrice,
+            slip_image: imageFileList[0],
+            count: count,
+          }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            // console.log(data);
+            if (data.status) {
+              alert("แนบสลิปเรียบร้อย");
+            } else {
+              alert("การแนบสลิปผิดพลาดโปรดตรวจสอบรูปภาพหรือติดต่อเจ้าหน้าที่");
+              logout();
+            }
+            setItemInBasket([]);
+            navigate("/mart/shop");
+          });
+      } catch (err) {
+        console.log(err);
       }
     } else {
-      alert("upload slip!");
+      alert("กรุณาแนบสลิป");
     }
+    setLoading(false);
   }
   return (
     <div
       className="w-full min-h-screen flex justify-center  bg-[#fdefe4]"
       style={{ fontFamily: '"Prompt", sans-serif' }}
     >
+      <Loading show={loading} />
       <div className="w-full max-w-[1100px] flex flex-col lg:flex-row items-center lg:items-start bg-[#e6e5e1] gap-5 lg:gap-0 justify-center pt-[120px] pb-[60px] px-[50px] relative overflow-x-clip">
         <div className="hidden lg:flex top-30 -right-[10px] absolute">
           <img
@@ -139,7 +142,6 @@ function Payment() {
           </span>{" "}
           กลับ
         </div>
-
         <div className="w-full flex flex-col gap-5 justify-start">
           {/* qr code component */}
           <div className="w-full flex flex-col items-start gap-4">
@@ -156,16 +158,21 @@ function Payment() {
                 ชำระผ่านบัญชีธนาคาร
               </p>
             </div>
+            <div>
+              <p>
+                <span className="font-semibold">ธนาคาร</span> ไทยพานิชย์ (SCB)
+                <br />
+                <span className="font-semibold">เลขที่บัญชี</span> 1652798843
+                <br />
+                <span className="font-semibold">ชื่อบัญชี</span> เสาวนีย์
+                เสถียรทนุพงษ์
+              </p>
+            </div>
             <div className="flex relative">
               <img
-                src={"/image/vertical-dots.png"}
+                src={qrCodeImagePath}
                 alt=""
-                className="hidden lg:flex absolute top-0 -right-[62px] w-[38px]"
-              />
-              <img
-                // src={qrCodeImagePath}
-                alt=""
-                className="w-[380px] h-[600px] object-cover"
+                className="w-[380px] object-cover"
               />
             </div>
           </div>
