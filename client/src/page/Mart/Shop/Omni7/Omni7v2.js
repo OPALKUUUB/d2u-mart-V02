@@ -17,6 +17,9 @@ const Omni7 = ({ children }) => {
   const handleSetCategory = (cat) => {
     setSearchParams({ ...searchParams, category: cat });
     setItemData(() => {
+      if (cat === "ทั้งหมด") {
+        return allItemData;
+      }
       let data = allItemData;
       let cat_label = cat;
       let temp = [];
