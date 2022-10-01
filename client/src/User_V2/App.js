@@ -29,7 +29,7 @@ import ShowMorePromotion from "../page/Mart/Shop/ShowMorePromotion/ShowMorePromo
 import { RecoilRoot } from "recoil";
 import Payment from "../page/Mart/Payment/Payment";
 import Ewelcia from "../page/Mart/Shop/Ewelcia/Ewelcia";
-import Omni7 from "../page/Mart/Shop/Omni7/Omni7";
+import Omni7 from "../page/Mart/Shop/Omni7/Omni7v2";
 import Donki from "../page/Mart/Shop/Donki/Donki";
 import Insurance from "../page/Mart/Insurance/Insurance";
 import Qa from "../page/Mart/Qa/Qa";
