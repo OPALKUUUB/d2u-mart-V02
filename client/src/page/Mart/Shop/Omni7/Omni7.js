@@ -11,7 +11,7 @@ const Omni7 = ({ children }) => {
   const [itemData, setItemData] = useState([]);
   const [pos, setPos] = useState(0);
   // const [amount, setAmount] = useState(0);
-  const [show, setShow] = useState(50);
+  const [show, setShow] = useState("50");
   const [loading, setLoading] = useState(false);
   const sectionRef = useRef();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -34,64 +34,102 @@ const Omni7 = ({ children }) => {
         }
       }
       let start_time = Math.ceil(new Date().getTime() / 1000);
-      await Firebase.database()
-        .ref("/omni7")
-        // .orderByChild("name")
-        // .equalTo("ข้าวเหนียว")
-        .limitToFirst(parseInt(show))
-        // .on("value", (snapshot) => {
-        //   console.log(snapshot.val());
-        // });
-        .once("value", (snapshot) => {
-          if (snapshot.val()) {
-            let result = snapshot.val();
-            let data = [];
-            Object.keys(result).forEach((id) => {
-              let check = false;
-              if (cat_value !== "0") {
-                for (let i = 0; i < result[id].category.length; i++) {
-                  if (result[id].category[i].value === cat_value) {
-                    check = true;
+      if (parseInt(show) === -1) {
+        await Firebase.database()
+          .ref("/omni7")
+          .once("value", (snapshot) => {
+            if (snapshot.val()) {
+              let result = snapshot.val();
+              let data = [];
+              Object.keys(result).forEach((id) => {
+                let check = false;
+                if (cat_value !== "0") {
+                  for (let i = 0; i < result[id].category.length; i++) {
+                    if (result[id].category[i].value === cat_value) {
+                      check = true;
+                    }
                   }
+                } else if (cat_value === "0") {
+                  check = true;
                 }
-              } else if (cat_value === "0") {
-                check = true;
-              }
-              if (check) {
-                let item = {
-                  id: id,
-                  name: result[id]?.name,
-                  category: result[id]?.category,
-                  price: result[id]?.price,
-                  expire_date: result[id]?.expire_date,
-                  image: result[id]?.image,
-                  description: result[id]?.description,
-                  channel: "omni7",
-                };
-                data.push(item);
-              }
-            });
-            setAllItemData(data);
-            let temp = [];
-            for (let i = 0; i < 20; i++) {
-              if (i === data.length) {
-                break;
-              }
-              temp.push(data[i]);
+                if (check) {
+                  let item = {
+                    id: id,
+                    name: result[id]?.name,
+                    category: result[id]?.category,
+                    price: result[id]?.price,
+                    expire_date: result[id]?.expire_date,
+                    image: result[id]?.image,
+                    description: result[id]?.description,
+                    channel: "omni7",
+                  };
+                  data.push(item);
+                }
+              });
+              setAllItemData(data);
+              console.log(data.length);
+              setItemData(() => {
+                console.log(
+                  `take (process 2): ${
+                    Math.ceil(new Date().getTime() / 1000) - start_time
+                  }`
+                );
+                return data;
+              });
+              setLoading(false);
+            } else {
+              setAllItemData([]);
             }
-            setItemData(() => {
-              console.log(
-                `take (process 2): ${
-                  Math.ceil(new Date().getTime() / 1000) - start_time
-                }`
-              );
-              return temp;
-            });
-            setLoading(false);
-          } else {
-            setAllItemData([]);
-          }
-        });
+          });
+      } else {
+        await Firebase.database()
+          .ref("/omni7")
+          .limitToFirst(parseInt(show))
+          .once("value", (snapshot) => {
+            if (snapshot.val()) {
+              let result = snapshot.val();
+              let data = [];
+              Object.keys(result).forEach((id) => {
+                let check = false;
+                if (cat_value !== "0") {
+                  for (let i = 0; i < result[id].category.length; i++) {
+                    if (result[id].category[i].value === cat_value) {
+                      check = true;
+                    }
+                  }
+                } else if (cat_value === "0") {
+                  check = true;
+                }
+                if (check) {
+                  let item = {
+                    id: id,
+                    name: result[id]?.name,
+                    category: result[id]?.category,
+                    price: result[id]?.price,
+                    expire_date: result[id]?.expire_date,
+                    image: result[id]?.image,
+                    description: result[id]?.description,
+                    channel: "omni7",
+                  };
+                  data.push(item);
+                }
+              });
+              setAllItemData(data);
+              console.log(data.length);
+              setItemData(() => {
+                console.log(
+                  `take (process 2): ${
+                    Math.ceil(new Date().getTime() / 1000) - start_time
+                  }`
+                );
+                return data;
+              });
+              setLoading(false);
+            } else {
+              setAllItemData([]);
+            }
+          });
+      }
     }
     initial();
     return () => {
@@ -99,42 +137,42 @@ const Omni7 = ({ children }) => {
     };
   }, [searchParams, show]);
 
-  const handleNext = () => {
-    let data_len = allItemData.length;
-    if (pos + 20 < data_len) {
-      let first = pos + 20;
-      setPos(first);
-      let count = 0;
-      let temp = [];
-      for (let i = first; i < data_len; i++) {
-        if (count === 20) {
-          break;
-        } else {
-          temp.push(allItemData[i]);
-          count++;
-        }
-      }
-      setItemData(temp);
-    }
-  };
+  // const handleNext = () => {
+  //   let data_len = allItemData.length;
+  //   if (pos + 20 < data_len) {
+  //     let first = pos + 20;
+  //     setPos(first);
+  //     let count = 0;
+  //     let temp = [];
+  //     for (let i = first; i < data_len; i++) {
+  //       if (count === 20) {
+  //         break;
+  //       } else {
+  //         temp.push(allItemData[i]);
+  //         count++;
+  //       }
+  //     }
+  //     setItemData(temp);
+  //   }
+  // };
 
-  const handlePrev = () => {
-    if (pos - 20 >= 0) {
-      let first = pos - 20;
-      setPos(first);
-      let count = 0;
-      let temp = [];
-      for (let i = first; i < allItemData.length; i++) {
-        if (count === 20) {
-          break;
-        } else {
-          temp.push(allItemData[i]);
-          count++;
-        }
-      }
-      setItemData(temp);
-    }
-  };
+  // const handlePrev = () => {
+  //   if (pos - 20 >= 0) {
+  //     let first = pos - 20;
+  //     setPos(first);
+  //     let count = 0;
+  //     let temp = [];
+  //     for (let i = first; i < allItemData.length; i++) {
+  //       if (count === 20) {
+  //         break;
+  //       } else {
+  //         temp.push(allItemData[i]);
+  //         count++;
+  //       }
+  //     }
+  //     setItemData(temp);
+  //   }
+  // };
 
   useEffect(() => {
     window.scrollTo({
@@ -156,10 +194,11 @@ const Omni7 = ({ children }) => {
         <div className="w-[100%] md:w-[95%] mx-auto ">
           <div className="ml-[10px]">
             <Header />
-            <select onChange={(e) => setShow(e.target.value)}>
-              <option value={100}>100</option>
-              <option value={200}>200</option>
-              <option value={1000}>ทั้งหมด</option>
+            <select onChange={(e) => setShow(e.target.value)} value={show}>
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option value="200">200</option>
+              <option value="-1">ทั้งหมด</option>
             </select>
           </div>
           <div className="flex gap-2 mb-3 w-[80%] mx-auto">
@@ -189,8 +228,27 @@ const Omni7 = ({ children }) => {
               />
             ))}
           </div>
-
-          <div className="flex justify-center items-center gap-4">
+          {show !== "-1" && (
+            <div className="flex justify-center items-center">
+              <span
+                className="underline cursor-pointer"
+                onClick={() =>
+                  setShow((prev) => {
+                    if (show === "50") {
+                      return "100";
+                    } else if (show === "100") {
+                      return "200";
+                    } else if (show === "200") {
+                      return "-1";
+                    }
+                  })
+                }
+              >
+                แสดงเพิ่มเติม
+              </span>
+            </div>
+          )}
+          {/* <div className="flex justify-center items-center gap-4">
             <div
               className={`py-2 px-3 shadow-md text-gray-600 bg-amber-100 rounded-xl  ${
                 pos - 20 < 0
@@ -214,7 +272,7 @@ const Omni7 = ({ children }) => {
             >
               Next
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
       <Basket />
