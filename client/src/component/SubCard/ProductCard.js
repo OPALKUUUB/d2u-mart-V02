@@ -3,6 +3,7 @@ import "./ProductCard.css";
 import { useRecoilState } from "recoil";
 import { basketState } from "../../AppStateManagement/ShopAtom";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import Modal from "react-bootstrap/Modal";
 
 function useHover() {
   const [value, setValue] = useState(false);
@@ -63,11 +64,12 @@ const ProductCard = (props) => {
     <>
       <div className="w-[300px] h-[320px] rounded-[1.5rem] bg-[#ffffff] shadow-sm overflow-hidden relative cursor-pointer">
         <div className="relative w-[220px] m-auto mt-3">
-          <img
+          {/* <img
             className="absolute top-0 left-0 rounded-lg"
             src={props.data.image}
             alt=""
-          />
+          /> */}
+          <ShowImage src={props.data.image} />
         </div>
         <div className="absolute bottom-0">
           <div
@@ -134,3 +136,26 @@ const ProductCard = (props) => {
 };
 
 export default ProductCard;
+
+const ShowImage = ({ src }) => {
+  const [modal, setModal] = useState(false);
+  return (
+    <>
+      <img
+        src={src}
+        alt={src}
+        onClick={() => setModal(true)}
+        className="absolute top-0 left-0 rounded-lg"
+      />
+      <ImageModal show={modal} onHide={() => setModal(false)} src={src} />
+    </>
+  );
+};
+
+const ImageModal = (props) => {
+  return (
+    <Modal {...props}>
+      <img src={props.src} alt={props.src} />
+    </Modal>
+  );
+};
