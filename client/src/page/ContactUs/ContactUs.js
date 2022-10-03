@@ -1,4 +1,5 @@
 import React from "react";
+import Header from "../../component/Header/Header";
 
 export const ContactUs = () => {
   return (
@@ -10,7 +11,7 @@ export const ContactUs = () => {
         height: "50vh",
       }}
     >
-      <h1>ContactUs</h1>
+      <Header />
     </div>
   );
 };

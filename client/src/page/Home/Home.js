@@ -14,7 +14,8 @@ const Home = () => {
 
       {/* <ServiceProcess /> */}
       <div className="bg">
-        <img src="/image/old/D2U_3.png" width="100%" alt="" />
+        <img src="/image/service_us.jpg" alt="" />
+        {/* <img src="/image/old/D2U_3.png" width="100%" alt="" /> */}
         <img src="/image/old/D2U_4.png" width="100%" alt="" id="promotion" />
         <img src="/image/old/D2U_5.png" width="100%" alt="" id="point" />
         <img src="/image/sunHome.jpg" width="100%" alt="" />
