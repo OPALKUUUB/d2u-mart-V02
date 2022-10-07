@@ -68,75 +68,91 @@ export default function YahooOrder() {
   };
 
   return (
-    <div style={{ background: "#fdeee4", width: "100vw", height: "100%" }}>
-      <div style={{ paddingTop: "30px", width: "80vw", margin: "0 auto" }}>
-        <h3 className="mb-3">Yahoo Order</h3>
-        <Table responsive="md" striped bordered hover size="sm">
-          <thead style={{ textAlign: "center" }}>
-            <tr>
-              <th>#</th>
-              <th>Order</th>
-              <th>Link</th>
-              <th>Bidding</th>
-              <th>Status</th>
-              <th>Addbid</th>
-            </tr>
-          </thead>
-          <tbody style={{ textAlign: "center" }}>
-            {!loading && (
-              <>
-                {orders.map((item, index) => (
-                  <tr key={index}>
-                    <td className="align-middle">{index + 1}</td>
-                    <td className="align-middle">
-                      {/* <img src={item.imgsrc} width={100} alt={item.imgsrc} /> */}
-                      <ShowImage src={item.imgsrc} />
-                    </td>
-                    <td className="align-middle">
-                      <a href={item.link} target="_blank" rel="noreferrer">
-                        link
-                      </a>
-                    </td>
-                    <td className="align-middle">
-                      Maxbid: {item.maxbid} (¥)
-                      {item.addbid1 !== null && (
-                        <>
-                          <br />
-                          Addbid#1: {item.addbid1 === null
-                            ? "-"
-                            : item.addbid1}{" "}
-                          (¥)
-                          {item.addbid2 !== null && (
-                            <>
-                              <br />
-                              Addbid#2:{" "}
-                              {item.addbid2 === null ? "-" : item.addbid2} (¥)
-                            </>
-                          )}
-                        </>
-                      )}
-                    </td>
-                    <td className="align-middle">
-                      {item.maxbid_work_by !== null ||
-                      item.addbid1_work_by !== null ||
-                      item.addbid2_work_by !== null
-                        ? "กำลังประมูล"
-                        : "รอเจ้าหน้าที่"}
-                    </td>
-                    <td className="align-middle">
-                      <Button
-                        size="sm"
-                        onClick={() => handleShowAddbidModal(item)}
-                      >
-                        Addbid
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </>
-            )}
-          </tbody>
-        </Table>
+    <div
+      style={{
+        background: "#fdeee4",
+        width: "100vw",
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <div style={{ width: "80vw" }}>
+        <h3 className="pb-3">YAHOO ORDERS</h3>
+        <div style={{ width: "100%", height: "600px", overflow: "scroll" }}>
+          <Table
+            responsive="md"
+            striped
+            bordered
+            hover
+            size="sm"
+            style={{ background: "white" }}
+          >
+            <thead style={{ textAlign: "center" }}>
+              <tr>
+                <th>#</th>
+                <th>Order</th>
+                <th>Link</th>
+                <th>Bidding</th>
+                <th>Status</th>
+                <th>Addbid</th>
+              </tr>
+            </thead>
+            <tbody style={{ textAlign: "center" }}>
+              {!loading && (
+                <>
+                  {orders.map((item, index) => (
+                    <tr key={index}>
+                      <td className="align-middle">{index + 1}</td>
+                      <td className="align-middle">
+                        {/* <img src={item.imgsrc} width={100} alt={item.imgsrc} /> */}
+                        <ShowImage src={item.imgsrc} />
+                      </td>
+                      <td className="align-middle">
+                        <a href={item.link} target="_blank" rel="noreferrer">
+                          link
+                        </a>
+                      </td>
+                      <td className="align-middle">
+                        Maxbid: {item.maxbid} (¥)
+                        {item.addbid1 !== null && (
+                          <>
+                            <br />
+                            Addbid#1:{" "}
+                            {item.addbid1 === null ? "-" : item.addbid1} (¥)
+                            {item.addbid2 !== null && (
+                              <>
+                                <br />
+                                Addbid#2:{" "}
+                                {item.addbid2 === null ? "-" : item.addbid2} (¥)
+                              </>
+                            )}
+                          </>
+                        )}
+                      </td>
+                      <td className="align-middle">
+                        {item.maxbid_work_by !== null ||
+                        item.addbid1_work_by !== null ||
+                        item.addbid2_work_by !== null
+                          ? "กำลังประมูล"
+                          : "รอเจ้าหน้าที่"}
+                      </td>
+                      <td className="align-middle">
+                        <Button
+                          size="sm"
+                          onClick={() => handleShowAddbidModal(item)}
+                        >
+                          Addbid
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </>
+              )}
+            </tbody>
+          </Table>
+        </div>
         {loading && (
           <>
             <div style={{ display: "flex", justifyContent: "center" }}>
