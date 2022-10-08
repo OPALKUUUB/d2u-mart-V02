@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import useToken from "../../hook/useToken";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import BackButt from "../../component/button/BackButt";
 
 async function loginUser(credentials) {
   return await fetch("/auth/login", {
@@ -81,7 +82,9 @@ const Login = () => {
           end={{ y: -500 }}
           transition={{ duration: 0.8 }}
         >
-          <label className="tracking-[0.05em] text-[16px] md:text-[18px]">USERNAME</label>
+          <label className="tracking-[0.05em] text-[16px] md:text-[18px]">
+            USERNAME
+          </label>
           <input
             className="w-full py-2 px-[18px] rounded-lg bg-[#dcd1ca] text-[18px] md:text-[22px] text-[#bd9095] placeholder:text-[#bd9095] outline-none"
             type="text"
@@ -97,7 +100,9 @@ const Login = () => {
           end={{ y: -500 }}
           transition={{ duration: 1.1 }}
         >
-          <label className="tracking-[0.05em] text-[16px] md:text-[18px]">PASSWORD</label>
+          <label className="tracking-[0.05em] text-[16px] md:text-[18px]">
+            PASSWORD
+          </label>
           <input
             className="w-full py-2 px-[18px] rounded-lg bg-[#dcd1ca] text-[18px] md:text-[22px] text-[#bd9095] placeholder:text-[#bd9095] outline-none"
             type="password"
@@ -129,6 +134,15 @@ const Login = () => {
           </button>
         </motion.div>
       </form>
+      <div
+        style={{
+          position: "absolute",
+          top: "100px",
+          left: "10px",
+        }}
+      >
+        <BackButt link="/home" />
+      </div>
     </div>
   );
 };

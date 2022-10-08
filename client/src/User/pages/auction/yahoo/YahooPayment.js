@@ -161,7 +161,7 @@ export default function YahooPayment() {
                       <ShowImage src={item.imgsrc} />
                     </td>
                     <td className="align-middle">
-                      <a href={item.link} target="_blank">
+                      <a href={item.link} target="_blank" rel="noreferrer">
                         {item.link.split("/")[5]}
                       </a>
                     </td>

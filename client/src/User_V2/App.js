@@ -3,7 +3,7 @@ import { Link, Route, Routes, useNavigate } from "react-router-dom";
 // Hooks
 import useToken from "../hook/useToken";
 // Components
-import { Navbar } from "../component/Navbar/Navbar";
+import Navbar from "../component/NavbarV2/Navbar";
 // Pages
 import Login from "../page/Login/Login";
 import Home from "../page/Home/Home";
