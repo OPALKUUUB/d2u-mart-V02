@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import useToken from "../../hook/useToken";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import BackButt from "../../component/button/BackButt";
 
 async function loginUser(credentials) {
@@ -117,27 +117,34 @@ const Login = () => {
           end={{ y: -200 }}
           transition={{ duration: 1.4 }}
         >
-          <button
-            type="submit"
-            className="tracking-[0.15em] font-semibold text-[18px] md:text-[22px] bg-[#f47e67] rounded-full py-[15px] w-[180px] md:w-[240px] ease-linear duration-150 flex justify-center"
-            onMouseEnter={() => setIsHoverButton(true)}
-            onMouseLeave={() => setIsHoverButton(false)}
-          >
-            SIGN IN{" "}
-            <span
-              className={`${
-                isHoverButton ? " w-5 opacity-100 pl-5" : " w-0 opacity-0 pl-0"
-              } duration-200 ease-linear inline-block`}
+          <div>
+            <button
+              type="submit"
+              className="tracking-[0.15em] font-semibold text-[18px] md:text-[22px] bg-[#f47e67] rounded-full py-[15px] w-[180px] md:w-[240px] ease-linear duration-150 flex justify-center"
+              onMouseEnter={() => setIsHoverButton(true)}
+              onMouseLeave={() => setIsHoverButton(false)}
             >
-              &raquo;
-            </span>
-          </button>
+              SIGN IN{" "}
+              <span
+                className={`${
+                  isHoverButton
+                    ? " w-5 opacity-100 pl-5"
+                    : " w-0 opacity-0 pl-0"
+                } duration-200 ease-linear inline-block`}
+              >
+                &raquo;
+              </span>
+            </button>
+            <div style={{ textAlign: "center" }}>
+              <Link to={"/register"}>Register</Link>
+            </div>
+          </div>
         </motion.div>
       </form>
       <div
         style={{
           position: "absolute",
-          top: "100px",
+          top: "50px",
           left: "10px",
         }}
       >

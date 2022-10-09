@@ -44,6 +44,7 @@
 .Navbar-menu {
   width: 170px;
   position: absolute;
+  display: none;
   top: 100%;
   right: -170px;
   z-index: 999;
@@ -52,6 +53,7 @@
 }
 
 .Navbar-menu.active {
+  display: block;
   right: 0px;
 }
 .Navbar-item {
