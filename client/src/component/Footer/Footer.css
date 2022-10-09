@@ -1,0 +1,23 @@
+.Footer {
+  display: flex;
+  justify-content: space-around;
+  padding: 50px 0px;
+}
+
+.Footer .contact {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.Footer .contact .head {
+  font-size: 1.5rem;
+  font-weight: 700;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.copyright {
+  background: blue;
+  color: white;
+}

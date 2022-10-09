@@ -56,7 +56,17 @@ const Navbar = () => {
             logout();
           }}
         >
-          Logout
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "5px",
+              color: "white",
+            }}
+          >
+            <FiLogOut />
+            <span>Logout</span>
+          </div>
         </div>
         <div className="responsive">
           <Hamburger toggled={isOpen} toggle={setOpen} color="white" />

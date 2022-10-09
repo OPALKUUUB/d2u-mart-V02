@@ -1,9 +1,8 @@
 import React from "react";
 import Footer from "../../component/Footer/Footer";
-import FooterNew from "../../component/Footer/FooterNew";
+import FooterV2 from "../../component/Footer/FooterV2";
 import Header from "../../component/Header/Header";
 import ImageSlider from "../../component/ImageSlider/ImageSlider";
-import ServiceProcess from "../../component/ServiceProcess/ServiceProcess";
 import "./Home.css";
 
 const Home = () => {
@@ -20,7 +19,7 @@ const Home = () => {
         <img src="/image/old/D2U_5.png" width="100%" alt="" id="point" />
         <img src="/image/sunHome.jpg" width="100%" alt="" />
       </div>
-      <Footer />
+      <FooterV2 />
     </div>
   );
 };
