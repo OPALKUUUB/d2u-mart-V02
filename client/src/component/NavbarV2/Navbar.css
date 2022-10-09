@@ -42,24 +42,34 @@
 }
 
 .Navbar-menu {
-  width: 300px;
+  width: 170px;
   position: absolute;
   top: 100%;
-  right: 0;
+  right: -170px;
   z-index: 999;
+  font-size: 0.9rem;
+  transition: all 0.2s ease-in;
+}
+
+.Navbar-menu.active {
+  right: 0px;
 }
 .Navbar-item {
   width: 100%;
-  padding: 18px 0px 18px 0px;
-  text-align: center;
+  padding: 18px 0px 18px 20px;
+  text-align: left;
   cursor: pointer;
-  color: white;
+  color: rgb(255, 255, 255);
   background-color: #dbbba4;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .Navbar-item:hover {
-  background-color: #dbbba4d1;
+  background-color: #dac1af;
 }
+
 @media only screen and (max-width: 1000px) {
   .Navbar-link {
     display: none;
@@ -69,5 +79,14 @@
   }
   .Navbar .responsive {
     display: block;
+  }
+
+  .Navbar-logo {
+    width: 150px;
+  }
+
+  .Navbar {
+    justify-content: space-between;
+    padding: 20px 20px;
   }
 }
