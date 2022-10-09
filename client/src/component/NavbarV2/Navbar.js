@@ -13,7 +13,12 @@ const Navbar = () => {
   if (token) {
     return (
       <div className="Navbar">
-        <img className="Navbar-logo" src="/logo_none.png" alt="" />
+        <img
+          className="Navbar-logo"
+          src="/logo_none.png"
+          alt=""
+          onClick={() => navigate("/")}
+        />
         <div className="Navbar-link">
           {LinkAuth.map((item) => {
             let home = false;
@@ -49,7 +54,7 @@ const Navbar = () => {
           <Hamburger toggled={isOpen} toggle={setOpen} color="white" />
           {isOpen && (
             <div className="Navbar-menu">
-              {LinkNoAuth.map((item) => (
+              {LinkAuth.map((item) => (
                 <div
                   className="Navbar-item"
                   onClick={() => navigate(item.path)}
@@ -74,9 +79,12 @@ const Navbar = () => {
   }
   return (
     <div className="Navbar">
-      <div className="Navbar-logo">
-        <img src="/logo_none.png" alt="logo_image" />
-      </div>
+      <img
+        className="Navbar-logo"
+        src="/logo_none.png"
+        alt=""
+        onClick={() => navigate("/")}
+      />
       <div className="Navbar-link">
         {LinkNoAuth.map((item) => {
           let home = false;

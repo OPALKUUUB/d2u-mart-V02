@@ -12,6 +12,7 @@
 
 .Navbar-logo {
   width: 200px;
+  cursor: pointer;
 }
 
 .Navbar-link {
