@@ -5,10 +5,12 @@ import useToken from "../../hook/useToken";
 import Hamburger from "hamburger-react";
 
 import { AiFillHome } from "react-icons/ai";
-import { RiAuctionFill } from "react-icons/ri";
+import { RiAuctionFill, RiQuestionAnswerFill } from "react-icons/ri";
 import { FiPackage, FiLogOut } from "react-icons/fi";
-import { FaShoppingCart } from "react-icons/fa";
-import { MdPayment } from "react-icons/md";
+import { FaShoppingCart, FaHandHoldingHeart, FaHeadset } from "react-icons/fa";
+import { MdPayment, MdRateReview } from "react-icons/md";
+import { HiOutlineShieldCheck } from "react-icons/hi";
+import { CgLogIn } from "react-icons/cg";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -117,32 +119,24 @@ const Navbar = () => {
       </div>
       <div className="responsive">
         <Hamburger toggled={isOpen} toggle={setOpen} color="white" />
-        {isOpen && (
-          <div className="Navbar-menu">
-            {LinkNoAuth.map((item) => (
-              <div className="Navbar-item" onClick={() => navigate(item.path)}>
-                {item.name}
-              </div>
-            ))}
-            <div
-              className="Navbar-item"
-              onClick={() => {
-                setOpen(false);
-                navigate("login");
-              }}
-            >
-              เข้าสู่ระบบ
+        <div className={`Navbar-menu ${isOpen && "active"}`}>
+          {LinkNoAuth.map((item) => (
+            <div className="Navbar-item" onClick={() => navigate(item.path)}>
+              {item?.icon}
+              <span style={{ marginTop: "3px" }}>{item.name}</span>
             </div>
-            <div
-              className="Navbar-item"
-              onClick={() => {
-                navigate("register");
-              }}
-            >
-              ลงทะเบียน
-            </div>
+          ))}
+          <div
+            className="Navbar-item"
+            onClick={() => {
+              setOpen(false);
+              navigate("login");
+            }}
+          >
+            <CgLogIn />
+            เข้าสู่ระบบ
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
@@ -156,11 +150,21 @@ const LinkAuth = [
   { id: 5, path: "pay-service", name: "ชำระค่าบริการ", icon: <MdPayment /> },
 ];
 const LinkNoAuth = [
-  { id: 1, path: "home", name: "หน้าหลัก" },
-  { id: 2, path: "our-service", name: "บริการของเรา" },
-  { id: 3, path: "insurance", name: "การรับประกัน" },
-  { id: 4, path: "qa", name: "คำถามที่พบบ่อย" },
-  { id: 5, path: "contact-us", name: "ติดต่อเรา" },
-  { id: 6, path: "review", name: "รีวิว" },
+  { id: 1, path: "home", name: "หน้าหลัก", icon: <AiFillHome /> },
+  {
+    id: 2,
+    path: "our-service",
+    name: "บริการของเรา",
+    icon: <FaHandHoldingHeart />,
+  },
+  {
+    id: 3,
+    path: "insurance",
+    name: "การรับประกัน",
+    icon: <HiOutlineShieldCheck />,
+  },
+  { id: 4, path: "qa", name: "คำถามที่พบบ่อย", icon: <RiQuestionAnswerFill /> },
+  { id: 5, path: "contact-us", name: "ติดต่อเรา", icon: <FaHeadset /> },
+  { id: 6, path: "review", name: "รีวิว", icon: <MdRateReview /> },
 ];
 export default Navbar;
