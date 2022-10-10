@@ -6,7 +6,9 @@ import ProductCard from "../../../../component/SubCard/ProductCard";
 import Loading from "../../../../component/Loading/Loading";
 import { useSearchParams } from "react-router-dom";
 
-const Omni7 = ({ children }) => {
+const ref = "disney";
+const head = "Tokyo DisneySea";
+const Disney = ({ children }) => {
   const [allItemData, setAllItemData] = useState([]);
   const [itemData, setItemData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -37,7 +39,7 @@ const Omni7 = ({ children }) => {
   async function FetchData(amount) {
     let data = [];
     await Firebase.database()
-      .ref("/omni7")
+      .ref("/" + ref)
       .limitToFirst(amount)
       .once("value", (snapshot) => {
         if (snapshot.val()) {
@@ -46,12 +48,12 @@ const Omni7 = ({ children }) => {
             let item = {
               id: id,
               name: result[id]?.name,
-              category: result[id]?.category,
+              // category: result[id]?.category,
               price: result[id]?.price,
               expire_date: result[id]?.expire_date,
               image: result[id]?.image,
               description: result[id]?.description,
-              channel: "omni7",
+              channel: ref,
             };
             data.push(item);
           });
@@ -64,7 +66,7 @@ const Omni7 = ({ children }) => {
   async function FetchDataAll() {
     let data = [];
     await Firebase.database()
-      .ref("/omni7")
+      .ref("/" + ref)
       .once("value", (snapshot) => {
         if (snapshot.val()) {
           let result = snapshot.val();
@@ -72,12 +74,12 @@ const Omni7 = ({ children }) => {
             let item = {
               id: id,
               name: result[id]?.name,
-              category: result[id]?.category,
+              // category: result[id]?.category,
               price: result[id]?.price,
               expire_date: result[id]?.expire_date,
               image: result[id]?.image,
               description: result[id]?.description,
-              channel: "omni7",
+              channel: ref,
             };
             data.push(item);
           });
@@ -93,21 +95,21 @@ const Omni7 = ({ children }) => {
     setItemData(() => {
       let data = allItemData;
       // console.log(searchParams.get("category"), data[0].category);
-      if (
-        searchParams.get("category") !== null &&
-        searchParams.get("category") !== "ทั้งหมด"
-      ) {
-        let cat_label = searchParams.get("category");
-        let temp = [];
-        for (let i = 0; i < data.length; i++) {
-          for (let j = 0; j < data[i].category.length; j++) {
-            if (cat_label === data[i].category[j].label) {
-              temp.push(data[i]);
-            }
-          }
-        }
-        return temp;
-      }
+      // if (
+      //   searchParams.get("category") !== null &&
+      //   searchParams.get("category") !== "ทั้งหมด"
+      // ) {
+      //   let cat_label = searchParams.get("category");
+      //   let temp = [];
+      //   for (let i = 0; i < data.length; i++) {
+      //     for (let j = 0; j < data[i].category.length; j++) {
+      //       if (cat_label === data[i].category[j].label) {
+      //         temp.push(data[i]);
+      //       }
+      //     }
+      //   }
+      //   return temp;
+      // }
       return data;
     });
     setLoading(false);
@@ -118,21 +120,21 @@ const Omni7 = ({ children }) => {
       let data = await FetchData(50);
       setItemData(() => {
         // console.log(searchParams.get("category"), data[0].category);
-        if (
-          searchParams.get("category") !== null &&
-          searchParams.get("category") !== "ทั้งหมด"
-        ) {
-          let cat_label = searchParams.get("category");
-          let temp = [];
-          for (let i = 0; i < data.length; i++) {
-            for (let j = 0; j < data[i].category.length; j++) {
-              if (cat_label === data[i].category[j].label) {
-                temp.push(data[i]);
-              }
-            }
-          }
-          return temp;
-        }
+        // if (
+        //   searchParams.get("category") !== null &&
+        //   searchParams.get("category") !== "ทั้งหมด"
+        // ) {
+        //   let cat_label = searchParams.get("category");
+        //   let temp = [];
+        //   for (let i = 0; i < data.length; i++) {
+        //     for (let j = 0; j < data[i].category.length; j++) {
+        //       if (cat_label === data[i].category[j].label) {
+        //         temp.push(data[i]);
+        //       }
+        //     }
+        //   }
+        //   return temp;
+        // }
         return data;
       });
       setLoading(false);
@@ -146,11 +148,11 @@ const Omni7 = ({ children }) => {
     <section style={{ fontFamily: '"Prompt", sans-serif' }}>
       <Loading show={loading} />
       <BackButt link="/mart/shop" />
-      <img
+      {/* <img
         src="/image/7-eleven.png"
         className="w-full object-cover object-center"
         alt=""
-      />
+      /> */}
       <div className="w-full bg-[#ece7e2] py-[50px]" ref={sectionRef}>
         <div className="w-[100%] md:w-[95%] mx-auto ">
           <div className="ml-[10px]">
@@ -158,7 +160,7 @@ const Omni7 = ({ children }) => {
           </div>
           <div className="flex gap-2 mb-3 w-[80%] mx-auto">
             <div className="flex flex-wrap gap-3">
-              {category.map((cat, index) => {
+              {/* {category.map((cat, index) => {
                 return (
                   <div
                     key={["CategoryTag", cat.value].join("_")}
@@ -171,7 +173,7 @@ const Omni7 = ({ children }) => {
                     {cat.label}
                   </div>
                 );
-              })}
+              })} */}
             </div>
           </div>
           <div className="flex justify-center flex-wrap gap-4 mb-3">
@@ -205,9 +207,7 @@ const Header = () => {
     <div className="flex justify-center items-end gap-2">
       <p className="m-0 md:text-[40px] text-[30px]">สินค้า</p>
       <p className="m-0 md:text-[39px] text-[#f0a28e] text-[30px]">ทั้งหมด</p>
-      <p className="m-0 md:text-[39px] text-[#f0a28e] text-[30px]">
-        (7-Eleven)
-      </p>
+      <p className="m-0 md:text-[39px] text-[#f0a28e] text-[30px]">({head})</p>
     </div>
   );
 };
@@ -231,4 +231,4 @@ const category = [
   // { value: "15", label: "เครื่องสำอางค์และความงาม" },
   // { value: "16", label: "อุปกรณ์เครื่องเขียน" },
 ];
-export default Omni7;
+export default Disney;

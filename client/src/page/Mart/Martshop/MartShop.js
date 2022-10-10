@@ -47,7 +47,7 @@ const ShopData = [
     alt: "https://www.omni7.jp/",
   },
   {
-    id: 1,
+    id: 2,
     name: "Gashapon",
     link: "/mart/shop/Ewelcia",
     image_url: "/image/gachapong.jpg",
@@ -55,11 +55,18 @@ const ShopData = [
     //mode: "dev",
   },
   {
-    id: 1,
+    id: 3,
     name: "Donki",
     link: "/mart/shop/Donki",
     image_url: "/image/donki.png",
     alt: "https://www.donki.com/",
+  },
+  {
+    id: 4,
+    name: "Tokyo DisneySea",
+    link: "/mart/shop/disney",
+    image_url: "/image/disney.jpg",
+    alt: "",
   },
 ];
 

@@ -30,11 +30,11 @@ const FooterV2 = () => {
           </div>
         </div>
         <div className="nav">
-          <Link to="about-us">เกี่ยวกับเรา</Link>
-          <Link to="our-service">บริการของเรา</Link>
-          <Link to="insurance">การรับประกัน</Link>
-          <Link to="qa">คำถามที่พบบ่อย</Link>
-          <Link to="review">รีวิว</Link>
+          <Link to="/about-us">เกี่ยวกับเรา</Link>
+          <Link to="/our-service">บริการของเรา</Link>
+          <Link to="/insurance">การรับประกัน</Link>
+          <Link to="/qa">คำถามที่พบบ่อย</Link>
+          <Link to="/review">รีวิว</Link>
         </div>
         <hr style={{ width: "100%", height: "2px", color: "black" }} />
         <div className="copyright">

@@ -35,6 +35,7 @@ import Insurance from "../page/Mart/Insurance/Insurance";
 import Qa from "../page/Mart/Qa/Qa";
 import Review from "../page/Mart/Review/Review";
 import AboutUs from "../page/AboutUs/AboutUs";
+import Disney from "../page/Mart/Shop/Disney/Disney";
 const AppUserV2 = () => {
   const { token } = useToken();
   let navData = !token ? route : routeAuth;
@@ -219,6 +220,11 @@ const routeAuth = [
     path: "/about-us",
     element: <AboutUs />,
   },
+  {
+    id: 31,
+    path: "/mart/shop/disney",
+    element: <Disney />,
+  },
 ];
 const route = [
   {
@@ -240,11 +246,6 @@ const route = [
     id: 4,
     path: "/register",
     element: <Register />,
-  },
-  {
-    id: 5,
-    path: "/product-service",
-    element: <ProductService />,
   },
   {
     id: 6,
