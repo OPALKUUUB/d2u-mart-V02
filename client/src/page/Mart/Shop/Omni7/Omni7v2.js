@@ -5,6 +5,7 @@ import Firebase from "../../../../Firebase/FirebaseConfig";
 import ProductCard from "../../../../component/SubCard/ProductCard";
 import Loading from "../../../../component/Loading/Loading";
 import { useSearchParams } from "react-router-dom";
+import FooterV2 from "../../../../component/Footer/FooterV2";
 
 const Omni7 = ({ children }) => {
   const [allItemData, setAllItemData] = useState([]);
@@ -146,13 +147,21 @@ const Omni7 = ({ children }) => {
     <section style={{ fontFamily: '"Prompt", sans-serif' }}>
       <Loading show={loading} />
       <BackButt link="/mart/shop" />
-      <img
+      {/* <img
         src="/image/7-eleven.png"
         className="w-full object-cover object-center"
         alt=""
-      />
+      /> */}
       <div className="w-full bg-[#ece7e2] py-[50px]" ref={sectionRef}>
-        <div className="w-[100%] md:w-[95%] mx-auto ">
+        <div
+          className="w-[100%] md:w-[95%] mx-auto "
+          style={{
+            padding: "30px 20px",
+            border: "1px solid white",
+            borderRadius: "10px",
+            background: "#F5F5F5",
+          }}
+        >
           <div className="ml-[10px]">
             <Header />
           </div>
@@ -196,6 +205,7 @@ const Omni7 = ({ children }) => {
         </div>
       </div>
       <Basket />
+      <FooterV2 />
     </section>
   );
 };
