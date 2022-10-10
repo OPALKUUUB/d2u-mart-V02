@@ -5,6 +5,7 @@ import Firebase from "../../../../Firebase/FirebaseConfig";
 import ProductCard from "../../../../component/SubCard/ProductCard";
 import Loading from "../../../../component/Loading/Loading";
 import { useSearchParams } from "react-router-dom";
+import FooterV2 from "../../../../component/Footer/FooterV2";
 
 const ref = "disney";
 const head = "Tokyo DisneySea";
@@ -154,7 +155,15 @@ const Disney = ({ children }) => {
         alt=""
       /> */}
       <div className="w-full bg-[#ece7e2] py-[50px]" ref={sectionRef}>
-        <div className="w-[100%] md:w-[95%] mx-auto ">
+        <div
+          className="w-[100%] md:w-[95%] mx-auto"
+          style={{
+            padding: "30px 20px",
+            border: "1px solid white",
+            borderRadius: "10px",
+            background: "#F5F5F5",
+          }}
+        >
           <div className="ml-[10px]">
             <Header />
           </div>
@@ -198,6 +207,7 @@ const Disney = ({ children }) => {
         </div>
       </div>
       <Basket />
+      <FooterV2 />
     </section>
   );
 };
