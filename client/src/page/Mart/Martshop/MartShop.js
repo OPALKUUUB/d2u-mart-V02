@@ -3,6 +3,7 @@ import BackButt from "../../../component/button/BackButt";
 import Basket from "../../../component/Basket/Basket";
 import "./MartMenu.css";
 import ShopCard from "../../../component/SubCard/ShopCard";
+import FooterV2 from "../../../component/Footer/FooterV2";
 
 const MartShop = () => {
   return (
@@ -34,6 +35,7 @@ const MartShop = () => {
         </div>
       </div>
       <Basket />
+      <FooterV2 />
     </section>
   );
 };
