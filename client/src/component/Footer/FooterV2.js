@@ -9,7 +9,12 @@ import Facebook from "../icon/Facebook";
 const FooterV2 = () => {
   return (
     <>
-      <div className="Footer">
+      <div
+        className="Footer"
+        style={{
+          backgroundImage: "url(/image/background.png)",
+        }}
+      >
         <div className="contact">
           <div className="head">
             <FiPhoneCall /> <span>ติดต่อเรา</span>
