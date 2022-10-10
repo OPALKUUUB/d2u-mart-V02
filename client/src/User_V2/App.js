@@ -34,6 +34,7 @@ import Donki from "../page/Mart/Shop/Donki/Donki";
 import Insurance from "../page/Mart/Insurance/Insurance";
 import Qa from "../page/Mart/Qa/Qa";
 import Review from "../page/Mart/Review/Review";
+import AboutUs from "../page/AboutUs/AboutUs";
 const AppUserV2 = () => {
   const { token } = useToken();
   let navData = !token ? route : routeAuth;
@@ -149,44 +150,74 @@ const routeAuth = [
     element: <Abc />,
   },
   {
-    id: 30,
+    id: 17,
     path: "/mart/shop/ewelcia",
     element: <Ewelcia />,
   },
   {
-    id: 17,
+    id: 18,
     path: "/mart/shop/showmoreall/:shop",
     element: <ShowMoreAllItem />,
   },
   {
-    id: 18,
+    id: 19,
     path: "/mart/shop/showmorepromotion",
     element: <ShowMorePromotion />,
   },
   {
-    id: 19,
+    id: 20,
     path: "/mart/payment",
     element: <Payment />,
   },
   {
-    id: 20,
+    id: 21,
     path: "/mart/shop/Ewelcia",
     element: <Ewelcia />,
   },
   {
-    id: 21,
+    id: 22,
     path: "/mart/shop/Omni7",
     element: <Omni7 />,
   },
   {
-    id: 22,
+    id: 23,
     path: "/mart/shop/Donki",
     element: <Donki />,
   },
   {
-    id: 23,
+    id: 24,
     path: "/mart/shop/Promotion",
     element: <ShowMorePromotion />,
+  },
+  {
+    id: 25,
+    path: "/our-service",
+    element: <OurService />,
+  },
+  {
+    id: 26,
+    path: "/contact-us",
+    element: <ContactUs />,
+  },
+  {
+    id: 27,
+    path: "/insurance",
+    element: <Insurance />,
+  },
+  {
+    id: 28,
+    path: "/qa",
+    element: <Qa />,
+  },
+  {
+    id: 29,
+    path: "/review",
+    element: <Review />,
+  },
+  {
+    id: 30,
+    path: "/about-us",
+    element: <AboutUs />,
   },
 ];
 const route = [
@@ -239,6 +270,11 @@ const route = [
     id: 10,
     path: "/review",
     element: <Review />,
+  },
+  {
+    id: 30,
+    path: "/about-us",
+    element: <AboutUs />,
   },
 ];
 
