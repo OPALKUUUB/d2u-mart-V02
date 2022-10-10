@@ -71,3 +71,14 @@
     /* justify-content: end; */
   }
 }
+
+@media only screen and (min-width: 1048px) {
+  .Footer {
+    margin: 0 160px;
+  }
+}
+@media only screen and (min-width: 1800px) {
+  .Footer {
+    margin: 0 250px;
+  }
+}
