@@ -12,6 +12,11 @@ import { OurService } from "../page/OurService/OurService";
 import { ContactUs } from "../page/ContactUs/ContactUs";
 // for older pages
 import Auction from "../User/pages/Auction";
+import AuctionV2 from "../page/Yahoo/Auction/Auction";
+import YahooOrderV2 from "../page/Yahoo/Order/Order";
+import YahooPaymentV2 from "../page/Yahoo/Payment/Payment";
+import YahooAllPaymentV2 from "../page/Yahoo/AllPayment/AllPayment";
+import YahooHistoryV2 from "../page/Yahoo/History/History";
 import YahooAuction from "../User/pages/auction/yahoo/YahooAuction";
 import YahooOrder from "../User/pages/auction/yahoo/YahooOrder";
 import YahooPayment from "../User/pages/auction/yahoo/YahooPayment";
@@ -22,7 +27,7 @@ import { Register } from "../page/Register/Register";
 import MartShop from "../page/Mart/Martshop/MartShop";
 import Daiso from "../page/Mart/Shop/Daiso/Daiso";
 import Mart from "../page/Mart/Mart";
-import Footer from "../component/Footer/Footer";
+// import Footer from "../component/Footer/Footer";
 import Abc from "../page/Mart/Shop/Abc/Abc";
 import ShowMoreAllItem from "../page/Mart/Shop/ShowMore/ShowMoreAllItem";
 import ShowMorePromotion from "../page/Mart/Shop/ShowMorePromotion/ShowMorePromotion";
@@ -224,6 +229,32 @@ const routeAuth = [
     id: 31,
     path: "/mart/shop/disney",
     element: <Disney />,
+  },
+  // yahoo auction version 2
+  {
+    id: 32,
+    path: "/yahoo/auction",
+    element: <AuctionV2 />,
+  },
+  {
+    id: 33,
+    path: "/yahoo/order",
+    element: <YahooOrderV2 />,
+  },
+  {
+    id: 34,
+    path: "/yahoo/payment",
+    element: <YahooPaymentV2 />,
+  },
+  {
+    id: 35,
+    path: "/yahoo/all/payment",
+    element: <YahooAllPaymentV2 />,
+  },
+  {
+    id: 36,
+    path: "/yahoo/history",
+    element: <YahooHistoryV2 />,
   },
 ];
 const route = [

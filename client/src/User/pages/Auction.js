@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Col, Container, Figure, Row } from "react-bootstrap";
+import { Figure } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 // import { useHistory } from "react-router-dom";
 
@@ -83,7 +83,7 @@ export default function Auction() {
           >
             <Figure.Image width={200} src="/resource/hand.png" />
             <Figure.Caption style={{ fontSize: "1rem" }}>
-              รายการสินค้าที่ต้องชำระ
+              รายการที่ต้องชำระ
             </Figure.Caption>
           </Figure>
           <Figure

@@ -1,6 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import FooterV2 from "../../component/Footer/FooterV2";
 import "./Mart.css";
 
 const Mart = () => {

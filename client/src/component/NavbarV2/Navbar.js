@@ -153,28 +153,38 @@ const Navbar = () => {
 };
 
 const LinkAuth = [
-  { id: 1, path: "home", name: "หน้าหลัก", icon: <AiFillHome /> },
-  { id: 2, path: "auction", name: "ประมูล Yahoo", icon: <RiAuctionFill /> },
-  { id: 3, path: "tracking", name: "เช็กสถานะสินค้า", icon: <FiPackage /> },
-  { id: 4, path: "mart", name: "ซื้อของหน้าร้าน", icon: <FaShoppingCart /> },
-  { id: 5, path: "pay-service", name: "ชำระค่าบริการ", icon: <MdPayment /> },
-];
-const LinkNoAuth = [
-  { id: 1, path: "home", name: "หน้าหลัก", icon: <AiFillHome /> },
+  { id: 1, path: "/home", name: "หน้าหลัก", icon: <AiFillHome /> },
   {
     id: 2,
-    path: "our-service",
+    path: "/yahoo/auction",
+    name: "ประมูล Yahoo",
+    icon: <RiAuctionFill />,
+  },
+  { id: 3, path: "/tracking", name: "เช็กสถานะสินค้า", icon: <FiPackage /> },
+  { id: 4, path: "/mart", name: "ซื้อของหน้าร้าน", icon: <FaShoppingCart /> },
+  { id: 5, path: "/pay-service", name: "ชำระค่าบริการ", icon: <MdPayment /> },
+];
+const LinkNoAuth = [
+  { id: 1, path: "/home", name: "หน้าหลัก", icon: <AiFillHome /> },
+  {
+    id: 2,
+    path: "/our-service",
     name: "บริการของเรา",
     icon: <FaHandHoldingHeart />,
   },
   {
     id: 3,
-    path: "insurance",
+    path: "/insurance",
     name: "การรับประกัน",
     icon: <HiOutlineShieldCheck />,
   },
-  { id: 4, path: "qa", name: "คำถามที่พบบ่อย", icon: <RiQuestionAnswerFill /> },
-  { id: 5, path: "contact-us", name: "ติดต่อเรา", icon: <FaHeadset /> },
-  { id: 6, path: "review", name: "รีวิว", icon: <MdRateReview /> },
+  {
+    id: 4,
+    path: "/qa",
+    name: "คำถามที่พบบ่อย",
+    icon: <RiQuestionAnswerFill />,
+  },
+  { id: 5, path: "/contact-us", name: "ติดต่อเรา", icon: <FaHeadset /> },
+  { id: 6, path: "/review", name: "รีวิว", icon: <MdRateReview /> },
 ];
 export default Navbar;
