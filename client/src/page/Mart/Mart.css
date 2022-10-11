@@ -1,25 +1,28 @@
 * {
   font-family: "Prompt", sans-serif;
 }
+.Mart-container {
+  min-height: 100vh;
+  background-image: url("./bg.png");
+  background-repeat: repeat-y;
+  background-size: 100%;
+  /* border: 1px solid black; */
+}
 .Mart {
-  position: relative;
   width: 100vw;
 }
-.Mart .background {
-  position: absolute;
-  top: 0;
-}
+
 .Mart .content {
   width: 100%;
-  position: absolute;
   display: flex;
-  flex-flow: wrap;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  /* background-color: #fff9f5; */
+  /* border: 1px solid red; */
 }
 
 .card-container {
+  position: relative;
   cursor: pointer;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   transition: 0.3s;

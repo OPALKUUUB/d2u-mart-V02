@@ -1,0 +1,31 @@
+.OurService1 {
+  background-image: url("./bg.png");
+  background-size: 90%;
+  background-position-x: center;
+  background-repeat: repeat-y;
+  padding-top: 30px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.OurService1 img.head {
+  width: 30vw;
+  margin-bottom: 20px;
+}
+
+.OurService1 .content {
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  column-gap: 8%;
+  row-gap: 10px;
+}
+
+.OurService1 .content img {
+  width: 220px;
+}
