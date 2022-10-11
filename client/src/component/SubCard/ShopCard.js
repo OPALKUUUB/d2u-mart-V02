@@ -10,7 +10,7 @@ const ShopCard = (props) => {
         navigate(
           props.mode === "dev"
             ? alert("This shop is comming soon...")
-            : props.link + "?category=ทั้งหมด"
+            : props.link + "?category=ทั้งหมด&page=1"
         )
       }
     >

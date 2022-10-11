@@ -9,33 +9,13 @@ import FooterV2 from "../../../../component/Footer/FooterV2";
 
 const ref = "donki";
 const head = "Donki";
-const Donki = ({ children }) => {
+const Disney = ({ children }) => {
   const [allItemData, setAllItemData] = useState([]);
   const [itemData, setItemData] = useState([]);
   const [loading, setLoading] = useState(false);
   const sectionRef = useRef();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [showMore, setShowMore] = useState(false);
-
-  const handleSetCategory = (cat) => {
-    setSearchParams({ ...searchParams, category: cat });
-    setItemData(() => {
-      if (cat === "ทั้งหมด") {
-        return allItemData;
-      }
-      let data = allItemData;
-      let cat_label = cat;
-      let temp = [];
-      for (let i = 0; i < data.length; i++) {
-        for (let j = 0; j < data[i].category.length; j++) {
-          if (cat_label === data[i].category[j].label) {
-            temp.push(data[i]);
-          }
-        }
-      }
-      return temp;
-    });
-  };
+  // const [showMore, setShowMore] = useState(false);
 
   async function FetchData(amount) {
     let data = [];
@@ -49,7 +29,6 @@ const Donki = ({ children }) => {
             let item = {
               id: id,
               name: result[id]?.name,
-              // category: result[id]?.category,
               price: result[id]?.price,
               expire_date: result[id]?.expire_date,
               image: result[id]?.image,
@@ -75,7 +54,6 @@ const Donki = ({ children }) => {
             let item = {
               id: id,
               name: result[id]?.name,
-              // category: result[id]?.category,
               price: result[id]?.price,
               expire_date: result[id]?.expire_date,
               image: result[id]?.image,
@@ -90,52 +68,56 @@ const Donki = ({ children }) => {
       });
     return data;
   }
-  const handleShowMore = () => {
-    setShowMore(true);
-    setLoading(true);
-    setItemData(() => {
-      let data = allItemData;
-      // console.log(searchParams.get("category"), data[0].category);
-      // if (
-      //   searchParams.get("category") !== null &&
-      //   searchParams.get("category") !== "ทั้งหมด"
-      // ) {
-      //   let cat_label = searchParams.get("category");
-      //   let temp = [];
-      //   for (let i = 0; i < data.length; i++) {
-      //     for (let j = 0; j < data[i].category.length; j++) {
-      //       if (cat_label === data[i].category[j].label) {
-      //         temp.push(data[i]);
-      //       }
-      //     }
-      //   }
-      //   return temp;
-      // }
-      return data;
+  // const handleShowMore = () => {
+  //   setShowMore(true);
+  //   setLoading(true);
+  //   setItemData(() => {
+  //     let data = allItemData;
+  //     return data;
+  //   });
+  //   setLoading(false);
+  // };
+
+  const handleSelectPage = (index) => {
+    setItemData(allItemData.slice(index * 50, (index + 1) * 50));
+    setSearchParams({
+      category: searchParams.get("category"),
+      page: index + 1,
     });
-    setLoading(false);
+  };
+
+  const handleNextPage = () => {
+    let page = parseInt(searchParams.get("page"));
+    let lastPage = Math.ceil(allItemData.length / 50);
+    if (page >= lastPage) {
+      console.log(page, lastPage);
+    } else {
+      setItemData(allItemData.slice(page * 50, (page + 1) * 50));
+      setSearchParams({
+        category: searchParams.get("category"),
+        page: page + 1,
+      });
+    }
+  };
+  const handlePrevPage = () => {
+    let page = parseInt(searchParams.get("page"));
+    let lastPage = Math.ceil(allItemData.length / 50);
+
+    if (page === 0) {
+      console.log(page, lastPage);
+    } else {
+      setItemData(allItemData.slice((page - 1) * 50, page * 50));
+      setSearchParams({
+        category: searchParams.get("category"),
+        page: page - 1 === 0 ? 1 : page - 1,
+      });
+    }
   };
   useEffect(() => {
     async function initial() {
       setLoading(true);
       let data = await FetchData(50);
       setItemData(() => {
-        // console.log(searchParams.get("category"), data[0].category);
-        // if (
-        //   searchParams.get("category") !== null &&
-        //   searchParams.get("category") !== "ทั้งหมด"
-        // ) {
-        //   let cat_label = searchParams.get("category");
-        //   let temp = [];
-        //   for (let i = 0; i < data.length; i++) {
-        //     for (let j = 0; j < data[i].category.length; j++) {
-        //       if (cat_label === data[i].category[j].label) {
-        //         temp.push(data[i]);
-        //       }
-        //     }
-        //   }
-        //   return temp;
-        // }
         return data;
       });
       setLoading(false);
@@ -149,11 +131,6 @@ const Donki = ({ children }) => {
     <section style={{ fontFamily: '"Prompt", sans-serif' }}>
       <Loading show={loading} />
       <BackButt link="/mart/shop" />
-      {/* <img
-        src="/image/7-eleven.png"
-        className="w-full object-cover object-center"
-        alt=""
-      /> */}
       <div className="w-full bg-[#ece7e2] py-[50px]" ref={sectionRef}>
         <div
           className="w-[100%] md:w-[95%] mx-auto"
@@ -168,22 +145,7 @@ const Donki = ({ children }) => {
             <Header />
           </div>
           <div className="flex gap-2 mb-3 w-[80%] mx-auto">
-            <div className="flex flex-wrap gap-3">
-              {/* {category.map((cat, index) => {
-                return (
-                  <div
-                    key={["CategoryTag", cat.value].join("_")}
-                    className={`underline cursor-pointer ${
-                      cat.label === searchParams.get("category") &&
-                      "text-blue-600"
-                    }`}
-                    onClick={() => handleSetCategory(cat.label)}
-                  >
-                    {cat.label}
-                  </div>
-                );
-              })} */}
-            </div>
+            <div className="flex flex-wrap gap-3"></div>
           </div>
           <div className="flex justify-center flex-wrap gap-4 mb-3">
             {itemData?.map((item, index) => (
@@ -194,7 +156,51 @@ const Donki = ({ children }) => {
               />
             ))}
           </div>
-          {showMore === false && (
+          <div className="w-100 flex justify-center pt-3 ">
+            {Math.ceil(allItemData.length / 50) > 0 ? (
+              <div className="flex cursor-pointer">
+                <div
+                  className={`w-[70px] h-[35px] flex items-center justify-center border-2 border-solid ${
+                    parseInt(searchParams.get("page")) === 1
+                      ? "bg-gray-500 text-white cursor-not-allowed"
+                      : "hover:bg-slate-200 "
+                  }`}
+                  onClick={handlePrevPage}
+                >
+                  {"<<"}
+                </div>
+                {Array(Math.ceil(allItemData.length / 50))
+                  .fill("")
+                  .map((item, index) => (
+                    <div
+                      key={["pagination", index + 1].join("_")}
+                      className={`w-[35px] h-[35px] flex items-center justify-center border-2 border-solid ${
+                        parseInt(searchParams.get("page")) === index + 1
+                          ? "bg-slate-800 text-white"
+                          : "hover:bg-slate-200 "
+                      }`}
+                      onClick={() => handleSelectPage(index)}
+                    >
+                      {index + 1}
+                    </div>
+                  ))}
+                <div
+                  className={`w-[70px] h-[35px] flex items-center justify-center border-2 border-solid ${
+                    parseInt(searchParams.get("page")) ===
+                    Math.ceil(allItemData.length / 50)
+                      ? "bg-gray-500 text-white cursor-not-allowed"
+                      : "hover:bg-slate-200 "
+                  }`}
+                  onClick={handleNextPage}
+                >
+                  >>
+                </div>
+              </div>
+            ) : (
+              <div>Pagination is loading...</div>
+            )}
+          </div>
+          {/* {showMore === false && (
             <div className="flex justify-center items-center">
               <span
                 className="underline cursor-pointer"
@@ -203,7 +209,7 @@ const Donki = ({ children }) => {
                 แสดงเพิ่มเติม
               </span>
             </div>
-          )}
+          )} */}
         </div>
       </div>
       <Basket />
@@ -221,24 +227,4 @@ const Header = () => {
     </div>
   );
 };
-
-const category = [
-  { value: "0", label: "ทั้งหมด" },
-  { value: "1", label: "7 Premium" },
-  { value: "2", label: "ข้าวและข้าวเหนียว" },
-  { value: "3", label: "บะหมี่สำเร็จรูป" },
-  // { value: "4", label: "เครื่องปรุงและเครื่องเทศ" },
-  { value: "5", label: "อาหารแห้ง" },
-  { value: "6", label: "อาหารกระป๋อง" },
-  // { value: "7", label: "น้ำ" },
-  // { value: "8", label: "กาแฟ" },
-  // { value: "9", label: "ชาต่างๆ" },
-  // { value: "10", label: "ชาดำ" },
-  // { value: "11", label: "น้ำอัดลม" },
-  // { value: "12", label: "เครื่องดื่มกีฬา" },
-  { value: "13", label: "อาหาร เครื่องดื่ม" },
-  // { value: "14", label: "บ้าน และครัว" },
-  // { value: "15", label: "เครื่องสำอางค์และความงาม" },
-  // { value: "16", label: "อุปกรณ์เครื่องเขียน" },
-];
-export default Donki;
+export default Disney;
