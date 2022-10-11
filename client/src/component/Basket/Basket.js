@@ -226,7 +226,7 @@ function Basket() {
                                   if (itemInBasketCountChange.id === item.id) {
                                     return {
                                       ...itemInBasketCountChange,
-                                      count: e.target.value,
+                                      count: parseInt(e.target.value),
                                     };
                                   } else {
                                     return itemInBasketCountChange;
