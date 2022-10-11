@@ -28,6 +28,7 @@ function Payment() {
   const [bigPicture, setBigPicture] = useState("");
   const { logout } = useToken();
   const [loading, setLoading] = useState(false);
+  const [check, setCheck] = useState(false);
   // let location = useLocation();
   // const timeInputRef = useRef();
   // const amountInputRef = useRef();
@@ -73,7 +74,7 @@ function Payment() {
 
   async function handlePayment() {
     setLoading(true);
-    if (imageFileList.length === 1) {
+    if (imageFileList.length === 1 || check) {
       let count = 0;
       for (let i = 0; i < itemInBasket.length; i++) {
         count += itemInBasket[i].count;
@@ -89,8 +90,9 @@ function Payment() {
           body: JSON.stringify({
             items: itemInBasket,
             price: totalPrice,
-            slip_image: imageFileList[0],
+            slip_image: check ? "" : imageFileList[0],
             count: count,
+            check: check,
           }),
         })
           .then((res) => res.json())
@@ -98,12 +100,12 @@ function Payment() {
             // console.log(data);
             if (data.status) {
               alert("แนบสลิปเรียบร้อย");
+              setItemInBasket([]);
+              navigate("/mart/shop");
             } else {
               alert("การแนบสลิปผิดพลาดโปรดตรวจสอบรูปภาพหรือติดต่อเจ้าหน้าที่");
               logout();
             }
-            setItemInBasket([]);
-            navigate("/mart/shop");
           });
       } catch (err) {
         console.log(err);
@@ -148,6 +150,14 @@ function Payment() {
             <p className="m-0 text-[24px] font-semibold text-[#52514f]">
               รูปแบบการชำระเงิน
             </p>
+            <div className="flex justify-center items-center gap-2">
+              <input
+                type="checkbox"
+                checked={check}
+                onChange={() => setCheck(!check)}
+              />
+              <div>แนบสลิปผ่านแอดมิน</div>
+            </div>
             <div className="flex items-center gap-[20px] pl-1">
               <div
                 className={`w-[25px] h-[25px] rounded-full border-2 border-[#bf8c90] cursor-pointer ${
@@ -220,18 +230,20 @@ function Payment() {
               ))}
             </div>
 
-            <label className="w-[180px] h-[45px] rounded-full text-[18px] flex justify-center items-center cursor-pointer bg-[#b1b3b0] mt-2 font-semibold">
-              UPLOAD
-              <input
-                type="file"
-                className="hidden"
-                accept="image/*"
-                onChange={(e) => {
-                  fileChangedHandler(e);
-                  e.target.value = "";
-                }}
-              />
-            </label>
+            {!check && (
+              <label className="w-[180px] h-[45px] rounded-full text-[18px] flex justify-center items-center cursor-pointer bg-[#b1b3b0] mt-2 font-semibold">
+                UPLOAD
+                <input
+                  type="file"
+                  className="hidden"
+                  accept="image/*"
+                  onChange={(e) => {
+                    fileChangedHandler(e);
+                    e.target.value = "";
+                  }}
+                />
+              </label>
+            )}
           </div>
           {/* button pay component */}
           <div className="w-full flex justify-center">
