@@ -225,11 +225,11 @@ const routeAuth = [
     path: "/about-us",
     element: <AboutUs />,
   },
-  {
-    id: 31,
-    path: "/mart/shop/disney",
-    element: <Disney />,
-  },
+  // {
+  //   id: 31,
+  //   path: "/mart/shop/disney",
+  //   element: <Disney />,
+  // },
   // yahoo auction version 2
   {
     id: 32,

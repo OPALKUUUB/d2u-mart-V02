@@ -69,6 +69,7 @@ const ShopData = [
     link: "/mart/shop/disney",
     image_url: "/image/disney.jpg",
     alt: "",
+    mode: "dev",
   },
 ];
 
